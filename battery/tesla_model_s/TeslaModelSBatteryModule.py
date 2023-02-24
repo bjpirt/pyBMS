@@ -12,7 +12,7 @@ class TeslaModelSBatteryModule(BatteryModule):
         self.__gateway: TeslaModelSNetworkGateway = gateway
         self.__address = address
         for _ in range(self.CELL_COUNT):
-            self.__cells.append(BatteryCell())
+            self.cells.append(BatteryCell())
 
         super().__init__()
 

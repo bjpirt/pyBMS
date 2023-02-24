@@ -3,8 +3,9 @@ class BatteryCell:
         self.__voltage: float = 0.0
         self.highestVoltage: float = -1.0
         self.lowestVoltage: float = -1.0
-        self.overVoltageLevel: float = 4.5
-        self.underVoltageLevel: float = 3.0
+        self.overVoltageFault: bool = False
+        self.underVoltageFault: bool = False
+        self.alert: bool = False
 
     @property
     def voltage(self) -> float:
@@ -18,14 +19,6 @@ class BatteryCell:
 
         if self.lowestVoltage == -1 or self.voltage < self.lowestVoltage:
             self.lowestVoltage = voltage
-
-    @property
-    def overVoltageFault(self) -> bool:
-        return self.voltage > self.overVoltageLevel
-
-    @property
-    def underVoltageFault(self) -> bool:
-        return self.voltage < self.underVoltageLevel
 
     @property
     def voltageFault(self) -> bool:
