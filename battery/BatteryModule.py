@@ -7,7 +7,8 @@ class BatteryModule:
     def __init__(self):
         self.cells: List[BatteryCell] = []
         self.temperatures: List[float] = []
-        self.voltage: float = 0.0
+
+        self.__voltage: float = 0.0
 
         self.highestVoltage: float = float('nan')
         self.lowestVoltage: float = float('nan')
@@ -16,6 +17,20 @@ class BatteryModule:
         self.lowestTemperature: float = float('nan')
 
         self.lastSuccessfulRead = 0
+
+    @property
+    def voltage(self):
+        return self.__voltage
+
+    @voltage.setter
+    def voltage(self, voltage):
+        self.__voltage = voltage
+
+        if self.voltage > self.highestVoltage or math.isnan(self.highestVoltage):
+            self.highestVoltage = self.voltage
+
+        if self.voltage < self.lowestVoltage or math.isnan(self.lowestVoltage):
+            self.lowestVoltage = self.voltage
 
     @property
     def averageCellVoltage(self) -> float:
@@ -54,12 +69,6 @@ class BatteryModule:
         return min(self.temperatures) if len(self.temperatures) > 0 else 0.0
 
     def update(self):
-        if self.voltage > self.highestVoltage or math.isnan(self.highestVoltage):
-            self.highestVoltage = self.voltage
-
-        if self.voltage < self.lowestVoltage or math.isnan(self.lowestVoltage):
-            self.lowestVoltage = self.voltage
-
         if self.highTemperature > self.highestTemperature or math.isnan(self.highestTemperature):
             self.highestTemperature = self.highTemperature
 

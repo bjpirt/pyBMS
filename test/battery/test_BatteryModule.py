@@ -39,13 +39,11 @@ class BatteryModuleTestCase(unittest.TestCase):
     def test_lowest_module_voltage(self):
         self.assertEqual(self.module.lowestVoltage, 24.0)
         self.module.voltage = 22.0
-        self.module.update()
         self.assertEqual(self.module.lowestVoltage, 22.0)
 
     def test_highest_module_voltage(self):
         self.assertEqual(self.module.highestVoltage, 24.0)
         self.module.voltage = 26.0
-        self.module.update()
         self.assertEqual(self.module.highestVoltage, 26.0)
 
     def test_average_temperature(self):
