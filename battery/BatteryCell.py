@@ -11,21 +11,21 @@ class BatteryCell:
         return self.__voltage
 
     @voltage.setter
-    def setVoltage(self, voltage: float):
+    def voltage(self, voltage: float) -> None:
         self.__voltage = voltage
         if self.highestVoltage == -1 or self.voltage > self.highestVoltage:
             self.highestVoltage = voltage
 
-        if self.lowestVoltage == -1 or self.voltage > self.lowestVoltage:
+        if self.lowestVoltage == -1 or self.voltage < self.lowestVoltage:
             self.lowestVoltage = voltage
 
     @property
     def overVoltageFault(self) -> bool:
-        return self.voltage > self.overVoltageFault
+        return self.voltage > self.overVoltageLevel
 
     @property
     def underVoltageFault(self) -> bool:
-        return self.voltage > self.underVoltageFault
+        return self.voltage < self.underVoltageLevel
 
     @property
     def voltageFault(self) -> bool:
