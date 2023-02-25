@@ -28,7 +28,7 @@ class TeslaModelSNetworkGatewayTestCase(unittest.TestCase):
 
     def test_read_register(self):
         self.serial.read = MagicMock(
-            return_value=bytearray([18, 10, 1, 2, 3, 4]))
+            return_value=bytearray([18, 10, 1, 2, 3, 4, 99]))
         result = self.gateway.readRegister(9, 10, 4)
         self.assertEqual(result, bytearray([1, 2, 3, 4]))
         self.serial.write.assert_called_with(bytearray([18, 10, 4, 234]))

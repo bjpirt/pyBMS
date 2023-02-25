@@ -1,5 +1,6 @@
 from battery.BatteryPack import BatteryPack
 from battery.tesla_model_s.TeslaModelSBatteryModule import TeslaModelSBatteryModule
+from battery.tesla_model_s.TeslaModelSConstants import *
 from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
 
 ADDRESS_REGISTER = 0x3B
@@ -7,19 +8,41 @@ ADDRESS_REGISTER = 0x3B
 
 class TeslaModelSBatteryPack(BatteryPack):
 
-    def __init__(self, gateway: TeslaModelSNetworkGateway) -> None:
+    def __init__(self, moduleCount: int, gateway: TeslaModelSNetworkGateway) -> None:
         super().__init__()
+        self.__moduleCount = moduleCount
+        self.ready = False
         self.__gateway = gateway
-        self.__discoverModules()
+        self.__setupModules()
 
     def update(self) -> None:
-        for module in self.modules:
-            module.update()
-        super().update()
+        if self.ready:
+            for module in self.modules:
+                module.update()
+            super().update()
 
-    def __discoverModules(self) -> None:
-        for address in range(0x01, 0x3E):
-            result = self.__gateway.readRegister(address, ADDRESS_REGISTER, 1)
-            if result != None:
-                module = TeslaModelSBatteryModule(address, self.__gateway)
-                self.modules.append(module)
+    def __setupModules(self) -> None:
+        # Reset all of the addresses to 0x00
+        for _ in range(3):
+            if self.__gateway.writeRegister(BROADCAST_ADDRESS, REG_RESET, 0xA5):
+                break
+
+        # Read the status register at address zero, then assign an address until no more are left
+        for _ in range(100):
+            if self.__gateway.readRegister(0x00, REG_DEVICE_STATUS, 1):
+                nextAddress = len(self.modules) + 1
+                self.__gateway.writeRegister(
+                    0x00, REG_ADDR_CTRL, nextAddress | 0x80)
+
+                # Read from the new address to make sure it works and add it if it does
+                readResult = self.__gateway.readRegister(
+                    nextAddress, REG_DEVICE_STATUS, 1)
+
+                if readResult and readResult[0] & 0x08 > 0:
+                    self.modules.append(TeslaModelSBatteryModule(
+                        nextAddress, self.__gateway))
+            else:
+                break
+
+        if len(self.modules) == self.__moduleCount:
+            self.ready = True

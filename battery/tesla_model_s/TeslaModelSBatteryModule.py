@@ -7,10 +7,10 @@ from battery.tesla_model_s.TeslaModelSConstants import *
 
 
 class TeslaModelSBatteryModule(BatteryModule):
-    def __init__(self, address, gateway: TeslaModelSNetworkGateway) -> None:
+    def __init__(self, address: int, gateway: TeslaModelSNetworkGateway) -> None:
         super().__init__()
         self.__gateway: TeslaModelSNetworkGateway = gateway
-        self.__address = address
+        self.address: int = address
         self.alert: bool = False
         self.fault: bool = False
 
@@ -56,10 +56,10 @@ class TeslaModelSBatteryModule(BatteryModule):
             self.communicationFailures = self.communicationFailures + 1
 
     def __writeRegister(self, register: int, value: int):
-        return self.__gateway.writeRegister(self.__address, register, value)
+        return self.__gateway.writeRegister(self.address, register, value)
 
     def __readRegister(self, register: int, length: int):
-        return self.__gateway.readRegister(self.__address, register, length)
+        return self.__gateway.readRegister(self.address, register, length)
 
     def __checkStatus(self, status: int):
         if status & 0b01100000 == 0:
