@@ -16,7 +16,7 @@ class BatteryModule:
         self.highestTemperature: float = float('nan')
         self.lowestTemperature: float = float('nan')
 
-        self.lastSuccessfulRead = 0
+        self.communicationFailures = 0
 
     @property
     def voltage(self):

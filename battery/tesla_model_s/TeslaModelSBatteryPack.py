@@ -13,7 +13,7 @@ class TeslaModelSBatteryPack(BatteryPack):
         self.__discoverModules()
 
     def update(self) -> None:
-        for module in self.__modules:
+        for module in self.modules:
             module.update()
         super().update()
 
@@ -22,4 +22,4 @@ class TeslaModelSBatteryPack(BatteryPack):
             result = self.__gateway.readRegister(address, ADDRESS_REGISTER, 1)
             if result != None:
                 module = TeslaModelSBatteryModule(address, self.__gateway)
-                self.__modules.append(module)
+                self.modules.append(module)

@@ -27,11 +27,3 @@ class BatteryCellTestCase(unittest.TestCase):
         self.cell.voltage = 3.1
         self.assertEqual(self.cell.voltage, 3.1)
         self.assertEqual(self.cell.lowestVoltage, 2.9)
-
-    def test_voltage_fault(self):
-        self.assertEqual(self.cell.voltageFault, False)
-        self.cell.overVoltageFault = True
-        self.assertEqual(self.cell.voltageFault, True)
-        self.cell.overVoltageFault = False
-        self.cell.underVoltageFault = True
-        self.assertEqual(self.cell.voltageFault, True)
