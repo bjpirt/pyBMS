@@ -1,8 +1,9 @@
 from typing import List, Union
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, call
 
 from battery.tesla_model_s.TeslaModelSBatteryModule import TeslaModelSBatteryModule
+from battery.tesla_model_s.TeslaModelSConstants import REG_CB_CTRL, REG_CB_TIME
 from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
 
 
@@ -61,3 +62,16 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
         for cell in self.module.cells[3:6]:
             self.assertFalse(cell.overVoltageFault)
             self.assertTrue(cell.underVoltageFault)
+
+    def test_balance(self):
+        self.mockGateway.writeRegister = MagicMock(return_value=True)
+        for cell in self.module.cells:
+            cell.voltage = 3.4
+        self.module.cells[1].voltage = 3.5
+        self.module.cells[2].voltage = 3.3
+        self.module.cells[3].voltage = 3.6
+        self.module.balance(3.4)
+
+        self.mockGateway.writeRegister.assert_has_calls(
+            [call(self.module.address, REG_CB_TIME, 5), call(self.module.address,
+                                                             REG_CB_CTRL, 0b00001010)])

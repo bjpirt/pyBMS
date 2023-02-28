@@ -24,6 +24,15 @@ class TeslaModelSBatteryModule(BatteryModule):
         self.__readModule()
         super().update()
 
+    def balance(self, lowCellVoltage: float) -> None:
+        balanceValue: int = 0
+        for i, cell in enumerate(self.cells):
+            if cell.voltage > lowCellVoltage:
+                balanceValue = balanceValue | (1 << i)
+        if balanceValue != 0:
+            self.__writeRegister(REG_CB_TIME, 5)
+            self.__writeRegister(REG_CB_CTRL, balanceValue)
+
     def __readModule(self) -> None:
         self.__writeRegister(REG_ADC_CONTROL, 0b00111101)
         self.__writeRegister(REG_IO_CONTROL, 0b00000011)

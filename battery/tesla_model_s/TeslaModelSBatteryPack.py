@@ -1,3 +1,4 @@
+from typing import List
 from battery.BatteryPack import BatteryPack
 from battery.tesla_model_s.TeslaModelSBatteryModule import TeslaModelSBatteryModule
 from battery.tesla_model_s.TeslaModelSConstants import *
@@ -10,6 +11,7 @@ class TeslaModelSBatteryPack(BatteryPack):
 
     def __init__(self, moduleCount: int, gateway: TeslaModelSNetworkGateway) -> None:
         super().__init__()
+        self.modules: List[TeslaModelSBatteryModule] = []
         self.__moduleCount = moduleCount
         self.ready = False
         self.__gateway = gateway
@@ -17,9 +19,8 @@ class TeslaModelSBatteryPack(BatteryPack):
 
     def update(self) -> None:
         if self.ready:
-            for module in self.modules:
-                module.update()
             super().update()
+            self.__balance()
 
     def __setupModules(self) -> None:
         # Reset all of the addresses to 0x00
@@ -46,3 +47,8 @@ class TeslaModelSBatteryPack(BatteryPack):
 
         if len(self.modules) == self.__moduleCount:
             self.ready = True
+
+    def __balance(self):
+        lowCellVoltage = self.lowCellVoltage
+        for module in self.modules:
+            module.balance(lowCellVoltage)
