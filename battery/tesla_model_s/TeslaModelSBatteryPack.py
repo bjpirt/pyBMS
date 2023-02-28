@@ -24,7 +24,7 @@ class TeslaModelSBatteryPack(BatteryPack):
     def __setupModules(self) -> None:
         # Reset all of the addresses to 0x00
         for _ in range(3):
-            if self.__gateway.writeRegister(BROADCAST_ADDRESS, REG_RESET, 0xA5):
+            if self.__gateway.writeRegister(BROADCAST_ADDRESS, REG_RESET, RESET_VALUE):
                 break
 
         # Read the status register at address zero, then assign an address until no more are left
@@ -32,7 +32,7 @@ class TeslaModelSBatteryPack(BatteryPack):
             if self.__gateway.readRegister(0x00, REG_DEVICE_STATUS, 1):
                 nextAddress = len(self.modules) + 1
                 self.__gateway.writeRegister(
-                    0x00, REG_ADDR_CTRL, nextAddress | 0x80)
+                    0x00, REG_ADDRESS_CONTROL, nextAddress | 0x80)
 
                 # Read from the new address to make sure it works and add it if it does
                 readResult = self.__gateway.readRegister(

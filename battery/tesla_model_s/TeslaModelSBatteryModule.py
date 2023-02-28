@@ -71,18 +71,18 @@ class TeslaModelSBatteryModule(BatteryModule):
         else:
             self.__readModuleStatus()
 
-    def __updateModuleVoltage(self, gpai: List[int]):
-        self.voltage = round((gpai[0] * 256 + gpai[1]) * 2.5 / 16383.0, 3)
+    def __updateModuleVoltage(self, gpai: bytearray):
+        self.voltage = round((gpai[0] * 256 + gpai[1]) * 100 / 49149, 3)
 
-    def __updateCellVoltages(self, vcells: List[int]):
+    def __updateCellVoltages(self, vcells: bytearray):
         for i in range(0, int(len(vcells)/2)):
             self.__updateCellVoltage(i, vcells[i*2:i*2+2])
 
-    def __updateCellVoltage(self, cellNum: int, vcell: List[int]):
+    def __updateCellVoltage(self, cellNum: int, vcell: bytearray):
         self.cells[cellNum].voltage = round(
-            (vcell[0] * 256 + vcell[1]) * 100 / 49149, 3)
+            (vcell[0] * 256 + vcell[1]) * 6.25 / 16383, 3)
 
-    def __updateTemperature(self, id: int, temp: List[int]):
+    def __updateTemperature(self, id: int, temp: bytearray):
 
         tempTemp = (
             1.780 / ((temp[0] * 256 + temp[1] + 2) / 33046) - 3.57) * 1000

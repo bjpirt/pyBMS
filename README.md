@@ -17,11 +17,10 @@ The initial implementation supports communicating with the OEM BMS on these modu
 
 ## To Do
 
+- [x] Simulator for integration testing over socat virtual serial port
 - [ ] Cell balancing
 - [ ] Hardware abstraction layer for UART
 - [ ] Hardware abstraction layer for RTC / Clock
-- [ ] Simulator for integration testing via dependency injection
-- [ ] Simulator for integration testing over socat virtual serial port
 - [ ] Simulator running on real devices
 - [ ] Victron CAN bus output
 - [ ] Battery Management system controlling contactors
