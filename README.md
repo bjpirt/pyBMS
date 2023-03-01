@@ -35,7 +35,9 @@ The ideal solution is to use an ESP32 once MicroPython supports CAN on that plat
 
 - [x] Simulator for integration testing over socat virtual serial port
 - [x] Cell balancing
-- [ ] Battery Management System controlling contactors
+- [x] Battery Management System controlling contactors
+- [x] Hardware abstraction layer for GPIO
+- [ ] Communication error detection
 - [ ] Victron CAN bus output
 - [ ] State of charge from current sensor
 - [ ] Hardware abstraction layer for UART

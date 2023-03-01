@@ -1,4 +1,4 @@
-from battery.BatteryCell import BatteryCell
+from battery import BatteryCell
 import unittest
 
 
@@ -27,3 +27,11 @@ class BatteryCellTestCase(unittest.TestCase):
         self.cell.voltage = 3.1
         self.assertEqual(self.cell.voltage, 3.1)
         self.assertEqual(self.cell.lowestVoltage, 2.9)
+
+    def test_has_error(self):
+        self.cell.voltage = 4.0
+        self.assertFalse(self.cell.hasError)
+        self.cell.voltage = 3.0
+        self.assertTrue(self.cell.hasError)
+        self.cell.voltage = 5.0
+        self.assertTrue(self.cell.hasError)

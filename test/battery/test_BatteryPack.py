@@ -1,6 +1,4 @@
-from battery.BatteryCell import BatteryCell
-from battery.BatteryModule import BatteryModule
-from battery.BatteryPack import BatteryPack
+from battery import BatteryCell, BatteryModule, BatteryPack
 import unittest
 
 
@@ -66,3 +64,16 @@ class BatteryPackTestCase(unittest.TestCase):
         self.pack.modules[0].temperatures[0] = 24.0
         self.pack.update()
         self.assertEqual(self.pack.highestTemperature, 24.0)
+
+    def test_has_error(self):
+        for module in self.pack.modules:
+            for cell in module.cells:
+                cell.voltage = 4.0
+        self.pack.modules[0].cells[0].voltage = 3.0
+        self.assertTrue(self.pack.hasError)
+        self.pack.modules[0].cells[0].voltage = 5.0
+        self.assertTrue(self.pack.hasError)
+        self.pack.modules[0].cells[0].voltage = 4.0
+        self.assertFalse(self.pack.hasError)
+        self.pack.modules[0].temperatures[0] = 66
+        self.assertTrue(self.pack.hasError)

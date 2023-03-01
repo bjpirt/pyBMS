@@ -4,11 +4,12 @@ from battery import BatteryCell
 
 
 class BatteryModule:
-    def __init__(self):
+    def __init__(self, highTemperature: float = 65.0):
         self.cells: List[BatteryCell] = []
         self.temperatures: List[float] = []
 
         self.__voltage: float = 0.0
+        self.__highTemperature = highTemperature
 
         self.highestVoltage: float = float('nan')
         self.lowestVoltage: float = float('nan')
@@ -17,6 +18,10 @@ class BatteryModule:
         self.lowestTemperature: float = float('nan')
 
         self.communicationFailures = 0
+
+    @property
+    def hasError(self) -> bool:
+        return any([c.hasError for c in self.cells]) or self.highTemperature > self.__highTemperature
 
     @property
     def voltage(self):

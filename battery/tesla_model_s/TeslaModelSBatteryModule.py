@@ -1,21 +1,19 @@
 import math
-from typing import List
-from battery.BatteryCell import BatteryCell
-from battery.BatteryModule import BatteryModule
-from battery import TeslaModelSNetworkGateway
+from battery import BatteryModule, BatteryCell
+from . import TeslaModelSNetworkGateway
 from battery.tesla_model_s.TeslaModelSConstants import *
 
 
 class TeslaModelSBatteryModule(BatteryModule):
-    def __init__(self, address: int, gateway: TeslaModelSNetworkGateway) -> None:
-        super().__init__()
+    def __init__(self, address: int, gateway: TeslaModelSNetworkGateway, lowCellVoltage: float=3.6, highCellVoltage: float=4.1, highTemperature:float = 65.0) -> None:
+        super().__init__(highTemperature)
         self.__gateway: TeslaModelSNetworkGateway = gateway
         self.address: int = address
         self.alert: bool = False
         self.fault: bool = False
 
         for _ in range(CELL_COUNT):
-            self.cells.append(BatteryCell())
+            self.cells.append(BatteryCell(lowCellVoltage, highCellVoltage))
 
         for _ in range(2):
             self.temperatures.append(float("nan"))

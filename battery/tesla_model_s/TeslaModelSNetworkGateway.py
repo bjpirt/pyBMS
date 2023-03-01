@@ -1,6 +1,6 @@
 import time
 from typing import Union
-from battery import crc8
+from . import crc8
 
 
 class TeslaModelSNetworkGateway:

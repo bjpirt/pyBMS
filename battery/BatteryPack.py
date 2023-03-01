@@ -13,6 +13,11 @@ class BatteryPack:
 
         self.highestTemperature: float = float('nan')
         self.lowestTemperature: float = float('nan')
+        self.ready = False
+
+    @property
+    def hasError(self) -> bool:
+        return any([m.hasError for m in self.modules])
 
     @property
     def voltage(self) -> float:
