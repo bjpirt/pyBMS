@@ -1,6 +1,6 @@
 import math
 from typing import List
-from battery.BatteryModule import BatteryModule
+from battery import BatteryModule
 
 
 class BatteryPack:

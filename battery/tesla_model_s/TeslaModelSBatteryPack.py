@@ -1,10 +1,7 @@
 from typing import List
 from battery.BatteryPack import BatteryPack
-from battery.tesla_model_s.TeslaModelSBatteryModule import TeslaModelSBatteryModule
+from battery import TeslaModelSBatteryModule, TeslaModelSNetworkGateway
 from battery.tesla_model_s.TeslaModelSConstants import *
-from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
-
-ADDRESS_REGISTER = 0x3B
 
 
 class TeslaModelSBatteryPack(BatteryPack):

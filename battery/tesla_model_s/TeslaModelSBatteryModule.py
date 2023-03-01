@@ -2,7 +2,7 @@ import math
 from typing import List
 from battery.BatteryCell import BatteryCell
 from battery.BatteryModule import BatteryModule
-from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
+from battery import TeslaModelSNetworkGateway
 from battery.tesla_model_s.TeslaModelSConstants import *
 
 
