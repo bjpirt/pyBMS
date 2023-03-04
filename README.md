@@ -37,14 +37,16 @@ The ideal solution is to use an ESP32 once MicroPython supports CAN on that plat
 - [x] Cell balancing
 - [x] Battery Management System controlling contactors
 - [x] Hardware abstraction layer for GPIO
-- [ ] Communication error detection
-- [ ] Victron CAN bus output
-- [ ] State of charge from current sensor
-- [ ] Hardware abstraction layer for UART
-- [ ] Hardware abstraction layer for CAN
+- [x] Communication error detection
+- [ ] Run against real hardware (real Tesla BMS boards with faked cells)
 - [ ] Hardware abstraction layer for RTC / Clock
-- [ ] Simulator running on real devices
+- [ ] Hardware abstraction layer for UART
+- [ ] Build script to generate image to flash
+- [ ] Simulator running on physical devices
 - [ ] Platform support e.g. ESP32, RP2, etc with hardware details
+- [ ] Victron CAN bus output
+- [ ] Hardware abstraction layer for CAN
+- [ ] State of charge from current sensor
 - [ ] Static configuration
 - [ ] Dynamic configuration (serial / usb)
 - [ ] Dynamic configuration (web)

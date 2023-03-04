@@ -1,5 +1,5 @@
 class BatteryCell:
-    def __init__(self, lowCellVoltage: float=3.6, highCellVoltage: float=4.1):
+    def __init__(self, lowCellVoltage: float = 3.6, highCellVoltage: float = 4.1):
         self.__voltage: float = 0.0
         self.highestVoltage: float = -1.0
         self.lowestVoltage: float = -1.0
@@ -9,7 +9,7 @@ class BatteryCell:
         self.__highCellVoltage = highCellVoltage
 
     @property
-    def hasError(self) -> bool:
+    def hasFault(self) -> bool:
         return self.voltage < self.__lowCellVoltage or self.voltage > self.__highCellVoltage
 
     @property

@@ -67,14 +67,14 @@ class BatteryModuleTestCase(unittest.TestCase):
         self.module.update()
         self.assertEqual(self.module.highestTemperature, 24.0)
 
-    def test_has_error(self):
+    def test_has_fault(self):
         for cell in self.module.cells:
             cell.voltage = 4.0
         self.module.cells[0].voltage = 3.0
-        self.assertTrue(self.module.hasError)
+        self.assertTrue(self.module.hasFault)
         self.module.cells[0].voltage = 5.0
-        self.assertTrue(self.module.hasError)
+        self.assertTrue(self.module.hasFault)
         self.module.cells[0].voltage = 4.0
-        self.assertFalse(self.module.hasError)
+        self.assertFalse(self.module.hasFault)
         self.module.temperatures[0] = 66
-        self.assertTrue(self.module.hasError)
+        self.assertTrue(self.module.hasFault)

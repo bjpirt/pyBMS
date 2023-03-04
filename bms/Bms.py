@@ -10,8 +10,8 @@ class Bms:
 
     def process(self):
         self.batteryPack.update()
-        
-        if self.batteryPack.hasError or not self.batteryPack.ready:
+
+        if self.batteryPack.hasFault or not self.batteryPack.ready:
             self.contactors.disable()
         else:
             self.contactors.enable()

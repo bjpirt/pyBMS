@@ -17,11 +17,11 @@ class BatteryModule:
         self.highestTemperature: float = float('nan')
         self.lowestTemperature: float = float('nan')
 
-        self.communicationFailures = 0
+        self.__fault: bool = False
 
     @property
-    def hasError(self) -> bool:
-        return any([c.hasError for c in self.cells]) or self.highTemperature > self.__highTemperature
+    def hasFault(self) -> bool:
+        return any([c.hasFault for c in self.cells]) or self.highTemperature > self.__highTemperature or self.__fault
 
     @property
     def voltage(self):

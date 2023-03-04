@@ -1,16 +1,19 @@
 import math
+import time
 from battery import BatteryModule, BatteryCell
 from . import TeslaModelSNetworkGateway
 from battery.tesla_model_s.TeslaModelSConstants import *
 
 
 class TeslaModelSBatteryModule(BatteryModule):
-    def __init__(self, address: int, gateway: TeslaModelSNetworkGateway, lowCellVoltage: float=3.6, highCellVoltage: float=4.1, highTemperature:float = 65.0) -> None:
+    def __init__(self, address: int, gateway: TeslaModelSNetworkGateway, lowCellVoltage: float = 3.6, highCellVoltage: float = 4.1, highTemperature: float = 65.0, commsTimeout: float = 10) -> None:
         super().__init__(highTemperature)
         self.__gateway: TeslaModelSNetworkGateway = gateway
         self.address: int = address
+        self.__lastCommunicationTime: float = float('nan')
+        self.__communicationTimeout = commsTimeout
+
         self.alert: bool = False
-        self.fault: bool = False
 
         for _ in range(CELL_COUNT):
             self.cells.append(BatteryCell(lowCellVoltage, highCellVoltage))
@@ -20,6 +23,7 @@ class TeslaModelSBatteryModule(BatteryModule):
 
     def update(self) -> None:
         self.__readModule()
+        self.__checkCommunicationTime()
         super().update()
 
     def balance(self, lowCellVoltage: float) -> None:
@@ -30,6 +34,9 @@ class TeslaModelSBatteryModule(BatteryModule):
         if balanceValue != 0:
             self.__writeRegister(REG_CB_TIME, 5)
             self.__writeRegister(REG_CB_CTRL, balanceValue)
+
+    def __checkCommunicationTime(self):
+        self.__fault = time.time() - self.__lastCommunicationTime > self.__communicationTimeout
 
     def __readModule(self) -> None:
         self.__writeRegister(REG_ADC_CONTROL, 0b00111101)
@@ -45,9 +52,7 @@ class TeslaModelSBatteryModule(BatteryModule):
                 0, result[REG_TEMPERATURE1:REG_TEMPERATURE1+2])
             self.__updateTemperature(
                 1, result[REG_TEMPERATURE2:REG_TEMPERATURE2+2])
-            self.communicationFailures = 0
-        else:
-            self.communicationFailures = self.communicationFailures + 1
+            self.__lastCommunicationTime = time.time()
 
     def __readModuleStatus(self):
         result = self.__readRegister(REG_ALERT_STATUS, 4)
@@ -59,8 +64,7 @@ class TeslaModelSBatteryModule(BatteryModule):
                 cell.overVoltageFault = result[2] & (1 << i) > 0
             for i, cell in enumerate(self.cells):
                 cell.underVoltageFault = result[3] & (1 << i) > 0
-        else:
-            self.communicationFailures = self.communicationFailures + 1
+            self.__lastCommunicationTime = time.time()
 
     def __writeRegister(self, register: int, value: int):
         return self.__gateway.writeRegister(self.address, register, value)
