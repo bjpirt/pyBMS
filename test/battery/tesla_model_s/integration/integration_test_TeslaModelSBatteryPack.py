@@ -7,8 +7,8 @@ from battery.tesla_model_s.TeslaModelSBatteryPack import TeslaModelSBatteryPack
 from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
 
 import time
-from test.dummy_tesla_bms.CompoundSerial import CompoundSerial
-from test.dummy_tesla_bms.TeslaBms import TeslaBms
+from test.tesla_bms_emulator.CompoundSerial import CompoundSerial
+from test.tesla_bms_emulator import TeslaBmsEmulator
 import serial
 
 bmsSerialPort1a = serial.Serial('port1-end-a', 230400, timeout=0.01)
@@ -35,9 +35,9 @@ compoundPort3 = CompoundSerial(bmsSerialPort3a, bmsSerialPort2b)
 # Tx = port3-end-a
 # Rx = port2-end-b
 
-bms1 = TeslaBms(compoundPort2, "bms1")
+bms1 = TeslaBmsEmulator(compoundPort2, "bms1")
 bms1.address = 9
-bms2 = TeslaBms(compoundPort3, "bms2")
+bms2 = TeslaBmsEmulator(compoundPort3, "bms2")
 bms2.address = 10
 done = threading.Event()
 

@@ -31,6 +31,51 @@ Currently I am using a [Canbed Dual](https://www.seeedstudio.com/CANBed-DUAL-RP2
 
 The ideal solution is to use an ESP32 once MicroPython supports CAN on that platform.
 
+## Supported Platforms
+
+### Unix
+
+This is designed to run on a regular Python distribution. Note that this doesn't support Victron CAN communication or current measurement. You can test this locally using socat (install via homebrew on a mac) by doing the following:
+
+1. Create a fake serial port pair
+
+```
+make module-fake-serial
+```
+
+2. In one terminal, run the dummy Tesla BMS board
+
+```
+python platforms/unix/teslaBmsEmulator.py ./port1-end-a 230400
+```
+
+3. In another terminal, run the pyBms code
+
+```
+python platforms/unix/main.py ./port1-end-b 230400
+```
+
+When you've finished, you can stop socat with `make kill-socat`
+
+It's also possible to run pyBms from a desktop computer against a real Tesla Model S module, using this approach, just pass in the serial port and baud rate (612500) to the command above. Note this will need to support running at 612500 baud. Not all do - if you have a Raspberry Pi RP2040 based module, you can make your own with the following sketch:
+
+```C
+void setup() {
+  Serial.begin(612500);
+  Serial1.begin(612500);
+}
+
+void loop() {
+  if(Serial1.available()){
+    Serial.write(Serial1.read());
+  }
+  if(Serial.available()){
+    Serial1.write(Serial.read());
+  }
+}
+
+```
+
 ## To Do
 
 - [x] Simulator for integration testing over socat virtual serial port
@@ -38,12 +83,11 @@ The ideal solution is to use an ESP32 once MicroPython supports CAN on that plat
 - [x] Battery Management System controlling contactors
 - [x] Hardware abstraction layer for GPIO
 - [x] Communication error detection
-- [ ] Run against real hardware (real Tesla BMS boards with faked cells)
-- [ ] Hardware abstraction layer for RTC / Clock
-- [ ] Hardware abstraction layer for UART
-- [ ] Build script to generate image to flash
+- [x] Build script to generate image to flash
+- [x] Platform support e.g. ESP32, RP2, etc with hardware details
 - [ ] Simulator running on physical devices
-- [ ] Platform support e.g. ESP32, RP2, etc with hardware details
+- [ ] Hardware abstraction layer for UART
+- [ ] Run against real hardware (real Tesla BMS boards with faked cells)
 - [ ] Victron CAN bus output
 - [ ] Hardware abstraction layer for CAN
 - [ ] State of charge from current sensor

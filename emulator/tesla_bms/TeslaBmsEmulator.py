@@ -1,13 +1,7 @@
 #!/usr/bin/env python3
+from battery import crc8
 
-import sys
-import time
-from typing import List
-from battery.tesla_model_s.crc8 import crc8
-
-from battery.tesla_model_s.TeslaModelSConstants import BROADCAST_ADDRESS, REG_ADDRESS_CONTROL, REG_DEVICE_STATUS, REG_GPAI, REG_RESET, REG_VCELL1, RESET_VALUE
-
-broadcast = 0x00
+from battery.tesla_model_s.TeslaModelSConstants import *
 
 """
 Message format:
@@ -41,9 +35,9 @@ Message format:
 """
 
 
-class TeslaBms:
+class TeslaBmsEmulator:
 
-    def __init__(self, serial, name="teslaBms", debug=False):
+    def __init__(self, serial, name="teslaBmsEmulator", debug=False):
         self.__serial = serial
         self.debug = debug
         self.name = name
@@ -87,7 +81,7 @@ class TeslaBms:
 
     def process(self):
         input = self.__serial.read()
-        if input != '':
+        if input and input != '':
             for c in input:
                 self.buff.append(c)
 

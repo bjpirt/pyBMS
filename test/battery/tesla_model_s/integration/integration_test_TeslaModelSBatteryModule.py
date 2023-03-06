@@ -7,11 +7,11 @@ from battery.tesla_model_s.TeslaModelSBatteryModule import TeslaModelSBatteryMod
 from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
 
 import time
-from test.dummy_tesla_bms.TeslaBms import TeslaBms
+from test.tesla_bms_emulator import TeslaBmsEmulator
 import serial
 
 bmsSerialPort = serial.Serial('port1-end-a', 115200, timeout=0.01)
-bms = TeslaBms(bmsSerialPort)
+bms = TeslaBmsEmulator(bmsSerialPort)
 bms.address = 1
 done = threading.Event()
 

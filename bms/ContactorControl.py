@@ -21,7 +21,7 @@ class ContactorState(Enum):
 
 
 class ContactorControl:
-    def __init__(self, contactorGpio: ContactorGpio, negativeTime=1, prechargeTime=5):
+    def __init__(self, contactorGpio: ContactorGpio, negativeTime: float = 1, prechargeTime: float = 5):
         self.__contactorGpio = contactorGpio
         self.__state = ContactorState.DISABLED
         self.__desiredState = ContactorState.DISABLED
