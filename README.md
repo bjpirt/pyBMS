@@ -52,12 +52,12 @@ python platforms/unix/teslaBmsEmulator.py ./port1-end-a 230400
 3. In another terminal, run the pyBms code
 
 ```
-python platforms/unix/main.py ./port1-end-b 230400
+python platforms/unix/pyBms.py ./port1-end-b 230400
 ```
 
 When you've finished, you can stop socat with `make kill-socat`
 
-It's also possible to run pyBms from a desktop computer against a real Tesla Model S module, using this approach, just pass in the serial port and baud rate (612500) to the command above. Note this will need to support running at 612500 baud. Not all do - if you have a Raspberry Pi RP2040 based module, you can make your own with the following sketch:
+It's also possible to run pyBms from a desktop computer against a real Tesla Model S module or the emulator running on a RP2040 based board using this approach, just pass in the serial port and baud rate (612500) to the command above. Note this will need to support running at 612500 baud. Not all do - if you have a Raspberry Pi RP2040 based module, you can make your own with the following sketch:
 
 ```C
 void setup() {
@@ -73,8 +73,17 @@ void loop() {
     Serial1.write(Serial.read());
   }
 }
+```
+
+### Building firmware images
+
+To build the emulator for the Canbed Dual platform (or other RP2040 based modules), run:
 
 ```
+make build-tesla-bms-emulator-rp2
+```
+
+Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop this onto your RP2040 device as usual.
 
 ## To Do
 
@@ -85,8 +94,9 @@ void loop() {
 - [x] Communication error detection
 - [x] Build script to generate image to flash
 - [x] Platform support e.g. ESP32, RP2, etc with hardware details
-- [ ] Simulator running on physical devices
-- [ ] Hardware abstraction layer for UART
+- [x] Simulator running on physical devices
+- [ ] pyBms running on physical devices
+- [ ] Hardware abstraction layer for time
 - [ ] Run against real hardware (real Tesla BMS boards with faked cells)
 - [ ] Victron CAN bus output
 - [ ] Hardware abstraction layer for CAN

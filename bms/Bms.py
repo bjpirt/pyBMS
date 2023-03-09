@@ -27,6 +27,8 @@ class Bms:
                 self.printDebug()
 
     def printDebug(self):
+        if not self.batteryPack.ready:
+            print("Battery pack not ready")
         for i, module in enumerate(self.batteryPack.modules):
             print(
                 f"Module: {i} Voltage: {module.voltage} Temperature: {module.temperatures[0]} {module.temperatures[0]} Fault: {module.hasFault}")

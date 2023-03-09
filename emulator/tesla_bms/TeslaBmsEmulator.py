@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import time
 from battery import crc8
 
 from battery.tesla_model_s.TeslaModelSConstants import *
@@ -37,9 +38,11 @@ Message format:
 
 class TeslaBmsEmulator:
 
-    def __init__(self, serial, name="teslaBmsEmulator", debug=False):
+    def __init__(self, serial, name="teslaBmsEmulator", debugComms: bool = False, debugInterval: float = 0):
         self.__serial = serial
-        self.debug = debug
+        self.__debugComms = debugComms
+        self.__debugInterval = debugInterval
+        self.__nextPrint = time.time()
         self.name = name
         self.registers = [0 for _ in range(REG_RESET+1)]
         self.registers[0x0F] = 0x11
@@ -64,6 +67,11 @@ class TeslaBmsEmulator:
         self.registers[REG_VCELL1 + cellId * 2] = temp >> 8
         self.registers[REG_VCELL1 + cellId * 2 + 1] = temp & 0xFF
 
+    def getCellVoltage(self, cellId: int) -> float:
+        reg = REG_VCELL1 + cellId * 2
+        rawTemp = (self.registers[reg] << 8) + self.registers[reg + 1]
+        return round((rawTemp) * 6.25 / 16383, 3)
+
     def setModuleVoltage(self, voltage: float):
         temp: int = int(round(voltage * 49149.0 / 100))
         self.registers[REG_GPAI] = temp >> 8
@@ -86,20 +94,29 @@ class TeslaBmsEmulator:
                 self.buff.append(c)
 
         if len(self.buff) >= self._expectedMessageLength():
-            if self.debug:
+            if self.__debugComms:
                 print(f"Received by device {self.name}", [
                     hex(c) for c in self.buff])
             msgAddress = self.buff[0] >> 1
             if msgAddress == self.address or msgAddress == BROADCAST_ADDRESS:
                 if crc8(self.buff[0:3]) == self.buff[3]:
-                    self.handleMessage()
+                    self.__handleMessage()
             else:
-                if self.debug:
+                if self.__debugComms:
                     print("Forwarding")
                 self.__serial.write(self.buff)
             self.buff = self.buff[self._expectedMessageLength():]
+        self.__printDebug()
 
-    def handleMessage(self):
+    def __printDebug(self):
+        if self.__debugInterval > 0 and time.time() > self.__nextPrint:
+            voltages = [self.getCellVoltage(i) for i in range(6)]
+            print(f"Voltage: {sum(voltages)} time: {time.time()}")
+            for i, v in enumerate(voltages):
+                print(f"  |- Cell: {i} voltage: {v}")
+            self.__nextPrint = time.time() + self.__debugInterval
+
+    def __handleMessage(self):
         msgAddress = self.buff[0] >> 1
         msgWrite = bool(self.buff[0] & 1)
         register = self.buff[1]
@@ -107,29 +124,29 @@ class TeslaBmsEmulator:
         if msgAddress != BROADCAST_ADDRESS:
             response[0] = self.buff[0] | 0x80
         if msgWrite:
-            if self.debug:
+            if self.__debugComms:
                 print(
                     f"Setting register {hex(register)} to {hex(self.buff[2])}")
             if register == REG_RESET and self.buff[2] == RESET_VALUE:
-                if self.debug:
+                if self.__debugComms:
                     print(f"Resetting address from {self.address} to 0")
                 self.address = 0
             elif register == REG_ADDRESS_CONTROL:
                 newAddress = self.buff[2] & 0b01111111
-                if self.debug:
+                if self.__debugComms:
                     print(f"Setting address to {newAddress}")
                 self.registers[register] = newAddress
                 self.registers[REG_DEVICE_STATUS] = 0x08
             else:
                 self.registers[register] = self.buff[2]
         else:
-            if self.debug:
+            if self.__debugComms:
                 print(
                     f"Reading {hex(self.buff[2])} registers from {hex(register)}")
             for i in range(self.buff[2]):
                 response.append(self.registers[self.buff[1] + i] & 0xFF)
         response.append(crc8(response))
-        if self.debug:
+        if self.__debugComms:
             print(f"Sending response from {self.name}", [
                   hex(c) for c in response])
         self.__serial.write(response)

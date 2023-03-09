@@ -1,9 +1,9 @@
 import random
 import serial
 import sys
-import os
+from os import path  # type: ignore
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../.."))
+sys.path.insert(0, path.join(path.dirname(__file__), "../.."))
 
 from emulator.tesla_bms import TeslaBmsEmulator  # nopep8
 

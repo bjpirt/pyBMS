@@ -1,7 +1,8 @@
-import os
 import sys
 import serial
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../.."))
+from os import path  # type: ignore
+
+sys.path.insert(0, path.join(path.dirname(__file__), "../.."))
 
 from bms import Bms  # nopep8
 from hal import DummyContactorGpio  # nopep8
