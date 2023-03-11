@@ -3,6 +3,7 @@ import time
 from battery import crc8
 
 from battery.tesla_model_s.TeslaModelSConstants import *
+from hal.interval import get_interval
 
 """
 Message format:
@@ -42,7 +43,9 @@ class TeslaBmsEmulator:
         self.__serial = serial
         self.__debugComms = debugComms
         self.__debugInterval = debugInterval
-        self.__nextPrint = time.time()
+        self.__interval = get_interval()
+        self.__interval.set(self.__debugInterval)
+        self.__receiveTimeout = get_interval()
         self.name = name
         self.registers = [0 for _ in range(REG_RESET+1)]
         self.registers[0x0F] = 0x11
@@ -92,6 +95,9 @@ class TeslaBmsEmulator:
         if input and input != '':
             for c in input:
                 self.buff.append(c)
+            self.__receiveTimeout.set(0.1)
+        elif self.__receiveTimeout.ready:
+            self.buff = bytearray()
 
         if len(self.buff) >= self._expectedMessageLength():
             if self.__debugComms:
@@ -109,12 +115,12 @@ class TeslaBmsEmulator:
         self.__printDebug()
 
     def __printDebug(self):
-        if self.__debugInterval > 0 and time.time() > self.__nextPrint:
+        if self.__debugInterval > 0 and self.__interval.ready:
             voltages = [self.getCellVoltage(i) for i in range(6)]
             print(f"Voltage: {sum(voltages)} time: {time.time()}")
             for i, v in enumerate(voltages):
                 print(f"  |- Cell: {i} voltage: {v}")
-            self.__nextPrint = time.time() + self.__debugInterval
+            self.__interval.set(self.__debugInterval)
 
     def __handleMessage(self):
         msgAddress = self.buff[0] >> 1

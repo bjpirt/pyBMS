@@ -1,20 +1,23 @@
-import time
 from battery.BatteryPack import BatteryPack
+from .Led import Led
 from hal import ContactorGpio
+from hal.interval import get_interval
 from . import ContactorControl
 
 
 class Bms:
-    def __init__(self, batteryPack: BatteryPack, contactorGpio: ContactorGpio, pollInterval: float = 0.5, debug: bool = False):
+    def __init__(self, batteryPack: BatteryPack, contactorGpio: ContactorGpio, pollInterval: float = 0.5, debug: bool = False, ledPin: int = 18):
         self.batteryPack = batteryPack
         self.contactors = ContactorControl(contactorGpio)
         self.__pollInterval: float = pollInterval
-        self.__nextPoll: float = 0
+        self.__interval = get_interval()
+        self.__interval.set(self.__pollInterval)
         self.__debug: bool = debug
+        self.__led = Led(ledPin)
 
     def process(self):
-        if self.__nextPoll < time.time():
-            self.__nextPoll = time.time() + self.__pollInterval
+        if self.__interval.ready:
+            self.__interval.set(self.__pollInterval)
             self.batteryPack.update()
 
             if self.batteryPack.hasFault or not self.batteryPack.ready:
@@ -25,6 +28,7 @@ class Bms:
             self.contactors.process()
             if self.__debug:
                 self.printDebug()
+        self.__led.process()
 
     def printDebug(self):
         if not self.batteryPack.ready:

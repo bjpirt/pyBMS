@@ -1,7 +1,5 @@
-from enum import Enum
-import time
-
 from hal import ContactorGpio
+from hal.interval import get_interval
 
 """
 States
@@ -9,14 +7,16 @@ States
 DISABLED - all contactors are off
 NEGATIVE_ON - only the negative contactor is on
 PRECHARGE_ON - the negative and precharge contactors are on
-ENABLED - all contactors are on
+ALL_ON - all contactors are on
+ENABLED - positive and negative contactors are on, precharge is off
 """
 
 
-class ContactorState(Enum):
+class ContactorState():
     DISABLED = 1
     NEGATIVE_ON = 2
     PRECHARGE_ON = 3
+    ALL_ON = 4
     ENABLED = 4
 
 
@@ -27,7 +27,7 @@ class ContactorControl:
         self.__desiredState = ContactorState.DISABLED
         self.__negativeTime = negativeTime
         self.__prechargeTime = prechargeTime
-        self.__timer = time.time()
+        self.__interval = get_interval()
 
     @property
     def state(self):
@@ -46,13 +46,17 @@ class ContactorControl:
         if self.__state != self.__desiredState:
             if self.__state == ContactorState.DISABLED:
                 self.__state = ContactorState.NEGATIVE_ON
-                self.__timer = time.time()
+                self.__interval.set(self.__negativeTime)
             elif self.__state == ContactorState.NEGATIVE_ON:
-                if time.time() > self.__timer + self.__negativeTime:
+                if self.__interval.ready:
                     self.__state = ContactorState.PRECHARGE_ON
-                    self.__timer = time.time()
+                    self.__interval.set(self.__prechargeTime)
             elif self.__state == ContactorState.PRECHARGE_ON:
-                if time.time() > self.__timer + self.__prechargeTime:
+                if self.__interval.ready:
+                    self.__state = ContactorState.ALL_ON
+                    self.__interval.set(self.__prechargeTime)
+            elif self.__state == ContactorState.ALL_ON:
+                if self.__interval.ready:
                     self.__state = ContactorState.ENABLED
         self.__control()
 
@@ -66,6 +70,9 @@ class ContactorControl:
         elif self.__state == ContactorState.PRECHARGE_ON:
             self.__contactorGpio.update(
                 negative=True, precharge=True, positive=False)
-        elif self.__state == ContactorState.ENABLED:
+        elif self.__state == ContactorState.ALL_ON:
             self.__contactorGpio.update(
                 negative=True, precharge=True, positive=True)
+        elif self.__state == ContactorState.ENABLED:
+            self.__contactorGpio.update(
+                negative=True, precharge=False, positive=True)

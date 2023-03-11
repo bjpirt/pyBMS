@@ -1,5 +1,6 @@
 from typing import List
 from battery import BatteryPack
+from hal.interval import get_interval
 from . import TeslaModelSBatteryModule, TeslaModelSNetworkGateway
 from .TeslaModelSConstants import *
 
@@ -15,12 +16,15 @@ class TeslaModelSBatteryPack(BatteryPack):
         self.__highCellVoltage: float = highCellVoltage
         self.__highTemperature: float = highTemperature
         self.__communicationTimeout: float = commsTimeout
+        self.__setupInterval = get_interval()
         self.__setupModules()
 
     def update(self) -> None:
         if self.ready:
             super().update()
             self.__balance()
+        elif self.__setupInterval.ready:
+            self.__setupModules()
 
     def __setupModules(self) -> None:
         # Reset all of the addresses to 0x00
@@ -47,6 +51,8 @@ class TeslaModelSBatteryPack(BatteryPack):
 
         if len(self.modules) == self.__moduleCount:
             self.ready = True
+        else:
+            self.__setupInterval.set(1)
 
     def __balance(self):
         lowCellVoltage = self.lowCellVoltage
