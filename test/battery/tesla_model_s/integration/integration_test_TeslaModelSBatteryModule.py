@@ -1,14 +1,10 @@
-from typing import List, Union
 import threading
 import unittest
 from unittest.mock import MagicMock
-
 from battery.tesla_model_s.TeslaModelSBatteryModule import TeslaModelSBatteryModule
 from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
-
-import time
-from test.tesla_bms_emulator import TeslaBmsEmulator
 import serial
+from emulator.tesla_bms import TeslaBmsEmulator
 
 bmsSerialPort = serial.Serial('port1-end-a', 115200, timeout=0.01)
 bms = TeslaBmsEmulator(bmsSerialPort)

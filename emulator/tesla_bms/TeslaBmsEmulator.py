@@ -59,7 +59,7 @@ class TeslaBmsEmulator:
 
     @property
     def address(self):
-        return self.registers[REG_ADDRESS_CONTROL]
+        return self.registers[REG_ADDRESS_CONTROL] & 0b00111111
 
     @address.setter
     def address(self, addr: int):
@@ -80,16 +80,6 @@ class TeslaBmsEmulator:
         self.registers[REG_GPAI] = temp >> 8
         self.registers[REG_GPAI + 1] = temp & 0xFF
 
-    def _expectedMessageLength(self) -> int:
-        if len(self.buff) >= 3:
-            msgWrite = bool(self.buff[0] & 1)
-            if msgWrite:
-                return 4
-            forwarded = self.buff[0] & 0x80 > 0
-            if forwarded:
-                return self.buff[2] + 4
-        return 4
-
     def process(self):
         input = self.__serial.read()
         if input and input != '':
@@ -99,19 +89,19 @@ class TeslaBmsEmulator:
         elif self.__receiveTimeout.ready:
             self.buff = bytearray()
 
-        if len(self.buff) >= self._expectedMessageLength():
+        if len(self.buff) >= 4 and crc8(self.buff[0:-1]) == self.buff[-1]:
             if self.__debugComms:
-                print(f"Received by device {self.name}", [
+                print(f"Received by device {self.name} address {self.address}", [
                     hex(c) for c in self.buff])
             msgAddress = self.buff[0] >> 1
             if msgAddress == self.address or msgAddress == BROADCAST_ADDRESS:
-                if crc8(self.buff[0:3]) == self.buff[3]:
+                if crc8(self.buff[0:-1]) == self.buff[-1]:
                     self.__handleMessage()
             else:
                 if self.__debugComms:
                     print("Forwarding")
                 self.__serial.write(self.buff)
-            self.buff = self.buff[self._expectedMessageLength():]
+            self.buff = bytearray()
         self.__printDebug()
 
     def __printDebug(self):
@@ -127,7 +117,7 @@ class TeslaBmsEmulator:
         msgWrite = bool(self.buff[0] & 1)
         register = self.buff[1]
         response: bytearray = bytearray([c for c in self.buff[0:-1]])
-        if msgAddress != BROADCAST_ADDRESS:
+        if msgAddress == 0 and self.address == 0:
             response[0] = self.buff[0] | 0x80
         if msgWrite:
             if self.__debugComms:
@@ -138,10 +128,10 @@ class TeslaBmsEmulator:
                     print(f"Resetting address from {self.address} to 0")
                 self.address = 0
             elif register == REG_ADDRESS_CONTROL:
-                newAddress = self.buff[2] & 0b01111111
+                newAddress = self.buff[2] & 0b00111111
                 if self.__debugComms:
                     print(f"Setting address to {newAddress}")
-                self.registers[register] = newAddress
+                self.registers[register] = newAddress | 0x80
                 self.registers[REG_DEVICE_STATUS] = 0x08
             else:
                 self.registers[register] = self.buff[2]

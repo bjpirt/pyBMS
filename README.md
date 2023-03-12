@@ -98,7 +98,7 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 - [x] pyBms running on physical devices
 - [x] Hardware abstraction layer for time
 - [x] Hardware abstraction layer for Pin
-- [ ] Run against real hardware (real Tesla BMS boards with faked cells)
+- [x] Run against real hardware (real Tesla BMS boards with faked cells)
 - [ ] Victron CAN bus output
 - [ ] Hardware abstraction layer for CAN
 - [ ] State of charge from current sensor

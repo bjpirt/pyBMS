@@ -94,10 +94,12 @@ class TeslaModelSBatteryModule(BatteryModule):
             (vcell[0] * 256 + vcell[1]) * 6.25 / 16383, 3)
 
     def __updateTemperature(self, id: int, temp: bytearray):
+        try:
+            tempTemp = (
+                1.780 / ((temp[0] * 256 + temp[1] + 2) / 33046) - 3.57) * 1000
+            tempCalc = 1.0 / (0.0007610373573 + (0.0002728524832 * math.log(tempTemp)
+                                                 ) + (math.pow(math.log(tempTemp), 3) * 0.0000001022822735))
 
-        tempTemp = (
-            1.780 / ((temp[0] * 256 + temp[1] + 2) / 33046) - 3.57) * 1000
-        tempCalc = 1.0 / (0.0007610373573 + (0.0002728524832 * math.log(tempTemp)
-                                             ) + (math.pow(math.log(tempTemp), 3) * 0.0000001022822735))
-
-        self.temperatures[id] = round(tempCalc - 273.15, 3)
+            self.temperatures[id] = round(tempCalc - 273.15, 3)
+        except:
+            print("Error calculating temperature", temp)

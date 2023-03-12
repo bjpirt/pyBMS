@@ -18,7 +18,7 @@ class TeslaModelSNetworkGateway:
         if self.debug:
             print("Sending register read", [hex(c) for c in message])
         self.__serial.write(message)
-        response = self.__receiveResponse()
+        response = self.__receiveResponse(4 + length)
         if response:
             if self.debug:
                 print("Received response", [hex(c) for c in response])
@@ -33,7 +33,7 @@ class TeslaModelSNetworkGateway:
         self.__serial.write(message)
         # TODO: Check the response message matches the write message
         # TODO: Validate the checksum
-        response = self.__receiveResponse()
+        response = self.__receiveResponse(4)
         if response:
             if self.debug:
                 print("Received response", [hex(c) for c in response])
@@ -41,17 +41,7 @@ class TeslaModelSNetworkGateway:
         self.receiveBuffer = bytearray()
         return False
 
-    def _expectedMessageLength(self) -> int:
-        if len(self.receiveBuffer) >= 3:
-            msgWrite = bool(self.receiveBuffer[0] & 1)
-            if msgWrite:
-                return 4
-            forwarded = self.receiveBuffer[0] & 0x80 > 0
-            if forwarded:
-                return self.receiveBuffer[2] + 4
-        return 4
-
-    def __receiveResponse(self):
+    def __receiveResponse(self, length):
         interval = get_interval()
         interval.set(0.1)
         while not interval.ready:
@@ -59,10 +49,9 @@ class TeslaModelSNetworkGateway:
             if readData and readData != '':
                 for c in readData:
                     self.receiveBuffer.append(c)
-                if len(self.receiveBuffer) >= self._expectedMessageLength():
-                    result = self.receiveBuffer[0:self._expectedMessageLength(
-                    )]
-                    self.receiveBuffer = bytearray(
-                        self.receiveBuffer[self._expectedMessageLength():])
+                if len(self.receiveBuffer) >= length:
+                    result = self.receiveBuffer[0:length]
+                    self.receiveBuffer = bytearray()
                     return result
+        self.receiveBuffer = bytearray()
         return None

@@ -1,4 +1,3 @@
-from typing import List, Union
 import threading
 import unittest
 from unittest.mock import MagicMock
@@ -7,9 +6,9 @@ from battery.tesla_model_s.TeslaModelSBatteryPack import TeslaModelSBatteryPack
 from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
 
 import time
-from test.tesla_bms_emulator.CompoundSerial import CompoundSerial
-from test.tesla_bms_emulator import TeslaBmsEmulator
 import serial
+
+from emulator.tesla_bms import CompoundSerial, TeslaBmsEmulator
 
 bmsSerialPort1a = serial.Serial('port1-end-a', 230400, timeout=0.01)
 bmsSerialPort1b = serial.Serial('port1-end-b', 230400, timeout=0.01)
@@ -42,22 +41,29 @@ bms2.address = 10
 done = threading.Event()
 
 
-def run_bms(name):
+def run_bms1(name):
     while not done.is_set():
         bms1.process()
+
+
+def run_bms2(name):
+    while not done.is_set():
         bms2.process()
 
 
 class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.bmsThread = threading.Thread(target=run_bms, args=(1,))
-        self.bmsThread.start()
+        self.bmsThread1 = threading.Thread(target=run_bms1, args=(1,))
+        self.bmsThread2 = threading.Thread(target=run_bms2, args=(2,))
+        self.bmsThread1.start()
+        self.bmsThread2.start()
         return super().tearDown()
 
     def tearDown(self):
         done.set()
-        self.bmsThread.join()
+        self.bmsThread1.join()
+        self.bmsThread2.join()
 
         return super().tearDown()
 
