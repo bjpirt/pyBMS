@@ -31,6 +31,12 @@ Currently I am using a [Canbed Dual](https://www.seeedstudio.com/CANBed-DUAL-RP2
 
 The ideal solution is to use an ESP32 once MicroPython supports CAN on that platform.
 
+### Hardware options
+
+ESP32 Built-in CAN driver + transceiver (current preferred option)
+ESP32 + external CAN driver (e.g. MCP2515)
+RP2040 + external CAN driver (e.g. MCP2515)
+
 ## Supported Platforms
 
 ### Unix
@@ -99,9 +105,16 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 - [x] Hardware abstraction layer for time
 - [x] Hardware abstraction layer for Pin
 - [x] Run against real hardware (real Tesla BMS boards with faked cells)
+- [x] Run on ESP32 platform
+- [x] CAN bus support
 - [ ] Victron CAN bus output
 - [ ] Hardware abstraction layer for CAN
+- [ ] Balance hysteresis
+- [ ] Battery capacity config
+- [ ] State of charge from voltage
 - [ ] State of charge from current sensor
+- [ ] Configure over/under voltage into the Tesla BMS
+- [ ] Configure over/under temperature into the Tesla BMS
 - [ ] Static configuration
 - [ ] Dynamic configuration (serial / usb)
 - [ ] Dynamic configuration (web)

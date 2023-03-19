@@ -13,8 +13,8 @@ baud = int(sys.argv[2])
 
 serialPort = serial.Serial(port, baud, timeout=0.1)
 contactors = DummyContactorGpio()
-gateway = TeslaModelSNetworkGateway(serialPort)
-pack = TeslaModelSBatteryPack(1, gateway)
+gateway = TeslaModelSNetworkGateway(serialPort, debug=True)
+pack = TeslaModelSBatteryPack(1, gateway, autoBalance=False)
 bms = Bms(pack, contactors, debug=True)
 
 

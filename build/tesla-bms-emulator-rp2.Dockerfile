@@ -20,7 +20,7 @@ RUN cd micropython && make -C mpy-cross
 RUN cd /mpy/micropython && make -C ports/rp2 submodules && cd /mpy/micropython/ports/rp2 && make
 
 COPY platforms/canbed_dual/teslaBmsEmulator.py /mpy/micropython/ports/rp2/modules/main.py
-COPY platforms/canbed_dual/typing.py /mpy/micropython/ports/rp2/modules/typing.py
+COPY platforms/micropython/typing.py /mpy/micropython/ports/rp2/modules/typing.py
 COPY battery /mpy/micropython/ports/rp2/modules/battery/
 COPY bms /mpy/micropython/ports/rp2/modules/bms/
 COPY hal /mpy/micropython/ports/rp2/modules/hal/

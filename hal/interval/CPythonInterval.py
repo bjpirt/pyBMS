@@ -8,6 +8,10 @@ class CPythonInterval(Interval):
 
     def set(self, interval: float) -> None:
         self.__readyTime = time.time() + interval
+        self.__lastInterval = interval
+
+    def reset(self) -> None:
+        self.set(self.__lastInterval)
 
     @property
     def ready(self) -> bool:
