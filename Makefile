@@ -1,3 +1,9 @@
+MAIN = pyBms
+PLATFORM = esp32
+BMS_BOARD = wemos-d1
+BOARD = GENERIC
+FIRMWARE_FORMAT = bin
+
 .PHONY: test
 test:
 	python -m unittest --verbose
@@ -21,31 +27,31 @@ kill-socat:
 	killall socat
 
 .PHONY: build-tesla-bms-emulator-rp2
-build-tesla-bms-emulator-rp2:
-	rm -f ./build/out/tesla-bms-emulator-rp2.uf2
-	docker build -f build/tesla-bms-emulator-rp2.Dockerfile -t bms-emulator-build-rp2 .
-	docker cp $$(docker create --name tc bms-emulator-build-rp2):/mpy/micropython/ports/rp2/build-PICO/firmware.uf2 ./build/out/tesla-bms-emulator-rp2.uf2 && docker rm tc
+build-tesla-bms-emulator-rp2: MAIN = teslaBmsEmulator
+build-tesla-bms-emulator-rp2: build-rp2
 
 .PHONY: build-pyBms-rp2
-build-pyBms-rp2:
-	rm -f ./build/out/pybms-rp2.uf2
-	docker build -f build/pyBms-rp2.Dockerfile -t pybms-build-rp2 .
-	docker cp $$(docker create --name tc pybms-build):/mpy/micropython/ports/rp2/build-PICO/firmware.uf2 ./build/out/pybms-rp2.uf2 && docker rm tc
+build-pyBms-rp2: build-rp2
 
 .PHONY: build-tesla-bms-emulator-esp32
-build-tesla-bms-emulator-esp32:
-	rm -f ./build/out/tesla-bms-emulator-esp32.bin
-	docker build -f build/tesla-bms-emulator-esp32.Dockerfile --progress=plain -t bms-emulator-build-esp32 .
-	docker cp $$(docker create --name tc bms-emulator-build-esp32):/code/ports/esp32/build-GENERIC/firmware.bin ./build/out/tesla-bms-emulator-esp32.bin && docker rm tc
-	# docker cp $$(docker create --name tc bms-emulator-build-esp32):/code/ports/esp32/build-GENERIC/bootloader/bootloader.bin ./build/out/tesla-bms-emulator-esp32.bootloader.bin && docker rm tc
-	# docker cp $$(docker create --name tc bms-emulator-build-esp32):/code/ports/esp32/build-GENERIC/partition_table/partition-table.bin ./build/out/tesla-bms-emulator-esp32.partition-table.bin && docker rm tc
-	# docker cp $$(docker create --name tc bms-emulator-build-esp32):/code/ports/esp32/build-GENERIC/firmware.bin ./build/out/tesla-bms-emulator-esp32.firmware.bin && docker rm tc
+build-tesla-bms-emulator-esp32: MAIN = teslaBmsEmulator
+build-tesla-bms-emulator-esp32: build
 
 .PHONY: build-pyBms-esp32
-build-pyBms-esp32:
-	rm -f ./build/out/pybms-esp32.bin
-	docker build -f build/pyBms-esp32.Dockerfile -t pybms-build-esp32 .
-	docker cp $$(docker create --name tc pybms-build-esp32):/code/ports/esp32/build-GENERIC/firmware.bin ./build/out/pybms-esp32.bin && docker rm tc
+build-pyBms-esp32: build
+
+.PHONY: build-rp2
+build-rp2: PLATFORM = rp2
+build-rp2: BOARD = PICO
+build-rp2: BMS_BOARD = pico
+build-rp2: FIRMWARE_FORMAT = uf2
+build-rp2: build
+
+.PHONY: build
+build:
+	rm -f ./build/out/${MAIN}.${PLATFORM}.${BMS_BOARD}.${FIRMWARE_FORMAT}
+	docker build -f build/${PLATFORM}.Dockerfile --build-arg BOARD=${BOARD} --build-arg BMS_BOARD=${BMS_BOARD} --build-arg MAIN=${MAIN} -t pybms-build-${PLATFORM} .
+	docker cp "$$(docker create --name tc pybms-build-${PLATFORM}):/code/ports/${PLATFORM}/build-${BOARD}/${MAIN}.${FIRMWARE_FORMAT}" ./build/out/${MAIN}.${PLATFORM}.${BMS_BOARD}.${FIRMWARE_FORMAT} && docker rm tc
 
 .PHONY: flash-tesla-bms-emulator-rp2
 flash-tesla-bms-emulator-rp2: build-tesla-bms-emulator-rp2
@@ -57,7 +63,6 @@ flash-pyBms-rp2: build-pyBms-rp2
 
 .PHONY: flash-tesla-bms-emulator-esp32
 flash-tesla-bms-emulator-esp32: build-tesla-bms-emulator-esp32
-	# esptool.py -c esp32 -b 921600 --before default_reset --after hard_reset --chip esp32  write_flash --flash_mode dio --flash_size detect --flash_freq 40m 0x1000 build/out/tesla-bms-emulator-esp32.bootloader.bin 0x8000 build/out/tesla-bms-emulator-esp32.partition-table.bin 0x10000 build/out/tesla-bms-emulator-esp32.firmware.bin
 	esptool.py -c esp32 -b 921600 write_flash -z 0x1000 build/out/tesla-bms-emulator-esp32.bin
 
 .PHONY: flash-pyBms-esp32
