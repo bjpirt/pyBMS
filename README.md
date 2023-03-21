@@ -107,12 +107,13 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 - [x] Run against real hardware (real Tesla BMS boards with faked cells)
 - [x] Run on ESP32 platform
 - [x] CAN bus support (ESP32)
-- [ ] Victron CAN bus output
+- [x] Victron CAN bus output
 - [ ] Static configuration file
 - [ ] Balance hysteresis
 - [ ] Battery capacity config
 - [ ] State of charge from voltage
 - [ ] State of charge from current sensor
+- [ ] Watchdog Timer
 - [ ] Configure over/under voltage into the Tesla BMS
 - [ ] Configure over/under temperature into the Tesla BMS
 - [ ] Dynamic configuration (web)
