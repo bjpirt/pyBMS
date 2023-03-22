@@ -27,13 +27,14 @@ class TeslaModelSBatteryModule(BatteryModule):
         super().update()
 
     def balance(self, lowCellVoltage: float) -> None:
-        balanceValue: int = 0
-        for i, cell in enumerate(self.cells):
-            if cell.voltage > lowCellVoltage:
-                balanceValue = balanceValue | (1 << i)
-        if balanceValue != 0:
-            self.__writeRegister(REG_CB_TIME, 5)
-            self.__writeRegister(REG_CB_CTRL, balanceValue)
+        if self.highCellVoltage > self._config.balanceVoltage and self.highCellVoltage - self.lowCellVoltage > self._config.balanceDifference:
+            balanceValue: int = 0
+            for i, cell in enumerate(self.cells):
+                if cell.voltage > lowCellVoltage:
+                    balanceValue = balanceValue | (1 << i)
+            if balanceValue != 0:
+                self.__writeRegister(REG_CB_TIME, self._config.balanceTime)
+                self.__writeRegister(REG_CB_CTRL, balanceValue)
 
     def __checkCommunicationTime(self):
         # TODO: Use hal time abstraction

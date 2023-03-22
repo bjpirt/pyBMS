@@ -6,5 +6,8 @@
   "highTemperatureSetpoint": 65.0,
   "lowTemperatureSetpoint": 10.0,
   "commsTimeout": 10.0,
-  "autoBalance": true
+  "autoBalance": true,
+  "balanceTime": 5,
+  "balanceVoltage": 3.9,
+  "balanceDifference": 0.4
 }

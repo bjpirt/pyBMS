@@ -71,9 +71,27 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
             cell.voltage = 3.4
         self.module.cells[1].voltage = 3.5
         self.module.cells[2].voltage = 3.3
-        self.module.cells[3].voltage = 3.6
+        self.module.cells[3].voltage = 3.95
         self.module.balance(3.4)
 
         self.mockGateway.writeRegister.assert_has_calls(
             [call(self.module.address, REG_CB_TIME, 5), call(self.module.address,
                                                              REG_CB_CTRL, 0b00001010)])
+
+    def test_no_balance_below_threshold(self):
+        self.mockGateway.writeRegister = MagicMock(return_value=True)
+        for cell in self.module.cells:
+            cell.voltage = 3.4
+        self.module.cells[1].voltage = 3.5
+        self.module.balance(3.4)
+
+        self.mockGateway.writeRegister.assert_not_called()
+
+    def test_no_balance_within_difference(self):
+        self.mockGateway.writeRegister = MagicMock(return_value=True)
+        for cell in self.module.cells:
+            cell.voltage = 4.0
+        self.module.cells[1].voltage = 4.1
+        self.module.balance(3.4)
+
+        self.mockGateway.writeRegister.assert_not_called()
