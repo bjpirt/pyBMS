@@ -1,16 +1,18 @@
+from bms import Config
+
+
 class BatteryCell:
-    def __init__(self, lowCellVoltage: float = 3.6, highCellVoltage: float = 4.1):
+    def __init__(self, config: Config):
         self.__voltage: float = 0.0
         self.highestVoltage: float = -1.0
         self.lowestVoltage: float = -1.0
         self.overVoltageFault: bool = False
         self.underVoltageFault: bool = False
-        self.__lowCellVoltage = lowCellVoltage
-        self.__highCellVoltage = highCellVoltage
+        self.__config: Config = config
 
     @property
     def hasFault(self) -> bool:
-        return self.voltage < self.__lowCellVoltage or self.voltage > self.__highCellVoltage
+        return self.voltage < self.__config.cellLowVoltageSetpoint or self.voltage > self.__config.cellHighVoltageSetpoint
 
     @property
     def voltage(self) -> float:

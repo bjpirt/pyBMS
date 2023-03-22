@@ -1,6 +1,7 @@
 import time
 from typing import List
 from battery import BatteryPack
+from bms import Config
 from hal.interval import get_interval
 from . import TeslaModelSBatteryModule, TeslaModelSNetworkGateway
 from .TeslaModelSConstants import *
@@ -9,30 +10,20 @@ from .TeslaModelSConstants import *
 class TeslaModelSBatteryPack(BatteryPack):
 
     def __init__(self,
-                 moduleCount: int,
                  gateway: TeslaModelSNetworkGateway,
-                 lowCellVoltage: float = 3.6,
-                 highCellVoltage: float = 4.1,
-                 highTemperature: float = 65.0,
-                 commsTimeout: float = 10,
-                 autoBalance: bool = True
+                 config: Config
                  ) -> None:
         super().__init__()
         self.modules: List[TeslaModelSBatteryModule] = []
-        self.__moduleCount: int = moduleCount
+        self.__config = config
         self.__gateway: TeslaModelSNetworkGateway = gateway
-        self.__lowCellVoltage: float = lowCellVoltage
-        self.__highCellVoltage: float = highCellVoltage
-        self.__highTemperature: float = highTemperature
-        self.__communicationTimeout: float = commsTimeout
-        self.__autoBalance = autoBalance
         self.__setupInterval = get_interval()
         self.__setupModules()
 
     def update(self) -> None:
         if self.ready:
             super().update()
-            if self.__autoBalance:
+            if self.__config.autoBalance:
                 self.__balance()
         elif self.__setupInterval.ready:
             self.__setupModules()
@@ -56,11 +47,11 @@ class TeslaModelSBatteryPack(BatteryPack):
 
                 if readResult and readResult[0] & 0b00111111 == nextAddress:
                     self.modules.append(TeslaModelSBatteryModule(
-                        nextAddress, self.__gateway, self.__lowCellVoltage, self.__highCellVoltage, self.__highTemperature, self.__communicationTimeout))
+                        nextAddress, self.__gateway, self.__config))
             else:
                 break
 
-        if len(self.modules) == self.__moduleCount:
+        if len(self.modules) == self.__config.moduleCount:
             self.ready = True
         else:
             self.__setupInterval.set(1)

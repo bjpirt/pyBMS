@@ -5,6 +5,7 @@ from unittest.mock import MagicMock
 from battery.tesla_model_s.TeslaModelSBatteryPack import TeslaModelSBatteryPack
 from battery.tesla_model_s.TeslaModelSConstants import REG_CB_CTRL, REG_CB_TIME
 from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
+from bms import Config
 
 
 class FakeGateway(TeslaModelSNetworkGateway):
@@ -29,13 +30,15 @@ class TeslaModelSBatteryPackTestCase(unittest.TestCase):
     def setUp(self):
         self.mockGateway = FakeGateway(None)
         self.mockGateway.writeRegister = MagicMock(return_value=True)
+        self.config = Config()
+        self.config.moduleCount = 2
         return super().setUp()
 
     def test_setup_modules(self):
         self.mockGateway.readRegister = MagicMock()
         self.mockGateway.readRegister.side_effect = [
             mockDeviceStatusRead, mockDeviceAddressRead1, mockDeviceStatusRead, mockDeviceAddressRead2, None]
-        self.pack = TeslaModelSBatteryPack(2, self.mockGateway)
+        self.pack = TeslaModelSBatteryPack(self.mockGateway, self.config)
         self.assertEqual(len(self.pack.modules), 2)
         self.assertEqual(self.pack.modules[0].address, 1)
         self.assertEqual(self.pack.modules[1].address, 2)
@@ -45,7 +48,7 @@ class TeslaModelSBatteryPackTestCase(unittest.TestCase):
         self.mockGateway.readRegister.side_effect = [
             mockDeviceStatusRead, mockDeviceAddressRead1, mockDeviceStatusRead, mockDeviceAddressRead2, None,
             mockValidRead, mockValidRead]
-        self.pack = TeslaModelSBatteryPack(2, self.mockGateway)
+        self.pack = TeslaModelSBatteryPack(self.mockGateway, self.config)
         self.assertEqual(len(self.pack.modules), 2)
         self.pack.update()
 

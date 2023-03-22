@@ -1,15 +1,18 @@
 from battery import BatteryCell, BatteryModule, BatteryPack
 import unittest
 
+from bms import Config
+
 
 class BatteryPackTestCase(unittest.TestCase):
     def setUp(self):
+        c = Config()
         self.pack = BatteryPack()
         self.pack.parallelStringCount = 2
         for m in range(4):
-            module = BatteryModule()
+            module = BatteryModule(c)
             for i in range(4):
-                cell = BatteryCell()
+                cell = BatteryCell(c)
                 cell.voltage = i + 1
                 module.cells.append(cell)
             module.voltage = 24.0

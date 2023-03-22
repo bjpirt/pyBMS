@@ -1,4 +1,4 @@
-from bms import Bms, VictronOutput
+from bms import Bms, Config, VictronOutput
 from battery.tesla_model_s import TeslaModelSBatteryPack, TeslaModelSNetworkGateway
 from hal.contactor_gpio.HardwareContactorGpio import HardwareContactorGpio
 from machine import UART
@@ -9,10 +9,12 @@ def main():
     uart = UART(0, 612500, tx=1, rx=3)
     can = CAN(0, CAN.NORMAL, baudrate=500_000, tx=21, rx=22)
     uart.init(timeout=5, timeout_char=5)
-    contactors = HardwareContactorGpio(4, 5, 6)
-    gateway = TeslaModelSNetworkGateway(uart, debug=True)
-    pack = TeslaModelSBatteryPack(1, gateway)
-    bms = Bms(pack, contactors, debug=True)
+    config = Config()
+    contactors = HardwareContactorGpio(
+        config.negativePin, config.prechargePin, config.positivePin)
+    gateway = TeslaModelSNetworkGateway(uart, debug=config.debug)
+    pack = TeslaModelSBatteryPack(gateway, config)
+    bms = Bms(pack, contactors, debug=config.debug)
     victronOutput = VictronOutput(can, pack, 0.5)
 
     while True:

@@ -1,0 +1,10 @@
+{
+  "moduleCount": 2,
+  "parallelStringCount": 1,
+  "cellHighVoltageSetpoint": 4.1,
+  "celllowVoltageSetpoint": 3.6,
+  "highTemperatureSetpoint": 65.0,
+  "lowTemperatureSetpoint": 10.0,
+  "commsTimeout": 10.0,
+  "autoBalance": true
+}

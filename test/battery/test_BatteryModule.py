@@ -2,12 +2,15 @@ from battery.BatteryCell import BatteryCell
 from battery.BatteryModule import BatteryModule
 import unittest
 
+from bms import Config
+
 
 class BatteryModuleTestCase(unittest.TestCase):
     def setUp(self):
-        self.module = BatteryModule()
+        c = Config()
+        self.module = BatteryModule(c)
         for i in range(4):
-            cell = BatteryCell()
+            cell = BatteryCell(c)
             cell.voltage = i + 1
             self.module.cells.append(cell)
         self.module.voltage = 24.0

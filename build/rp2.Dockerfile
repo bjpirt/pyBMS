@@ -19,6 +19,7 @@ COPY battery /code/ports/rp2/modules/battery/
 COPY bms /code/ports/rp2/modules/bms/
 COPY hal /code/ports/rp2/modules/hal/
 COPY emulator /code/ports/rp2/modules/emulator/
+COPY config_json.py /code/ports/esp32/modules/config_json.py
 COPY platforms/rp2/${BMS_BOARD}/${MAIN}.py /code/ports/rp2/modules/main.py
 
 RUN cd /code/ports/rp2 && \

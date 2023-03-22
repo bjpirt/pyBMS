@@ -4,6 +4,7 @@ from unittest.mock import MagicMock
 from battery.tesla_model_s.TeslaModelSBatteryModule import TeslaModelSBatteryModule
 from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
 import serial
+from bms import Config
 from emulator.tesla_bms import TeslaBmsEmulator
 
 bmsSerialPort = serial.Serial('port1-end-a', 115200, timeout=0.01)
@@ -33,7 +34,7 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
     def test_update(self):
         moduleSerialPort = serial.Serial('port1-end-b', 115200, timeout=0.01)
         gateway = TeslaModelSNetworkGateway(moduleSerialPort)
-        module = TeslaModelSBatteryModule(1, gateway)
+        module = TeslaModelSBatteryModule(1, gateway, Config())
 
         module.update()
 

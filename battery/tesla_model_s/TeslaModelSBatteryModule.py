@@ -1,22 +1,22 @@
 import math
 import time
 from battery import BatteryModule, BatteryCell
+from bms import Config
 from . import TeslaModelSNetworkGateway
 from battery.tesla_model_s.TeslaModelSConstants import *
 
 
 class TeslaModelSBatteryModule(BatteryModule):
-    def __init__(self, address: int, gateway: TeslaModelSNetworkGateway, lowCellVoltage: float = 3.6, highCellVoltage: float = 4.1, highTemperature: float = 65.0, commsTimeout: float = 10) -> None:
-        super().__init__(highTemperature)
+    def __init__(self, address: int, gateway: TeslaModelSNetworkGateway, config: Config) -> None:
+        super().__init__(config)
         self.__gateway: TeslaModelSNetworkGateway = gateway
         self.address: int = address
         self.__lastCommunicationTime: float = float('nan')
-        self.__communicationTimeout = commsTimeout
 
         self.alert: bool = False
 
         for _ in range(CELL_COUNT):
-            self.cells.append(BatteryCell(lowCellVoltage, highCellVoltage))
+            self.cells.append(BatteryCell(config))
 
         for _ in range(2):
             self.temperatures.append(float("nan"))
@@ -36,7 +36,8 @@ class TeslaModelSBatteryModule(BatteryModule):
             self.__writeRegister(REG_CB_CTRL, balanceValue)
 
     def __checkCommunicationTime(self):
-        self.__fault = time.time() - self.__lastCommunicationTime > self.__communicationTimeout
+        # TODO: Use hal time abstraction
+        self.__fault = time.time() - self.__lastCommunicationTime > self._config.commsTimeout
 
     def __readModule(self) -> None:
         self.__writeRegister(REG_ADC_CONTROL, 0b00111101)

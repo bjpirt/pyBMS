@@ -1,15 +1,16 @@
 import math
 from typing import List
 from battery import BatteryCell
+from bms import Config
 
 
 class BatteryModule:
-    def __init__(self, highTemperature: float = 65.0):
+    def __init__(self, config: Config):
         self.cells: List[BatteryCell] = []
         self.temperatures: List[float] = []
+        self._config: Config = config
 
         self.__voltage: float = 0.0
-        self.__highTemperature = highTemperature
 
         self.highestVoltage: float = float('nan')
         self.lowestVoltage: float = float('nan')
@@ -21,7 +22,7 @@ class BatteryModule:
 
     @property
     def hasFault(self) -> bool:
-        return any([c.hasFault for c in self.cells]) or self.highTemperature > self.__highTemperature or self.__fault
+        return any([c.hasFault for c in self.cells]) or self.highTemperature > self._config.highTemperatureSetpoint or self.__fault
 
     @property
     def voltage(self):

@@ -108,7 +108,7 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 - [x] Run on ESP32 platform
 - [x] CAN bus support (ESP32)
 - [x] Victron CAN bus output
-- [ ] Static configuration file
+- [x] Static configuration file
 - [ ] Balance hysteresis
 - [ ] Battery capacity config
 - [ ] State of charge from voltage

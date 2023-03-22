@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, call
 from battery.tesla_model_s.TeslaModelSBatteryModule import TeslaModelSBatteryModule
 from battery.tesla_model_s.TeslaModelSConstants import REG_CB_CTRL, REG_CB_TIME
 from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
+from bms import Config
 
 
 class FakeGateway(TeslaModelSNetworkGateway):
@@ -31,9 +32,10 @@ mockStatusRead = [0x03, 0x03, 0x07, 0x38]
 class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
 
     def setUp(self):
+        c = Config()
         self.mockGateway = FakeGateway(None)
         self.mockGateway.writeRegister = MagicMock(return_value=True)
-        self.module = TeslaModelSBatteryModule(1, self.mockGateway)
+        self.module = TeslaModelSBatteryModule(1, self.mockGateway, c)
         return super().setUp()
 
     def test_update(self):

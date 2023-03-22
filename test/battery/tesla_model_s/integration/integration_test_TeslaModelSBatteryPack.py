@@ -7,6 +7,7 @@ from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGa
 
 import time
 import serial
+from bms import Config
 
 from emulator.tesla_bms import CompoundSerial, TeslaBmsEmulator
 
@@ -69,7 +70,9 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
 
     def test_update(self):
         gateway = TeslaModelSNetworkGateway(compoundPort1)
-        pack = TeslaModelSBatteryPack(2, gateway)
+        config = Config()
+        config.moduleCount = 2
+        pack = TeslaModelSBatteryPack(gateway, config)
 
         timeoutTime = time.time() + 5
         while not pack.ready and time.time() < timeoutTime:
