@@ -7,8 +7,8 @@ from bms import Config
 class BatteryPackTestCase(unittest.TestCase):
     def setUp(self):
         c = Config()
-        self.pack = BatteryPack()
-        self.pack.parallelStringCount = 2
+        c.parallelStringCount = 2
+        self.pack = BatteryPack(c)
         for m in range(4):
             module = BatteryModule(c)
             for i in range(4):
@@ -80,3 +80,6 @@ class BatteryPackTestCase(unittest.TestCase):
         self.assertFalse(self.pack.hasFault)
         self.pack.modules[0].temperatures[0] = 66
         self.assertTrue(self.pack.hasFault)
+
+    def test_capacity(self):
+        self.assertEqual(self.pack.capacity, 232)

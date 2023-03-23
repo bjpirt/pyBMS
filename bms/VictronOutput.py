@@ -82,7 +82,7 @@ class VictronOutput:
         """
         message = CanMessage(0x355)
         message.addInt(0)
-        message.addInt(0)
+        message.addInt(100)
         message.addInt(0)
         message.send(self.__can)
         """
@@ -185,14 +185,14 @@ class VictronOutput:
     def sendMessage8(self) -> None:
         """
         Sends:
-            Bytes 0, 1    - Parallel strings * capacity
+            Bytes 0, 1    - Battery Pack Capacity
             Bytes 2       - Contactor state
             Bytes 3       - Outputs
             Bytes 4       - BMS status
             Bytes 5, 6, 7 - 0
         """
         message = CanMessage(0x379)
-        message.addInt(0)
+        message.addInt(int(self.__pack.capacity))
         message.addByte(0)
         message.addByte(0)
         message.addByte(0)

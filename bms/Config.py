@@ -36,6 +36,8 @@ class Config:
         self.balanceVoltage: float = 3.9
         # The difference between a module's highest and lowest cell voltages that triggers balancing
         self.balanceDifference: float = 0.4
+        # The capacity of an individual module in Ah
+        self.moduleCapacity: float = 232.0
 
         self.readConfig()
 

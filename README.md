@@ -33,9 +33,9 @@ The ideal solution is to use an ESP32 once MicroPython supports CAN on that plat
 
 ### Hardware options
 
-ESP32 Built-in CAN driver + transceiver (current preferred option)
-ESP32 + external CAN driver (e.g. MCP2515)
-RP2040 + external CAN driver (e.g. MCP2515)
+- ESP32 Built-in CAN driver + transceiver (current preferred option)
+- ESP32 + external CAN driver (e.g. MCP2515)
+- RP2040 + external CAN driver (e.g. MCP2515)
 
 ## Supported Platforms
 
@@ -110,11 +110,12 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 - [x] Victron CAN bus output
 - [x] Static configuration file
 - [x] Balance config
-- [ ] Battery capacity config
+- [x] Battery capacity config
+- [ ] Alarms
 - [ ] State of charge from voltage
-- [ ] State of charge from current sensor
 - [ ] Watchdog Timer
+- [ ] Dynamic configuration (web)
+- [ ] Monitoring UI / Data endpoint
+- [ ] State of charge from current sensor
 - [ ] Configure over/under voltage into the Tesla BMS
 - [ ] Configure over/under temperature into the Tesla BMS
-- [ ] Dynamic configuration (web)
-- [ ] Dynamic configuration (serial / usb)

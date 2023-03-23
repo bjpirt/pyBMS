@@ -1,12 +1,13 @@
 import math
 from typing import List
 from battery import BatteryModule
+from bms import Config
 
 
 class BatteryPack:
-    def __init__(self) -> None:
+    def __init__(self, config: Config) -> None:
+        self._config = config
         self.modules: List[BatteryModule] = []
-        self.parallelStringCount: int = 1
 
         self.highestVoltage: float = float('nan')
         self.lowestVoltage: float = float('nan')
@@ -23,7 +24,7 @@ class BatteryPack:
     def voltage(self) -> float:
         if len(self.modules) <= 0:
             return 0.0
-        return sum([module.voltage for module in self.modules]) / self.parallelStringCount
+        return sum([module.voltage for module in self.modules]) / self._config.parallelStringCount
 
     @property
     def highCellVoltage(self) -> float:
@@ -44,6 +45,10 @@ class BatteryPack:
     @property
     def lowTemperature(self) -> float:
         return min([module.lowTemperature for module in self.modules]) if len(self.modules) > 0 else 0.0
+
+    @property
+    def capacity(self) -> float:
+        return self._config.moduleCapacity * self._config.moduleCount / self._config.parallelStringCount
 
     def update(self) -> None:
         for module in self.modules:

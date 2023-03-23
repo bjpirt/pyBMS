@@ -9,5 +9,6 @@
   "autoBalance": true,
   "balanceTime": 5,
   "balanceVoltage": 3.9,
-  "balanceDifference": 0.4
+  "balanceDifference": 0.4,
+  "moduleCapacity": 232.0
 }

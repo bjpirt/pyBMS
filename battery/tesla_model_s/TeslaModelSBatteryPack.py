@@ -13,9 +13,8 @@ class TeslaModelSBatteryPack(BatteryPack):
                  gateway: TeslaModelSNetworkGateway,
                  config: Config
                  ) -> None:
-        super().__init__()
+        super().__init__(config)
         self.modules: List[TeslaModelSBatteryModule] = []
-        self.__config = config
         self.__gateway: TeslaModelSNetworkGateway = gateway
         self.__setupInterval = get_interval()
         self.__setupModules()
@@ -23,7 +22,7 @@ class TeslaModelSBatteryPack(BatteryPack):
     def update(self) -> None:
         if self.ready:
             super().update()
-            if self.__config.autoBalance:
+            if self._config.autoBalance:
                 self.__balance()
         elif self.__setupInterval.ready:
             self.__setupModules()
@@ -47,11 +46,11 @@ class TeslaModelSBatteryPack(BatteryPack):
 
                 if readResult and readResult[0] & 0b00111111 == nextAddress:
                     self.modules.append(TeslaModelSBatteryModule(
-                        nextAddress, self.__gateway, self.__config))
+                        nextAddress, self.__gateway, self._config))
             else:
                 break
 
-        if len(self.modules) == self.__config.moduleCount:
+        if len(self.modules) == self._config.moduleCount:
             self.ready = True
         else:
             self.__setupInterval.set(1)

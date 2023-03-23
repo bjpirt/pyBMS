@@ -8,11 +8,11 @@ class BatteryCell:
         self.lowestVoltage: float = -1.0
         self.overVoltageFault: bool = False
         self.underVoltageFault: bool = False
-        self.__config: Config = config
+        self._config: Config = config
 
     @property
     def hasFault(self) -> bool:
-        return self.voltage < self.__config.cellLowVoltageSetpoint or self.voltage > self.__config.cellHighVoltageSetpoint
+        return self.voltage < self._config.cellLowVoltageSetpoint or self.voltage > self._config.cellHighVoltageSetpoint
 
     @property
     def voltage(self) -> float:
