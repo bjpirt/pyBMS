@@ -13,5 +13,7 @@
   "moduleCapacity": 232.0,
   "maxCellVoltageDifference": 0.2,
   "voltageWarningOffset": 0.1,
-  "temperatureWarningOffset": 5.0
+  "temperatureWarningOffset": 5.0,
+  "pollInterval": 0.5,
+  "ledPin": 18
 }

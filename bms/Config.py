@@ -46,6 +46,10 @@ class Config:
         self.temperatureWarningOffset: float = 5.0
         # The offset from the max and min cell voltage differences that triggers a warning
         self.voltageDifferenceWarningOffset: float = 0.05
+        # The interval between queries to the BMS in seconds
+        self.pollInterval: float = 0.5
+        # The pin to use for the LED
+        self.ledPin = 18
 
         self.readConfig()
 
