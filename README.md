@@ -111,11 +111,11 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 - [x] Static configuration file
 - [x] Balance config
 - [x] Battery capacity config
-- [ ] Alarms
+- [x] Alarms and warnings
 - [ ] State of charge from voltage
-- [ ] Watchdog Timer
 - [ ] Dynamic configuration (web)
 - [ ] Monitoring UI / Data endpoint
+- [ ] Watchdog Timer
 - [ ] State of charge from current sensor
 - [ ] Configure over/under voltage into the Tesla BMS
 - [ ] Configure over/under temperature into the Tesla BMS

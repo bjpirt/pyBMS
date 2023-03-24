@@ -4,11 +4,14 @@
   "cellHighVoltageSetpoint": 4.1,
   "celllowVoltageSetpoint": 3.6,
   "highTemperatureSetpoint": 65.0,
-  "lowTemperatureSetpoint": 10.0,
+  "lowTemperatureSetpoint": 5.0,
   "commsTimeout": 10.0,
   "autoBalance": true,
   "balanceTime": 5,
   "balanceVoltage": 3.9,
-  "balanceDifference": 0.4,
-  "moduleCapacity": 232.0
+  "balanceDifference": 0.04,
+  "moduleCapacity": 232.0,
+  "maxCellVoltageDifference": 0.2,
+  "voltageWarningOffset": 0.1,
+  "temperatureWarningOffset": 5.0
 }

@@ -17,7 +17,7 @@ class Config:
         # The high temperature setpoint
         self.highTemperatureSetpoint: float = 65.0
         # The low temperature setpoint
-        self.lowTemperatureSetpoint: float = 10.0
+        self.lowTemperatureSetpoint: float = 5.0
         # The number of seconds without communication before raising an alarm
         self.commsTimeout: float = 10.0
         # The pin number for the negative contactor
@@ -35,9 +35,17 @@ class Config:
         # The voltage above which balancing should be enabled
         self.balanceVoltage: float = 3.9
         # The difference between a module's highest and lowest cell voltages that triggers balancing
-        self.balanceDifference: float = 0.4
+        self.balanceDifference: float = 0.04
         # The capacity of an individual module in Ah
         self.moduleCapacity: float = 232.0
+        # The maximum allowed difference in cell voltages
+        self.maxCellVoltageDifference: float = 0.2
+        # The offset from the max and min charge voltages that triggers a warning
+        self.voltageWarningOffset: float = 0.1
+        # The offset from the max and min temperatures that triggers a warning
+        self.temperatureWarningOffset: float = 5.0
+        # The offset from the max and min cell voltage differences that triggers a warning
+        self.voltageDifferenceWarningOffset: float = 0.05
 
         self.readConfig()
 

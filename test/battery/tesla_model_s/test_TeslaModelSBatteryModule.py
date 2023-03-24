@@ -91,7 +91,7 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
         self.mockGateway.writeRegister = MagicMock(return_value=True)
         for cell in self.module.cells:
             cell.voltage = 4.0
-        self.module.cells[1].voltage = 4.1
+        self.module.cells[1].voltage = 4.01
         self.module.balance(3.4)
 
         self.mockGateway.writeRegister.assert_not_called()

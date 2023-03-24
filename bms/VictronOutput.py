@@ -1,4 +1,5 @@
 from battery import BatteryPack
+from battery.Constants import *
 from hal.interval import get_interval
 
 
@@ -129,22 +130,41 @@ class VictronOutput:
             Bytes 4, 5, 6, 7 - Warnings
         """
         message = CanMessage(0x35A)
-        message.addInt(0)
-        message.addInt(0)
-        message.addInt(0)
-        message.addInt(0)
+
+        alarms = [0, 0, 0, 0]
+        if self.__pack.alarms != None:
+            if OVER_VOLTAGE_ALARM in self.__pack.alarms:
+                alarms[0] = alarms[0] | 0x04
+            if UNDER_VOLTAGE_ALARM in self.__pack.alarms:
+                alarms[0] = alarms[0] | 0x10
+            if OVER_TEMPERATURE_ALARM in self.__pack.alarms:
+                alarms[0] = alarms[0] | 0x40
+            if UNDER_TEMPERATURE_ALARM in self.__pack.alarms:
+                alarms[1] = alarms[1] | 0x01
+            if BALANCE_ALARM in self.__pack.alarms:
+                alarms[3] = alarms[3] | 0x01
+        message.addByte(alarms[0])
+        message.addByte(alarms[1])
+        message.addByte(alarms[2])
+        message.addByte(alarms[3])
+
+        warnings = [0, 0, 0, 0]
+        if self.__pack.warnings != None:
+            if OVER_VOLTAGE_ALARM in self.__pack.warnings:
+                warnings[0] = warnings[0] | 0x04
+            if UNDER_VOLTAGE_ALARM in self.__pack.warnings:
+                warnings[0] = warnings[0] | 0x10
+            if OVER_TEMPERATURE_ALARM in self.__pack.warnings:
+                warnings[0] = warnings[0] | 0x40
+            if UNDER_TEMPERATURE_ALARM in self.__pack.warnings:
+                warnings[1] = warnings[1] | 0x01
+            if BALANCE_ALARM in self.__pack.warnings:
+                warnings[3] = warnings[3] | 0x01
+        message.addByte(warnings[0])
+        message.addByte(warnings[1])
+        message.addByte(warnings[2])
+        message.addByte(warnings[3])
         message.send(self.__can)
-        """
-        msg.buf[0] = alarm[0];//High temp  Low Voltage | High Voltage
-        msg.buf[1] = alarm[1]; // High Discharge Current | Low Temperature
-        msg.buf[2] = alarm[2]; //Internal Failure | High Charge current
-        msg.buf[3] = alarm[3];// Cell Imbalance
-        msg.buf[4] = warning[0];//High temp  Low Voltage | High Voltage
-        msg.buf[5] = warning[1];// High Discharge Current | Low Temperature
-        msg.buf[6] = warning[2];//Internal Failure | High Charge current
-        msg.buf[7] = warning[3];// Cell Imbalance
-        Can0.write(msg);
-        """
 
     def sendMessage5(self) -> None:
         message = CanMessage(0x35E)
@@ -171,16 +191,6 @@ class VictronOutput:
         message.addInt(int(self.__pack.lowTemperature + 273.15))
         message.addInt(int(self.__pack.highTemperature + 273.15))
         message.send(self.__can)
-        """
-        msg.buf[0] = lowByte(uint16_t(bms.getLowCellVolt() * 1000));
-        msg.buf[1] = highByte(uint16_t(bms.getLowCellVolt() * 1000));
-        msg.buf[2] = lowByte(uint16_t(bms.getHighCellVolt() * 1000));
-        msg.buf[3] = highByte(uint16_t(bms.getHighCellVolt() * 1000));
-        msg.buf[4] = lowByte(uint16_t(bms.getLowTemperature() + 273.15));
-        msg.buf[5] = highByte(uint16_t(bms.getLowTemperature() + 273.15));
-        msg.buf[6] = lowByte(uint16_t(bms.getHighTemperature() + 273.15));
-        msg.buf[7] = highByte(uint16_t(bms.getHighTemperature() + 273.15));
-        """
 
     def sendMessage8(self) -> None:
         """
@@ -213,13 +223,3 @@ class VictronOutput:
         message = CanMessage(0x372)
         message.addInt(len(self.__pack.modules))
         message.send(self.__can)
-        """
-        msg.buf[0] = lowByte(bms.getNumModules());
-        msg.buf[1] = highByte(bms.getNumModules());
-        msg.buf[2] = 0x00;
-        msg.buf[3] = 0x00;
-        msg.buf[4] = 0x00;
-        msg.buf[5] = 0x00;
-        msg.buf[6] = 0x00;
-        msg.buf[7] = 0x00;
-        """

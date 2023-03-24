@@ -1,6 +1,7 @@
 import math
-from typing import List
+from typing import List, Union
 from battery import BatteryModule
+from battery.Constants import *
 from bms import Config
 
 
@@ -49,6 +50,40 @@ class BatteryPack:
     @property
     def capacity(self) -> float:
         return self._config.moduleCapacity * self._config.moduleCount / self._config.parallelStringCount
+
+    @property
+    def cellVoltageDifference(self) -> float:
+        return max([module.cellVoltageDifference for module in self.modules]) if len(self.modules) > 0 else 0.0
+
+    @property
+    def alarms(self) -> Union[List[int], None]:
+        alarms = []
+        if self.highCellVoltage > self._config.cellHighVoltageSetpoint:
+            alarms.append(OVER_VOLTAGE_ALARM)
+        if self.lowCellVoltage < self._config.cellLowVoltageSetpoint:
+            alarms.append(UNDER_VOLTAGE_ALARM)
+        if self.highTemperature > self._config.highTemperatureSetpoint:
+            alarms.append(OVER_TEMPERATURE_ALARM)
+        if self.lowTemperature < self._config.lowTemperatureSetpoint:
+            alarms.append(UNDER_TEMPERATURE_ALARM)
+        if self.cellVoltageDifference > self._config.maxCellVoltageDifference:
+            alarms.append(BALANCE_ALARM)
+        return alarms if len(alarms) > 0 else None
+
+    @property
+    def warnings(self) -> Union[List[int], None]:
+        warnings = []
+        if self.highCellVoltage > self._config.cellHighVoltageSetpoint - self._config.voltageWarningOffset:
+            warnings.append(OVER_VOLTAGE_WARNING)
+        if self.lowCellVoltage < self._config.cellLowVoltageSetpoint + self._config.voltageWarningOffset:
+            warnings.append(UNDER_VOLTAGE_WARNING)
+        if self.highTemperature > self._config.highTemperatureSetpoint - self._config.temperatureWarningOffset:
+            warnings.append(OVER_TEMPERATURE_WARNING)
+        if self.lowTemperature < self._config.lowTemperatureSetpoint + self._config.temperatureWarningOffset:
+            warnings.append(UNDER_TEMPERATURE_WARNING)
+        if self.cellVoltageDifference > self._config.maxCellVoltageDifference - self._config.voltageDifferenceWarningOffset:
+            warnings.append(BALANCE_WARNING)
+        return warnings if len(warnings) > 0 else None
 
     def update(self) -> None:
         for module in self.modules:

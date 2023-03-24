@@ -63,6 +63,10 @@ class BatteryModule:
         return max([cell.highestVoltage for cell in self.cells]) if len(self.cells) > 0 else 0.0
 
     @property
+    def cellVoltageDifference(self) -> float:
+        return self.highCellVoltage - self.lowCellVoltage
+
+    @property
     def averageTemperature(self) -> float:
         return sum(self.temperatures) / len(self.temperatures) if len(self.temperatures) > 0 else 0.0
 

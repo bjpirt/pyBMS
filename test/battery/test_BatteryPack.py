@@ -1,18 +1,19 @@
 from battery import BatteryCell, BatteryModule, BatteryPack
 import unittest
+from battery.Constants import *
 
 from bms import Config
 
 
 class BatteryPackTestCase(unittest.TestCase):
     def setUp(self):
-        c = Config()
-        c.parallelStringCount = 2
-        self.pack = BatteryPack(c)
+        self.config = Config()
+        self.config.parallelStringCount = 2
+        self.pack = BatteryPack(self.config)
         for m in range(4):
-            module = BatteryModule(c)
+            module = BatteryModule(self.config)
             for i in range(4):
-                cell = BatteryCell(c)
+                cell = BatteryCell(self.config)
                 cell.voltage = i + 1
                 module.cells.append(cell)
             module.voltage = 24.0
@@ -83,3 +84,81 @@ class BatteryPackTestCase(unittest.TestCase):
 
     def test_capacity(self):
         self.assertEqual(self.pack.capacity, 232)
+
+    def test_no_alarms(self):
+        for module in self.pack.modules:
+            for cell in module.cells:
+                cell.voltage = 3.9
+        self.assertIsNone(self.pack.alarms)
+
+    def test_over_voltage_alarm(self):
+        for module in self.pack.modules:
+            for cell in module.cells:
+                cell.voltage = self.config.cellHighVoltageSetpoint + 0.01
+        self.assertEqual(self.pack.alarms, [OVER_VOLTAGE_ALARM])
+
+    def test_under_voltage_alarm(self):
+        for module in self.pack.modules:
+            for cell in module.cells:
+                cell.voltage = self.config.cellLowVoltageSetpoint - 0.01
+        self.assertEqual(self.pack.alarms, [UNDER_VOLTAGE_ALARM])
+
+    def test_over_temperature_alarm(self):
+        for module in self.pack.modules:
+            for cell in module.cells:
+                cell.voltage = 3.9
+            module.temperatures[0] = self.config.highTemperatureSetpoint + 0.01
+        self.assertEqual(self.pack.alarms, [OVER_TEMPERATURE_ALARM])
+
+    def test_under_temperature_alarm(self):
+        for module in self.pack.modules:
+            for cell in module.cells:
+                cell.voltage = 3.9
+            module.temperatures[0] = self.config.lowTemperatureSetpoint - 0.01
+        self.assertEqual(self.pack.alarms, [UNDER_TEMPERATURE_ALARM])
+
+    def test_balance_alarm(self):
+        for module in self.pack.modules:
+            for cell in module.cells:
+                cell.voltage = 3.8
+        self.pack.modules[0].cells[0].voltage = 4.01
+        self.assertEqual(self.pack.alarms, [BALANCE_ALARM])
+
+    def test_over_voltage_warning(self):
+        for module in self.pack.modules:
+            for cell in module.cells:
+                cell.voltage = self.config.cellHighVoltageSetpoint - \
+                    self.config.voltageWarningOffset + 0.01
+        print(self.pack.cellVoltageDifference)
+        self.assertEqual(self.pack.warnings, [OVER_VOLTAGE_WARNING])
+
+    def test_under_voltage_warning(self):
+        for module in self.pack.modules:
+            for cell in module.cells:
+                cell.voltage = self.config.cellLowVoltageSetpoint + \
+                    self.config.voltageWarningOffset - 0.01
+        self.assertEqual(self.pack.warnings, [UNDER_VOLTAGE_WARNING])
+
+    def test_over_temperature_warning(self):
+        for module in self.pack.modules:
+            for cell in module.cells:
+                cell.voltage = 3.9
+            module.temperatures[0] = self.config.highTemperatureSetpoint - \
+                self.config.temperatureWarningOffset + 0.01
+        self.assertEqual(self.pack.warnings, [OVER_TEMPERATURE_WARNING])
+
+    def test_under_temperature_warning(self):
+        for module in self.pack.modules:
+            for cell in module.cells:
+                cell.voltage = 3.9
+            module.temperatures[0] = self.config.lowTemperatureSetpoint + \
+                self.config.temperatureWarningOffset - 0.01
+        self.assertEqual(self.pack.warnings, [UNDER_TEMPERATURE_WARNING])
+
+    def test_balance_warning(self):
+        for module in self.pack.modules:
+            for cell in module.cells:
+                cell.voltage = 3.8
+        self.pack.modules[0].cells[0].voltage = 3.8 - self.config.voltageDifferenceWarningOffset + \
+            self.config.maxCellVoltageDifference + 0.01
+        self.assertEqual(self.pack.warnings, [BALANCE_WARNING])
