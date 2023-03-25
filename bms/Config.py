@@ -50,6 +50,13 @@ class Config:
         self.pollInterval: float = 0.5
         # The pin to use for the LED
         self.ledPin = 18
+        # The voltage to state of charge lookup table
+        self.socLookup = [
+            [3.0, 0.0],
+            [3.1, 0.1],
+            [4.1, 0.9],
+            [4.2, 1.0]
+        ]
 
         self.readConfig()
 

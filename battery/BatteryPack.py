@@ -36,6 +36,12 @@ class BatteryPack:
         return min([module.lowCellVoltage for module in self.modules]) if len(self.modules) > 0 else 0.0
 
     @property
+    def averageCellVoltage(self) -> float:
+        if len(self.modules) <= 0:
+            return 0.0
+        return sum([module.averageCellVoltage for module in self.modules]) / len(self.modules)
+
+    @property
     def averageTemperature(self) -> float:
         return sum([module.averageTemperature for module in self.modules]) / len(self.modules) if len(self.modules) > 0 else 0.0
 

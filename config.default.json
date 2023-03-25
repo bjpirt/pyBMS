@@ -15,5 +15,11 @@
   "voltageWarningOffset": 0.1,
   "temperatureWarningOffset": 5.0,
   "pollInterval": 0.5,
-  "ledPin": 18
+  "ledPin": 18,
+  "socLookup": [
+    [3.0, 0.0],
+    [3.1, 0.1],
+    [4.1, 0.9],
+    [4.2, 1.0]
+  ]
 }

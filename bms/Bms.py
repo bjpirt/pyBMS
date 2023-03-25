@@ -1,9 +1,10 @@
 from battery.BatteryPack import BatteryPack
 from bms import Config
-from .Led import Led
+from . import Led
 from hal import ContactorGpio
 from hal.interval import get_interval
 from . import ContactorControl
+from . import StateOfCharge
 
 
 class Bms:
@@ -15,6 +16,7 @@ class Bms:
         self.__interval = get_interval()
         self.__interval.set(self.__pollInterval)
         self.__led = Led(self.__config.ledPin)
+        self.__stateOfCharge = StateOfCharge(self.batteryPack, self.__config)
 
     def process(self):
         if self.__interval.ready:
@@ -30,6 +32,10 @@ class Bms:
             if self.__config.debug:
                 self.printDebug()
         self.__led.process()
+
+    @property
+    def stateOfCharge(self):
+        return self.__stateOfCharge.scaledLevel
 
     def printDebug(self):
         if not self.batteryPack.ready:

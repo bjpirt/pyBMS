@@ -16,7 +16,7 @@ contactors = DummyContactorGpio()
 config = Config()
 gateway = TeslaModelSNetworkGateway(serialPort, debug=config.debug)
 pack = TeslaModelSBatteryPack(gateway, config)
-bms = Bms(pack, contactors, debug=True)
+bms = Bms(pack, contactors, config)
 
 
 def main():

@@ -14,8 +14,8 @@ def main():
         config.negativePin, config.prechargePin, config.positivePin)
     gateway = TeslaModelSNetworkGateway(uart, debug=config.debug)
     pack = TeslaModelSBatteryPack(gateway, config)
-    bms = Bms(pack, contactors, debug=config.debug)
-    victronOutput = VictronOutput(can, pack, 0.5)
+    bms = Bms(pack, contactors, config)
+    victronOutput = VictronOutput(can, bms, 0.5)
 
     while True:
         bms.process()

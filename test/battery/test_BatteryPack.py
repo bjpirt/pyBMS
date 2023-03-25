@@ -1,7 +1,6 @@
 from battery import BatteryCell, BatteryModule, BatteryPack
 import unittest
 from battery.Constants import *
-
 from bms import Config
 
 
