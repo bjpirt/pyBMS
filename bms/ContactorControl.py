@@ -13,11 +13,11 @@ ENABLED - positive and negative contactors are on, precharge is off
 
 
 class ContactorState():
-    DISABLED = 1
-    NEGATIVE_ON = 2
-    PRECHARGE_ON = 3
-    ALL_ON = 4
-    ENABLED = 4
+    DISABLED = "DISABLED"
+    NEGATIVE_ON = "NEGATIVE_ON"
+    PRECHARGE_ON = "PRECHARGE_ON"
+    ALL_ON = "ALL_ON"
+    ENABLED = "ENABLED"
 
 
 class ContactorControl:
@@ -76,3 +76,8 @@ class ContactorControl:
         elif self.__state == ContactorState.ENABLED:
             self.__contactorGpio.update(
                 negative=True, precharge=False, positive=True)
+
+    def getDict(self):
+        return {
+            "state": self.__state
+        }

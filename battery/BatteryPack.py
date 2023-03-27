@@ -65,30 +65,30 @@ class BatteryPack:
     def alarms(self) -> Union[List[int], None]:
         alarms = []
         if self.highCellVoltage > self._config.cellHighVoltageSetpoint:
-            alarms.append(OVER_VOLTAGE_ALARM)
+            alarms.append(OVER_VOLTAGE)
         if self.lowCellVoltage < self._config.cellLowVoltageSetpoint:
-            alarms.append(UNDER_VOLTAGE_ALARM)
+            alarms.append(UNDER_VOLTAGE)
         if self.highTemperature > self._config.highTemperatureSetpoint:
-            alarms.append(OVER_TEMPERATURE_ALARM)
+            alarms.append(OVER_TEMPERATURE)
         if self.lowTemperature < self._config.lowTemperatureSetpoint:
-            alarms.append(UNDER_TEMPERATURE_ALARM)
+            alarms.append(UNDER_TEMPERATURE)
         if self.cellVoltageDifference > self._config.maxCellVoltageDifference:
-            alarms.append(BALANCE_ALARM)
+            alarms.append(BALANCE)
         return alarms if len(alarms) > 0 else None
 
     @property
     def warnings(self) -> Union[List[int], None]:
         warnings = []
         if self.highCellVoltage > self._config.cellHighVoltageSetpoint - self._config.voltageWarningOffset:
-            warnings.append(OVER_VOLTAGE_WARNING)
+            warnings.append(OVER_VOLTAGE)
         if self.lowCellVoltage < self._config.cellLowVoltageSetpoint + self._config.voltageWarningOffset:
-            warnings.append(UNDER_VOLTAGE_WARNING)
+            warnings.append(UNDER_VOLTAGE)
         if self.highTemperature > self._config.highTemperatureSetpoint - self._config.temperatureWarningOffset:
-            warnings.append(OVER_TEMPERATURE_WARNING)
+            warnings.append(OVER_TEMPERATURE)
         if self.lowTemperature < self._config.lowTemperatureSetpoint + self._config.temperatureWarningOffset:
-            warnings.append(UNDER_TEMPERATURE_WARNING)
+            warnings.append(UNDER_TEMPERATURE)
         if self.cellVoltageDifference > self._config.maxCellVoltageDifference - self._config.voltageDifferenceWarningOffset:
-            warnings.append(BALANCE_WARNING)
+            warnings.append(BALANCE)
         return warnings if len(warnings) > 0 else None
 
     def update(self) -> None:
@@ -106,3 +106,17 @@ class BatteryPack:
 
         if self.lowTemperature < self.lowestTemperature or math.isnan(self.lowestTemperature):
             self.lowestTemperature = self.lowTemperature
+
+    def getDict(self):
+        return {
+            "ready": self.ready,
+            "voltage": self.voltage,
+            "highestVoltage": self.highestVoltage,
+            "lowestVoltage": self.lowestVoltage,
+            "highestTemperature": self.highestTemperature,
+            "lowestTemperature": self.lowestTemperature,
+            "alarms": self.alarms,
+            "warnings": self.warnings,
+            "fault": self.hasFault,
+            "modules": [m.getDict() for m in self.modules]
+        }

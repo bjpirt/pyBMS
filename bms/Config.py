@@ -60,7 +60,7 @@ class Config:
 
         self.readConfig()
 
-    def __getDict(self):
+    def getDict(self):
         return {k: v for k, v in self.__dict__.items() if not k.startswith("_Config__")}
 
     def readConfig(self):
@@ -85,4 +85,4 @@ class Config:
 
     def saveConfig(self):
         with open(self.__file, 'w') as fp:
-            json.dump(self.__getDict(), fp)
+            json.dump(self.getDict(), fp)

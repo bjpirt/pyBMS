@@ -1,10 +1,10 @@
 from battery.BatteryPack import BatteryPack
 from bms import Config
-from . import Led
+from .Led import Led
 from hal import ContactorGpio
 from hal.interval import get_interval
-from . import ContactorControl
-from . import StateOfCharge
+from .ContactorControl import ContactorControl
+from .StateOfCharge import StateOfCharge
 
 
 class Bms:
@@ -36,6 +36,13 @@ class Bms:
     @property
     def stateOfCharge(self):
         return self.__stateOfCharge.scaledLevel
+
+    def getDict(self) -> dict:
+        return {
+            "stateOfCharge": self.__stateOfCharge.level,
+            "contactors": self.contactors.getDict(),
+            "pack": self.batteryPack.getDict()
+        }
 
     def printDebug(self):
         if not self.batteryPack.ready:

@@ -12,7 +12,7 @@ baud = int(sys.argv[2])
 
 serialPort = serial.Serial(port, baud, timeout=0.1)
 
-bms = TeslaBmsEmulator(serialPort)
+bms = TeslaBmsEmulator(serialPort, debugInterval=1)
 
 
 def main():

@@ -87,3 +87,15 @@ class BatteryModule:
 
     def __cellVoltages(self):
         return [cell.voltage for cell in self.cells]
+
+    def getDict(self):
+        return {
+            "temperatures": self.temperatures,
+            "voltage": self.voltage,
+            "highestVoltage": self.highestVoltage,
+            "lowestVoltage": self.lowestVoltage,
+            "highestTemperature": self.highestTemperature,
+            "lowestTemperature": self.lowestTemperature,
+            "fault": self.hasFault,
+            "cells": [c.getDict() for c in self.cells]
+        }

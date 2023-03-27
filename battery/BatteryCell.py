@@ -26,3 +26,13 @@ class BatteryCell:
 
         if self.lowestVoltage == -1 or self.voltage < self.lowestVoltage:
             self.lowestVoltage = voltage
+
+    def getDict(self):
+        return {
+            "voltage": self.voltage,
+            "highestVoltage": self.highestVoltage,
+            "lowestVoltage": self.lowestVoltage,
+            "overVoltageFault": self.overVoltageFault,
+            "underVoltageFault": self.underVoltageFault,
+            "fault": self.hasFault
+        }

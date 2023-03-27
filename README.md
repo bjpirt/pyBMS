@@ -52,13 +52,13 @@ make module-fake-serial
 2. In one terminal, run the dummy Tesla BMS board
 
 ```
-python platforms/unix/teslaBmsEmulator.py ./port1-end-a 230400
+python platforms/cpython/teslaBmsEmulator.py ./port1-end-a 230400
 ```
 
 3. In another terminal, run the pyBms code
 
 ```
-python platforms/unix/pyBms.py ./port1-end-b 230400
+python platforms/cpython/pyBms.py ./port1-end-b 230400
 ```
 
 When you've finished, you can stop socat with `make kill-socat`
@@ -114,8 +114,9 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 - [x] Alarms and warnings
 - [x] State of charge from voltage
 - [ ] Dynamic configuration (web)
-- [ ] Monitoring UI / Data endpoint
+- [ ] Data endpoint
+- [ ] Monitoring UI
 - [ ] Watchdog Timer
-- [ ] State of charge from current sensor
 - [ ] Configure over/under voltage into the Tesla BMS
 - [ ] Configure over/under temperature into the Tesla BMS
+- [ ] State of charge from current sensor
