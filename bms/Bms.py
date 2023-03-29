@@ -1,8 +1,8 @@
 from battery.BatteryPack import BatteryPack
-from bms import Config
 from .Led import Led
 from hal import ContactorGpio
 from hal.interval import get_interval
+from .Config import Config
 from .ContactorControl import ContactorControl
 from .StateOfCharge import StateOfCharge
 

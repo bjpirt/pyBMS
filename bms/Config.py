@@ -1,5 +1,13 @@
-from os import path  # type: ignore
+import os
 import json
+
+
+def exists(filename: str) -> bool:
+    try:
+        os.stat(filename)
+        return True
+    except OSError:
+        return False
 
 
 class Config:
@@ -57,6 +65,12 @@ class Config:
             [4.1, 0.9],
             [4.2, 1.0]
         ]
+        # Whether to start an access point if there is no access point
+        self.startAccessPoint: bool = True
+        # The wifi network to connect to
+        self.wifiNetwork: str = ""
+        # The wifi network password
+        self.wifiPassword: str = ""
 
         self.readConfig()
 
@@ -65,7 +79,7 @@ class Config:
 
     def readConfig(self):
         data = None
-        if path.exists(self.__file):
+        if exists(self.__file):
             with open(self.__file, 'r') as fp:
                 data = fp.read()
         else:

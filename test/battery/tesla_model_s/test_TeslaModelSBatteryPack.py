@@ -28,7 +28,7 @@ mockValidRead = [
 class TeslaModelSBatteryPackTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.mockGateway = FakeGateway(None)
+        self.mockGateway = FakeGateway(None, Config())
         self.mockGateway.writeRegister = MagicMock(return_value=True)
         self.config = Config()
         self.config.moduleCount = 2

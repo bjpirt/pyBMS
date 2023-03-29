@@ -3,6 +3,8 @@ from .Config import Config
 from microdot import Microdot
 from .pages.bmsUi import bmsUi
 from .pages.bmsConfig import bmsConfig
+from hal.WiFi import connect
+
 mpy = True
 try:
     import _thread
@@ -48,4 +50,5 @@ class WebServer:
             thread.start()
 
     def run(self):
+        connect(self.__config.wifiNetwork, self.__config.wifiPassword)
         self.__app.run(port=6001)

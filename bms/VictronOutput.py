@@ -1,6 +1,6 @@
 from battery import BatteryPack
 from battery.Constants import *
-from bms import Bms
+from .Bms import Bms
 from hal.interval import get_interval
 
 
@@ -123,15 +123,15 @@ class VictronOutput:
 
         alarms = [0, 0, 0, 0]
         if self.__bms.batteryPack.alarms != None:
-            if OVER_VOLTAGE_ALARM in self.__bms.batteryPack.alarms:
+            if OVER_VOLTAGE in self.__bms.batteryPack.alarms:
                 alarms[0] = alarms[0] | 0x04
-            if UNDER_VOLTAGE_ALARM in self.__bms.batteryPack.alarms:
+            if UNDER_VOLTAGE in self.__bms.batteryPack.alarms:
                 alarms[0] = alarms[0] | 0x10
-            if OVER_TEMPERATURE_ALARM in self.__bms.batteryPack.alarms:
+            if OVER_TEMPERATURE in self.__bms.batteryPack.alarms:
                 alarms[0] = alarms[0] | 0x40
-            if UNDER_TEMPERATURE_ALARM in self.__bms.batteryPack.alarms:
+            if UNDER_TEMPERATURE in self.__bms.batteryPack.alarms:
                 alarms[1] = alarms[1] | 0x01
-            if BALANCE_ALARM in self.__bms.batteryPack.alarms:
+            if BALANCE in self.__bms.batteryPack.alarms:
                 alarms[3] = alarms[3] | 0x01
         message.addByte(alarms[0])
         message.addByte(alarms[1])
@@ -140,15 +140,15 @@ class VictronOutput:
 
         warnings = [0, 0, 0, 0]
         if self.__bms.batteryPack.warnings != None:
-            if OVER_VOLTAGE_ALARM in self.__bms.batteryPack.warnings:
+            if OVER_VOLTAGE in self.__bms.batteryPack.warnings:
                 warnings[0] = warnings[0] | 0x04
-            if UNDER_VOLTAGE_ALARM in self.__bms.batteryPack.warnings:
+            if UNDER_VOLTAGE in self.__bms.batteryPack.warnings:
                 warnings[0] = warnings[0] | 0x10
-            if OVER_TEMPERATURE_ALARM in self.__bms.batteryPack.warnings:
+            if OVER_TEMPERATURE in self.__bms.batteryPack.warnings:
                 warnings[0] = warnings[0] | 0x40
-            if UNDER_TEMPERATURE_ALARM in self.__bms.batteryPack.warnings:
+            if UNDER_TEMPERATURE in self.__bms.batteryPack.warnings:
                 warnings[1] = warnings[1] | 0x01
-            if BALANCE_ALARM in self.__bms.batteryPack.warnings:
+            if BALANCE in self.__bms.batteryPack.warnings:
                 warnings[3] = warnings[3] | 0x01
         message.addByte(warnings[0])
         message.addByte(warnings[1])

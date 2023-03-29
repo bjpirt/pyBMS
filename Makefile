@@ -71,7 +71,7 @@ flash-tesla-bms-emulator-esp32: build-tesla-bms-emulator-esp32
 
 .PHONY: flash-pyBms-esp32
 flash-pyBms-esp32: build-pyBms-esp32
-	esptool.py -c esp32 -b 921600 write_flash -z 0x1000 build/out/pyBms-esp32.bin
+	esptool.py -c esp32 -b 921600 write_flash -z 0x1000 build/out/pyBms.esp32.wemos-d1.bin
 
 .PHONY: wipe-rp2
 wipe-rp2:

@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
+from bms import Config
 
 
 class FakeSerial:
@@ -17,7 +18,7 @@ class TeslaModelSNetworkGatewayTestCase(unittest.TestCase):
     def setUp(self):
         self.serial = FakeSerial()
         self.serial.write = MagicMock()
-        self.gateway = TeslaModelSNetworkGateway(self.serial)
+        self.gateway = TeslaModelSNetworkGateway(self.serial, Config())
         return super().setUp()
 
     def test_write_register(self):

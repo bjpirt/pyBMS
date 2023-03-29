@@ -2,12 +2,11 @@ from .CPythonInterval import CPythonInterval
 from .MicroPythonInterval import MicroPythonInterval
 from .Interval import Interval
 
-upy = False
+upy = True
 try:
     import machine
-    upy = True
 except:
-    pass
+    upy = False
 
 
 def get_interval() -> Interval:
