@@ -9,7 +9,7 @@ class ContactorControlTestCase(unittest.TestCase):
     def setUp(self):
         self.gpio = DummyContactorGpio()
         self.control = ContactorControl(
-            self.gpio, negativeTime=0.1, prechargeTime=0.1)
+            self.gpio, negative_time=0.1, precharge_time=0.1)
 
     def test_switch(self):
         self.assertEqual(self.control.state, ContactorState.DISABLED)

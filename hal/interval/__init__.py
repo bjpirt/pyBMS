@@ -1,16 +1,15 @@
-from .CPythonInterval import CPythonInterval
-from .MicroPythonInterval import MicroPythonInterval
-from .Interval import Interval
+from .c_python_interval import CPythonInterval
+from .micropython_interval import MicroPythonInterval
+from .interval import Interval
 
-upy = True
+MPY = True
 try:
-    import machine
+    import machine  # type: ignore
 except:
-    upy = False
+    MPY = False
 
 
 def get_interval() -> Interval:
-    if upy:
+    if MPY:
         return MicroPythonInterval()
-    else:
-        return CPythonInterval()
+    return CPythonInterval()

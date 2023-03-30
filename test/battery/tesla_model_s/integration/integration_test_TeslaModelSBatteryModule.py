@@ -1,9 +1,8 @@
 import threading
 import unittest
-from unittest.mock import MagicMock
-from battery.tesla_model_s.TeslaModelSBatteryModule import TeslaModelSBatteryModule
-from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
-import serial
+from battery.tesla_model_s.tesla_model_s_battery_module import TeslaModelSBatteryModule
+from battery.tesla_model_s.tesla_model_s_network_gateway import TeslaModelSNetworkGateway
+import serial  # type: ignore
 from bms import Config
 from emulator.tesla_bms import TeslaBmsEmulator
 

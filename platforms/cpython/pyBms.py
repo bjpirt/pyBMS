@@ -1,5 +1,5 @@
 import sys
-import serial
+import serial  # type: ignore
 from os import path  # type: ignore
 
 sys.path.insert(0, path.join(path.dirname(__file__), "../.."))

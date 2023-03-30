@@ -1,54 +1,59 @@
-from battery.BatteryPack import BatteryPack
-from .Led import Led
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from hal import ContactorGpio
 from hal.interval import get_interval
-from .Config import Config
-from .ContactorControl import ContactorControl
-from .StateOfCharge import StateOfCharge
+from .led import Led
+from .config import Config
+from .contactor_control import ContactorControl
+from .state_of_charge import StateOfCharge
+if TYPE_CHECKING:
+    from battery import BatteryPack
 
 
 class Bms:
-    def __init__(self, batteryPack: BatteryPack, contactorGpio: ContactorGpio, config: Config):
+    def __init__(self, battery_pack: BatteryPack, contactor_gpio: ContactorGpio, config: Config):
         self.__config = config
-        self.batteryPack = batteryPack
-        self.contactors = ContactorControl(contactorGpio)
-        self.__pollInterval: float = self.__config.pollInterval
+        self.battery_pack = battery_pack
+        self.contactors = ContactorControl(contactor_gpio)
+        self.__poll_interval: float = self.__config.poll_interval
         self.__interval = get_interval()
-        self.__interval.set(self.__pollInterval)
-        self.__led = Led(self.__config.ledPin)
-        self.__stateOfCharge = StateOfCharge(self.batteryPack, self.__config)
+        self.__interval.set(self.__poll_interval)
+        self.__led = Led(self.__config.led_pin)
+        self.__state_of_charge = StateOfCharge(
+            self.battery_pack, self.__config)
 
     def process(self):
         if self.__interval.ready:
-            self.__interval.set(self.__pollInterval)
-            self.batteryPack.update()
+            self.__interval.set(self.__poll_interval)
+            self.battery_pack.update()
 
-            if self.batteryPack.hasFault or not self.batteryPack.ready:
+            if self.battery_pack.has_fault or not self.battery_pack.ready:
                 self.contactors.disable()
             else:
                 self.contactors.enable()
 
             self.contactors.process()
             if self.__config.debug:
-                self.printDebug()
+                self.print_debug()
         self.__led.process()
 
     @property
-    def stateOfCharge(self):
-        return self.__stateOfCharge.scaledLevel
+    def state_of_charge(self):
+        return self.__state_of_charge.scaled_level
 
-    def getDict(self) -> dict:
+    def get_dict(self) -> dict:
         return {
-            "stateOfCharge": self.__stateOfCharge.level,
-            "contactors": self.contactors.getDict(),
-            "pack": self.batteryPack.getDict()
+            "state_of_charge": self.__state_of_charge.level,
+            "contactors": self.contactors.get_dict(),
+            "pack": self.battery_pack.get_dict()
         }
 
-    def printDebug(self):
-        if not self.batteryPack.ready:
+    def print_debug(self):
+        if not self.battery_pack.ready:
             print("Battery pack not ready")
-        for i, module in enumerate(self.batteryPack.modules):
+        for i, module in enumerate(self.battery_pack.modules):
             print(
-                f"Module: {i} Voltage: {module.voltage} Temperature: {module.temperatures[0]} {module.temperatures[0]} Fault: {module.hasFault}")
+                f"Module: {i} Voltage: {module.voltage} Temperature: \
+                    {module.temperatures[0]} {module.temperatures[0]} Fault: {module.has_fault}")
             for j, cell in enumerate(module.cells):
                 print(f"  |- Cell: {j} voltage: {cell.voltage}")

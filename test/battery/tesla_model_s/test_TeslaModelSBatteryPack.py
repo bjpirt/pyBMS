@@ -2,17 +2,17 @@ from typing import List, Union
 import unittest
 from unittest.mock import MagicMock
 
-from battery.tesla_model_s.TeslaModelSBatteryPack import TeslaModelSBatteryPack
-from battery.tesla_model_s.TeslaModelSConstants import REG_CB_CTRL, REG_CB_TIME
-from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
+from battery.tesla_model_s.tesla_model_s_battery_pack import TeslaModelSBatteryPack
+from battery.tesla_model_s.tesla_model_s_constants import REG_CB_CTRL, REG_CB_TIME
+from battery.tesla_model_s.tesla_model_s_network_gateway import TeslaModelSNetworkGateway
 from bms import Config
 
 
 class FakeGateway(TeslaModelSNetworkGateway):
-    def readRegister(self, address: int, register: int, length: int) -> Union[List[int], None]:
+    def read_register(self, address: int, register: int, length: int) -> Union[List[int], None]:
         return None
 
-    def writeRegister(self, address: int, register: int, value: int) -> bool:
+    def write_register(self, address: int, register: int, value: int) -> bool:
         return True
 
 
@@ -29,14 +29,14 @@ class TeslaModelSBatteryPackTestCase(unittest.TestCase):
 
     def setUp(self):
         self.mockGateway = FakeGateway(None, Config())
-        self.mockGateway.writeRegister = MagicMock(return_value=True)
+        self.mockGateway.write_register = MagicMock(return_value=True)
         self.config = Config()
-        self.config.moduleCount = 2
+        self.config.module_count = 2
         return super().setUp()
 
     def test_setup_modules(self):
-        self.mockGateway.readRegister = MagicMock()
-        self.mockGateway.readRegister.side_effect = [
+        self.mockGateway.read_register = MagicMock()
+        self.mockGateway.read_register.side_effect = [
             mockDeviceStatusRead, mockDeviceAddressRead1, mockDeviceStatusRead, mockDeviceAddressRead2, None]
         self.pack = TeslaModelSBatteryPack(self.mockGateway, self.config)
         self.assertEqual(len(self.pack.modules), 2)
@@ -44,19 +44,19 @@ class TeslaModelSBatteryPackTestCase(unittest.TestCase):
         self.assertEqual(self.pack.modules[1].address, 2)
 
     def test_balance(self):
-        self.mockGateway.readRegister = MagicMock()
-        self.mockGateway.readRegister.side_effect = [
+        self.mockGateway.read_register = MagicMock()
+        self.mockGateway.read_register.side_effect = [
             mockDeviceStatusRead, mockDeviceAddressRead1, mockDeviceStatusRead, mockDeviceAddressRead2, None,
             mockValidRead, mockValidRead]
         self.pack = TeslaModelSBatteryPack(self.mockGateway, self.config)
         self.assertEqual(len(self.pack.modules), 2)
         self.pack.update()
 
-        self.mockGateway.writeRegister.assert_any_call(
+        self.mockGateway.write_register.assert_any_call(
             self.pack.modules[0].address, REG_CB_TIME, 5)
-        self.mockGateway.writeRegister.assert_any_call(
+        self.mockGateway.write_register.assert_any_call(
             self.pack.modules[0].address, REG_CB_CTRL, 0b00000001)
-        self.mockGateway.writeRegister.assert_any_call(
+        self.mockGateway.write_register.assert_any_call(
             self.pack.modules[1].address, REG_CB_TIME, 5)
-        self.mockGateway.writeRegister.assert_any_call(
+        self.mockGateway.write_register.assert_any_call(
             self.pack.modules[1].address, REG_CB_CTRL, 0b00000001)

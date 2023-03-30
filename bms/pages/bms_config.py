@@ -29,13 +29,13 @@ bmsConfig = """
 
   const renderConfig = (config) => {
     const table = document.querySelector("#config");
-    const rows = Object.keys(config).filter(k => k != "socLookup").sort().map(
+    const rows = Object.keys(config).filter(k => k != "soc_lookup").sort().map(
       k => `<tr><td>${k}</td><td>${getInput(k, config[k])}</td>`
     );
-    rows.push("<tr><td>socLookup</td><td></td></tr>");
+    rows.push("<tr><td>soc_lookup</td><td></td></tr>");
     rows.push("<tr><td>V</td><td>%</td></tr>");
-    rows.push(...config.socLookup.map((point, i) => 
-    `<tr><td>${getInput(`socLookupV[${i}]`, point[0])}</td><td>${getInput(`socLookupPc[${i}]`, point[1] * 100)}</td></tr>`
+    rows.push(...config.soc_lookup.map((point, i) =>
+    `<tr><td>${getInput(`soc_lookupV[${i}]`, point[0])}</td><td>${getInput(`soc_lookupPc[${i}]`, point[1] * 100)}</td></tr>`
     ))
     table.innerHTML = rows.join("")
   }
@@ -51,13 +51,13 @@ bmsConfig = """
 
   const tableToJson = () => {
     const inputs = [...document.querySelectorAll("input")]
-    const mainInputs = inputs.filter(i => !i.name.startsWith("socLookup"))
-    const socInputs = inputs.filter(i => i.name.startsWith("socLookup"))
+    const mainInputs = inputs.filter(i => !i.name.startsWith("soc_lookup"))
+    const socInputs = inputs.filter(i => i.name.startsWith("soc_lookup"))
     const output = mainInputs.reduce((acc, input) => ({...acc, ...rowToJson(input)}), {})
-    output.socLookup = Array(4).fill(0).map((_, i) => {
+    output.soc_lookup = Array(4).fill(0).map((_, i) => {
       return [
-        Number(document.querySelector(`input[name="socLookupV[${i}]"]`).value),
-        Number(document.querySelector(`input[name="socLookupPc[${i}]"]`).value)/100
+        Number(document.querySelector(`input[name="soc_lookupV[${i}]"]`).value),
+        Number(document.querySelector(`input[name="soc_lookupPc[${i}]"]`).value)/100
       ]
     })
     return output

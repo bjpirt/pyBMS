@@ -1,12 +1,12 @@
-mpy = True
+MPY = True
 try:
-    import network
+    import network  # type: ignore
 except:
-    mpy = False
+    MPY = False
 
 
 def connect(ssid, password):
-    if mpy:
+    if MPY:
         wlan = network.WLAN(network.STA_IF)
         wlan.active(True)
         if not wlan.isconnected():

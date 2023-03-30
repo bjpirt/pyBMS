@@ -1,7 +1,6 @@
 import unittest
 from battery.tesla_model_s import crc8
-from battery.tesla_model_s.TeslaModelSConstants import BROADCAST_ADDRESS, REG_ADDRESS_CONTROL, REG_CB_CTRL, REG_RESET, RESET_VALUE
-
+from battery.tesla_model_s.tesla_model_s_constants import BROADCAST_ADDRESS, REG_ADDRESS_CONTROL, REG_CB_CTRL, REG_RESET, RESET_VALUE
 from emulator.tesla_bms import TeslaBmsEmulator
 from unittest.mock import MagicMock
 
@@ -41,8 +40,8 @@ class TeslaBmsEmulatorTestCase(unittest.TestCase):
         self.emulator = TeslaBmsEmulator(self.serial)
 
     def test_set_module_voltage(self):
-        self.emulator.setCellVoltage(0, 4.25)
-        self.assertEqual(self.emulator.getCellVoltage(0), 4.25)
+        self.emulator.set_cell_voltage(0, 4.25)
+        self.assertEqual(self.emulator.get_cell_voltage(0), 4.25)
 
     def test_reset_address(self):
         self.emulator.address = 1

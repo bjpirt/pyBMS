@@ -1,4 +1,4 @@
-from .ContactorGpio import ContactorGpio
+from .contactor_gpio import ContactorGpio
 
 
 class DummyContactorGpio(ContactorGpio):

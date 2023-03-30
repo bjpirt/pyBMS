@@ -1,22 +1,21 @@
-from battery import BatteryPack
-from battery.Constants import *
-from .Bms import Bms
+from battery.constants import *
 from hal.interval import get_interval
+from .bms import Bms
 
 
 class CanMessage:
-    def __init__(self, id: int) -> None:
-        self.__id: int = id
+    def __init__(self, msg_id: int) -> None:
+        self.__id: int = msg_id
         self.__message = bytearray()
 
-    def addInt(self, value: int) -> None:
+    def add_int(self, value: int) -> None:
         self.__message.append(value & 0xFF)
         self.__message.append((value >> 8) & 0xFF)
 
-    def addByte(self, value: int) -> None:
+    def add_byte(self, value: int) -> None:
         self.__message.append(value & 0xFF)
 
-    def addString(self, value: str) -> None:
+    def add_string(self, value: str) -> None:
         self.__message.extend(map(ord, value))
 
     def send(self, can) -> None:
@@ -33,36 +32,29 @@ class VictronOutput:
         self.__interval.set(interval)
 
     def process(self):
-        if self.__interval.ready and self.__bms.batteryPack.ready:
+        if self.__interval.ready and self.__bms.battery_pack.ready:
             self.send()
             self.__interval.reset()
 
     def send(self) -> None:
-        self.sendMessage1()
-        self.sendMessage2()
-        self.sendMessage3()
-        self.sendMessage4()
-        self.sendMessage5()
-        self.sendMessage6()
-        self.sendMessage7()
-        self.sendMessage8()
-        self.sendMessage9()
+        self.send_message_1()
+        self.send_message_2()
+        self.send_message_3()
+        self.send_message_4()
+        self.send_message_5()
+        self.send_message_6()
+        self.send_message_7()
+        self.send_message_8()
+        self.send_message_9()
 
-    def sendMessage1(self) -> None:
+    def send_message_1(self) -> None:
         """
         Sends:
             Bytes 0, 1 - settings.StoreVsetpoint * settings.Scells ??
             Bytes 2, 3 - Charge current
             Bytes 4, 5 - Discharge current
             Bytes 6, 7 - DischVsetpoint * settings.Scells ??
-        """
-        message = CanMessage(0x351)
-        message.addInt(0)
-        message.addInt(0)
-        message.addInt(0)
-        message.addInt(0)
-        message.send(self.__can)
-        """
+
         msg.buf[0] = lowByte(uint16_t((settings.StoreVsetpoint * settings.Scells ) * 10));
         msg.buf[1] = highByte(uint16_t((settings.StoreVsetpoint * settings.Scells ) * 10));
         msg.buf[2] = lowByte(chargecurrent);
@@ -71,10 +63,15 @@ class VictronOutput:
         msg.buf[5] = highByte(discurrent);
         msg.buf[6] = lowByte(uint16_t((settings.DischVsetpoint * settings.Scells) * 10));
         msg.buf[7] = highByte(uint16_t((settings.DischVsetpoint * settings.Scells) * 10));
-        Can0.write(msg);
         """
+        message = CanMessage(0x351)
+        message.add_int(0)
+        message.add_int(0)
+        message.add_int(0)
+        message.add_int(0)
+        message.send(self.__can)
 
-    def sendMessage2(self) -> None:
+    def send_message_2(self) -> None:
         """
         Sends:
             Bytes 0, 1 - State of charge
@@ -83,37 +80,33 @@ class VictronOutput:
             Bytes 6, 7 - 0
         """
         message = CanMessage(0x355)
-        message.addInt(int(self.__bms.stateOfCharge))
-        message.addInt(100)
-        message.addInt(int(self.__bms.stateOfCharge * 10))
+        message.add_int(int(self.__bms.state_of_charge))
+        message.add_int(100)
+        message.add_int(int(self.__bms.state_of_charge * 10))
         message.send(self.__can)
 
-    def sendMessage3(self) -> None:
+    def send_message_3(self) -> None:
         """
         Sends:
             Bytes 0, 1 - Pack voltage (mV)
             Bytes 2, 3 - Current / 100
             Bytes 4, 5 - Average temperature (0.1)
             Bytes 6, 7 - 0
-        """
-        message = CanMessage(0x356)
-        message.addInt(int(self.__bms.batteryPack.voltage * 100))
-        message.addInt(0)
-        message.addInt(int(self.__bms.batteryPack.averageTemperature * 10))
-        message.send(self.__can)
-        """
+
         msg.buf[0] = lowByte(uint16_t(bms.getPackVoltage() * 100));
         msg.buf[1] = highByte(uint16_t(bms.getPackVoltage() * 100));
         msg.buf[2] = lowByte(long(currentact / 100));
         msg.buf[3] = highByte(long(currentact / 100));
         msg.buf[4] = lowByte(int16_t(bms.getAvgTemperature() * 10));
         msg.buf[5] = highByte(int16_t(bms.getAvgTemperature() * 10));
-        msg.buf[6] = 0;
-        msg.buf[7] = 0;
-        Can0.write(msg);
         """
+        message = CanMessage(0x356)
+        message.add_int(int(self.__bms.battery_pack.voltage * 100))
+        message.add_int(0)
+        message.add_int(int(self.__bms.battery_pack.average_temperature * 10))
+        message.send(self.__can)
 
-    def sendMessage4(self) -> None:
+    def send_message_4(self) -> None:
         """
         Sends:
             Bytes 0, 1, 2, 3 - Alarms
@@ -122,51 +115,51 @@ class VictronOutput:
         message = CanMessage(0x35A)
 
         alarms = [0, 0, 0, 0]
-        if self.__bms.batteryPack.alarms != None:
-            if OVER_VOLTAGE in self.__bms.batteryPack.alarms:
+        if self.__bms.battery_pack.alarms is not None:
+            if OVER_VOLTAGE in self.__bms.battery_pack.alarms:
                 alarms[0] = alarms[0] | 0x04
-            if UNDER_VOLTAGE in self.__bms.batteryPack.alarms:
+            if UNDER_VOLTAGE in self.__bms.battery_pack.alarms:
                 alarms[0] = alarms[0] | 0x10
-            if OVER_TEMPERATURE in self.__bms.batteryPack.alarms:
+            if OVER_TEMPERATURE in self.__bms.battery_pack.alarms:
                 alarms[0] = alarms[0] | 0x40
-            if UNDER_TEMPERATURE in self.__bms.batteryPack.alarms:
+            if UNDER_TEMPERATURE in self.__bms.battery_pack.alarms:
                 alarms[1] = alarms[1] | 0x01
-            if BALANCE in self.__bms.batteryPack.alarms:
+            if BALANCE in self.__bms.battery_pack.alarms:
                 alarms[3] = alarms[3] | 0x01
-        message.addByte(alarms[0])
-        message.addByte(alarms[1])
-        message.addByte(alarms[2])
-        message.addByte(alarms[3])
+        message.add_byte(alarms[0])
+        message.add_byte(alarms[1])
+        message.add_byte(alarms[2])
+        message.add_byte(alarms[3])
 
         warnings = [0, 0, 0, 0]
-        if self.__bms.batteryPack.warnings != None:
-            if OVER_VOLTAGE in self.__bms.batteryPack.warnings:
+        if self.__bms.battery_pack.warnings is not None:
+            if OVER_VOLTAGE in self.__bms.battery_pack.warnings:
                 warnings[0] = warnings[0] | 0x04
-            if UNDER_VOLTAGE in self.__bms.batteryPack.warnings:
+            if UNDER_VOLTAGE in self.__bms.battery_pack.warnings:
                 warnings[0] = warnings[0] | 0x10
-            if OVER_TEMPERATURE in self.__bms.batteryPack.warnings:
+            if OVER_TEMPERATURE in self.__bms.battery_pack.warnings:
                 warnings[0] = warnings[0] | 0x40
-            if UNDER_TEMPERATURE in self.__bms.batteryPack.warnings:
+            if UNDER_TEMPERATURE in self.__bms.battery_pack.warnings:
                 warnings[1] = warnings[1] | 0x01
-            if BALANCE in self.__bms.batteryPack.warnings:
+            if BALANCE in self.__bms.battery_pack.warnings:
                 warnings[3] = warnings[3] | 0x01
-        message.addByte(warnings[0])
-        message.addByte(warnings[1])
-        message.addByte(warnings[2])
-        message.addByte(warnings[3])
+        message.add_byte(warnings[0])
+        message.add_byte(warnings[1])
+        message.add_byte(warnings[2])
+        message.add_byte(warnings[3])
         message.send(self.__can)
 
-    def sendMessage5(self) -> None:
+    def send_message_5(self) -> None:
         message = CanMessage(0x35E)
-        message.addString("pyBms   ")
+        message.add_string("pyBms   ")
         message.send(self.__can)
 
-    def sendMessage6(self) -> None:
+    def send_message_6(self) -> None:
         message = CanMessage(0x370)
-        message.addString("pyBms   ")
+        message.add_string("pyBms   ")
         message.send(self.__can)
 
-    def sendMessage7(self) -> None:
+    def send_message_7(self) -> None:
         """
         Sends:
             Bytes 0, 1 - Lowest cell voltage (mV)
@@ -176,13 +169,13 @@ class VictronOutput:
             Bytes 6, 7 - 0
         """
         message = CanMessage(0x373)
-        message.addInt(int(self.__bms.batteryPack.lowCellVoltage * 1000))
-        message.addInt(int(self.__bms.batteryPack.highCellVoltage * 1000))
-        message.addInt(int(self.__bms.batteryPack.lowTemperature + 273.15))
-        message.addInt(int(self.__bms.batteryPack.highTemperature + 273.15))
+        message.add_int(int(self.__bms.battery_pack.low_cell_voltage * 1000))
+        message.add_int(int(self.__bms.battery_pack.high_cell_voltage * 1000))
+        message.add_int(int(self.__bms.battery_pack.low_temperature + 273.15))
+        message.add_int(int(self.__bms.battery_pack.high_temperature + 273.15))
         message.send(self.__can)
 
-    def sendMessage8(self) -> None:
+    def send_message_8(self) -> None:
         """
         Sends:
             Bytes 0, 1    - Battery Pack Capacity
@@ -190,26 +183,25 @@ class VictronOutput:
             Bytes 3       - Outputs
             Bytes 4       - BMS status
             Bytes 5, 6, 7 - 0
-        """
-        message = CanMessage(0x379)
-        message.addInt(int(self.__bms.batteryPack.capacity))
-        message.addByte(0)
-        message.addByte(0)
-        message.addByte(0)
-        message.send(self.__can)
-        """
+
         msg.buf[0] = lowByte(uint16_t(settings.Pstrings * settings.CAP));
         msg.buf[1] = highByte(uint16_t(settings.Pstrings * settings.CAP));
         msg.buf[2] = contstat; //contactor state
         msg.buf[3] = (digitalRead(OUT1) | (digitalRead(OUT2) << 1) | (digitalRead(OUT3) << 2) | (digitalRead(OUT4) << 3));
         msg.buf[4] = bmsstatus;
         """
+        message = CanMessage(0x379)
+        message.add_int(int(self.__bms.battery_pack.capacity))
+        message.add_byte(0)
+        message.add_byte(0)
+        message.add_byte(0)
+        message.send(self.__can)
 
-    def sendMessage9(self) -> None:
+    def send_message_9(self) -> None:
         """
         Sends:
             Bytes 0, 1 - Number of modules
         """
         message = CanMessage(0x372)
-        message.addInt(len(self.__bms.batteryPack.modules))
+        message.add_int(len(self.__bms.battery_pack.modules))
         message.send(self.__can)

@@ -2,10 +2,10 @@ def crc8(message: bytearray) -> int:
     seed: int = 0x07
     crc: int = 0
 
-    for c in message:
-        crc = crc ^ c
+    for char in message:
+        crc = crc ^ char
 
-        for i in range(8):
+        for _ in range(8):
             if crc & 0x80 != 0:
                 crc = ((crc << 1) & 0xFF) ^ seed
             else:

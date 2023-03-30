@@ -1,5 +1,5 @@
 import random
-import serial
+import serial  # type: ignore
 import sys
 from os import path  # type: ignore
 
@@ -20,9 +20,9 @@ def main():
         moduleVoltage = 0
         for id in range(6):
             cellVoltage = 3.6 + random.random()/2
-            bms.setCellVoltage(id, cellVoltage)
+            bms.set_cell_voltage(id, cellVoltage)
             moduleVoltage = moduleVoltage + cellVoltage
-        bms.setModuleVoltage(moduleVoltage)
+        bms.set_module_voltage(moduleVoltage)
         bms.process()
 
 

@@ -1,14 +1,10 @@
 import threading
 import unittest
-from unittest.mock import MagicMock
-
-from battery.tesla_model_s.TeslaModelSBatteryPack import TeslaModelSBatteryPack
-from battery.tesla_model_s.TeslaModelSNetworkGateway import TeslaModelSNetworkGateway
-
+from battery.tesla_model_s.tesla_model_s_battery_pack import TeslaModelSBatteryPack
+from battery.tesla_model_s.tesla_model_s_network_gateway import TeslaModelSNetworkGateway
 import time
-import serial
+import serial  # type: ignore
 from bms import Config
-
 from emulator.tesla_bms import CompoundSerial, TeslaBmsEmulator
 
 bmsSerialPort1a = serial.Serial('port1-end-a', 230400, timeout=0.01)
@@ -69,9 +65,9 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
         return super().tearDown()
 
     def test_update(self):
-        gateway = TeslaModelSNetworkGateway(compoundPort1)
+        gateway = TeslaModelSNetworkGateway(compoundPort1, Config())
         config = Config()
-        config.moduleCount = 2
+        config.module_count = 2
         pack = TeslaModelSBatteryPack(gateway, config)
 
         timeoutTime = time.time() + 5

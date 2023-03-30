@@ -3,13 +3,13 @@ from hal.pin import Pin
 
 
 class Led:
-    def __init__(self, ledPin: int, frequency: float = 1, duration: float = 0.05):
-        self.__led = Pin(ledPin, Pin.OUT)
-        self.__ledOn: bool = False
+    def __init__(self, led_pin: int, frequency: float = 1, duration: float = 0.05):
+        self.__led = Pin(led_pin, Pin.OUT)
+        self.__led_on: bool = False
         self.__frequency = frequency
         self.__duration = duration
-        self.__ledInterval = get_interval()
-        self.__ledInterval.set(frequency)
+        self.__led_interval = get_interval()
+        self.__led_interval.set(frequency)
 
     def off(self):
         self.__led.off()
@@ -18,12 +18,12 @@ class Led:
         self.__led.on()
 
     def process(self):
-        if self.__ledInterval.ready:
-            if self.__ledOn:
+        if self.__led_interval.ready:
+            if self.__led_on:
                 self.off()
-                self.__ledOn = False
-                self.__ledInterval.set(self.__frequency - self.__duration)
+                self.__led_on = False
+                self.__led_interval.set(self.__frequency - self.__duration)
             else:
                 self.on()
-                self.__ledOn = True
-                self.__ledInterval.set(self.__duration)
+                self.__led_on = True
+                self.__led_interval.set(self.__duration)

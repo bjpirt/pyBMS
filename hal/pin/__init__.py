@@ -1,4 +1,4 @@
 try:
-    from machine import Pin
+    from machine import Pin  # type: ignore
 except:
-    from .DummyPin import DummyPin as Pin
+    from .dummy_pin import DummyPin as Pin
