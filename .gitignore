@@ -131,3 +131,4 @@ dmypy.json
 .vscode
 build/out
 config.json
+config_json.py

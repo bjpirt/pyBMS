@@ -56,5 +56,7 @@ class TeslaModelSNetworkGateway:
                     result = self.receive_buffer[0:length]
                     self.receive_buffer = bytearray()
                     return result
+        if self.__config.debug:
+            print("Timed out")
         self.receive_buffer = bytearray()
         return None

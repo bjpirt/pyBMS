@@ -20,13 +20,13 @@ RUN . /opt/esp/idf/export.sh && \
   rm -rf /code/ports/esp32/build-${BOARD}
 
 COPY platforms/micropython/typing.py /code/ports/esp32/modules/typing.py
+COPY platforms/micropython/__future__.py /code/ports/esp32/modules/__future__.py
 COPY battery /code/ports/esp32/modules/battery/
 COPY bms /code/ports/esp32/modules/bms/
 COPY hal /code/ports/esp32/modules/hal/
 COPY emulator /code/ports/esp32/modules/emulator/
 COPY config_json.py /code/ports/esp32/modules/config_json.py
-# COPY platforms/esp32/${BMS_BOARD}/${MAIN}.py /code/ports/esp32/modules/main.py
-COPY platforms/esp32/${BMS_BOARD}/${MAIN}.py /code/ports/esp32/modules/pyBms.py
+COPY platforms/esp32/${BMS_BOARD}/${MAIN}.py /code/ports/esp32/modules/main.py
 RUN curl -s -o /code/ports/esp32/modules/microdot.py https://raw.githubusercontent.com/miguelgrinberg/microdot/main/src/microdot.py
 
 RUN . /opt/esp/idf/export.sh && \

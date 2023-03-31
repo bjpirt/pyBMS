@@ -13,25 +13,25 @@ class WebServer:
         self.__app = app = Microdot()
 
         @app.get("/")
-        def get_bms_ui():
+        def get_bms_ui(_):
             return bmsUi, 200, {'Content-Type': 'text/html'}
 
         @app.get("/config")
-        def get_config_ui():
+        def get_config_ui(_):
             return bmsConfig, 200, {'Content-Type': 'text/html'}
 
         @app.get("/config.json")
-        def get_config():
+        def get_config(_):
             return self.__config.get_dict()
 
         @app.put("/config.json")
         def set_config(req):
-            self.__config.apply_config(req.json)
-            self.__config.save_config()
+            self.__config.update(req.json)
+            self.__config.save()
             return self.__config.get_dict()
 
         @app.get("/status.json")
-        def get_status():
+        def get_status(_):
             return self.__bms.battery_pack.get_dict()
 
         try:

@@ -9,10 +9,8 @@ from emulator.tesla_bms import TeslaBmsEmulator  # nopep8
 
 port = sys.argv[1]
 baud = int(sys.argv[2])
-
-serialPort = serial.Serial(port, baud, timeout=0.1)
-
-bms = TeslaBmsEmulator(serialPort, debugInterval=1)
+serial_port = serial.Serial(port, baud, timeout=0.1)
+bms = TeslaBmsEmulator(serial_port, debug_interval=1)
 
 
 def main():

@@ -4,3 +4,6 @@ class List:
 
 class Union:
     pass
+
+
+TYPE_CHECKING = False

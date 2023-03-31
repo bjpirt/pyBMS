@@ -1,15 +1,15 @@
 import time
 import unittest
 
-from bms import ContactorControl, ContactorState
-from hal import DummyContactorGpio
+from bms import Config, ContactorControl, ContactorState
 
 
 class ContactorControlTestCase(unittest.TestCase):
     def setUp(self):
-        self.gpio = DummyContactorGpio()
-        self.control = ContactorControl(
-            self.gpio, negative_time=0.1, precharge_time=0.1)
+        config = Config()
+        config.contactor_negative_time = 0.1
+        config.contactor_precharge_time = 0.1
+        self.control = ContactorControl(config)
 
     def test_switch(self):
         self.assertEqual(self.control.state, ContactorState.DISABLED)

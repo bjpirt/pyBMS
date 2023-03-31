@@ -29,11 +29,11 @@ class Config:
         # The number of seconds without communication before raising an alarm
         self.comms_timeout: float = 10.0
         # The pin number for the negative contactor
-        self.negative_pin: int = 4
+        self.negative_pin: int = 16
         # The pin number for the precharge contactor
-        self.precharge_pin: int = 5
+        self.precharge_pin: int = 17
         # The pin number for the positive contactor
-        self.positive_pin: int = 6
+        self.positive_pin: int = 26
         # Whether to print debug information over serial
         self.debug: bool = False
         # Whether the BMS should balance the modules automatically
@@ -69,16 +69,20 @@ class Config:
         self.wifi_network: str = ""
         # The wifi network password
         self.wifi_password: str = ""
+        # The amount of time for the negative contactor to be on before turning on the precharge
+        self.contactor_negative_time: float = 1
+        # The amount of time for the precharge contactor to be on before turning on the positive contactor
+        self.contactor_precharge_time: float = 5.0
 
-        self.read_config()
+        self.read()
 
     def get_dict(self):
         return {k: v for k, v in self.__dict__.items() if not k.startswith("_Config__")}
 
-    def read_config(self):
+    def read(self):
         data = None
         if exists(self.__file):
-            with open(self.__file, 'r', encoding="utf8") as file:
+            with open(self.__file, 'r', encoding="UTF-8") as file:
                 data = file.read()
         else:
             try:
@@ -88,13 +92,13 @@ class Config:
                 pass
         if data:
             new_config = json.loads(data)
-            self.apply_config(new_config)
+            self.update(new_config)
 
-    def apply_config(self, new_config: dict) -> None:
+    def update(self, new_config: dict) -> None:
         for (key, value) in new_config.items():
             if hasattr(self, key):
                 setattr(self, key, value)
 
-    def save_config(self):
+    def save(self):
         with open(self.__file, 'w') as file:
             json.dump(self.get_dict(), file)

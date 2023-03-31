@@ -13,3 +13,6 @@ class DummyPin():
 
     def on(self):
         pass
+
+    def value(self, state):
+        pass

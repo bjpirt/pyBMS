@@ -1,6 +1,5 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-from hal import ContactorGpio
 from hal.interval import get_interval
 from .led import Led
 from .config import Config
@@ -11,10 +10,10 @@ if TYPE_CHECKING:
 
 
 class Bms:
-    def __init__(self, battery_pack: BatteryPack, contactor_gpio: ContactorGpio, config: Config):
+    def __init__(self, battery_pack: BatteryPack, config: Config):
         self.__config = config
         self.battery_pack = battery_pack
-        self.contactors = ContactorControl(contactor_gpio)
+        self.contactors = ContactorControl(config)
         self.__poll_interval: float = self.__config.poll_interval
         self.__interval = get_interval()
         self.__interval.set(self.__poll_interval)
@@ -32,9 +31,9 @@ class Bms:
             else:
                 self.contactors.enable()
 
-            self.contactors.process()
-            if self.__config.debug:
-                self.print_debug()
+        self.contactors.process()
+        if self.__config.debug:
+            self.print_debug()
         self.__led.process()
 
     @property

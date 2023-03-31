@@ -1,5 +1,9 @@
-from hal import ContactorGpio
+from __future__ import annotations
 from hal.interval import get_interval
+from typing import TYPE_CHECKING
+from hal import Pin
+if TYPE_CHECKING:
+    from .config import Config
 
 
 class ContactorState():
@@ -20,16 +24,14 @@ class ContactorState():
 
 
 class ContactorControl:
-    def __init__(self,
-                 contactor_gpio: ContactorGpio,
-                 negative_time: float = 1,
-                 precharge_time: float = 5):
-        self.__contactor_gpio = contactor_gpio
+    def __init__(self, config: Config):
+        self.__config = config
         self.__state = ContactorState.DISABLED
         self.__desired_state = ContactorState.DISABLED
-        self.__negative_time = negative_time
-        self.__precharge_time = precharge_time
         self.__interval = get_interval()
+        self.__negative_pin = Pin(self.__config.negative_pin, Pin.OUT)
+        self.__precharge_pin = Pin(self.__config.precharge_pin, Pin.OUT)
+        self.__positive_pin = Pin(self.__config.positive_pin, Pin.OUT)
 
     @property
     def state(self):
@@ -48,15 +50,15 @@ class ContactorControl:
         if self.__state != self.__desired_state:
             if self.__state == ContactorState.DISABLED:
                 self.__state = ContactorState.NEGATIVE_ON
-                self.__interval.set(self.__negative_time)
+                self.__interval.set(self.__config.contactor_negative_time)
             elif self.__state == ContactorState.NEGATIVE_ON:
                 if self.__interval.ready:
                     self.__state = ContactorState.PRECHARGE_ON
-                    self.__interval.set(self.__precharge_time)
+                    self.__interval.set(self.__config.contactor_precharge_time)
             elif self.__state == ContactorState.PRECHARGE_ON:
                 if self.__interval.ready:
                     self.__state = ContactorState.ALL_ON
-                    self.__interval.set(self.__precharge_time)
+                    self.__interval.set(self.__config.contactor_precharge_time)
             elif self.__state == ContactorState.ALL_ON:
                 if self.__interval.ready:
                     self.__state = ContactorState.ENABLED
@@ -64,20 +66,25 @@ class ContactorControl:
 
     def __control(self):
         if self.__state == ContactorState.DISABLED:
-            self.__contactor_gpio.update(
-                negative=False, precharge=False, positive=False)
+            self.__negative_pin.value(False)
+            self.__precharge_pin.value(False)
+            self.__positive_pin.value(False)
         elif self.__state == ContactorState.NEGATIVE_ON:
-            self.__contactor_gpio.update(
-                negative=True, precharge=False, positive=False)
+            self.__negative_pin.value(True)
+            self.__precharge_pin.value(False)
+            self.__positive_pin.value(False)
         elif self.__state == ContactorState.PRECHARGE_ON:
-            self.__contactor_gpio.update(
-                negative=True, precharge=True, positive=False)
+            self.__negative_pin.value(True)
+            self.__precharge_pin.value(True)
+            self.__positive_pin.value(False)
         elif self.__state == ContactorState.ALL_ON:
-            self.__contactor_gpio.update(
-                negative=True, precharge=True, positive=True)
+            self.__negative_pin.value(True)
+            self.__precharge_pin.value(True)
+            self.__positive_pin.value(True)
         elif self.__state == ContactorState.ENABLED:
-            self.__contactor_gpio.update(
-                negative=True, precharge=False, positive=True)
+            self.__negative_pin.value(True)
+            self.__precharge_pin.value(False)
+            self.__positive_pin.value(True)
 
     def get_dict(self):
         return {

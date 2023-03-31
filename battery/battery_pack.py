@@ -14,11 +14,11 @@ class BatteryPack:
         self._config = config
         self.modules: List[BatteryModule] = []
 
-        self.highest_voltage: float = float('nan')
-        self.lowest_voltage: float = float('nan')
+        self.highest_voltage: float = -1
+        self.lowest_voltage: float = -1
 
-        self.highest_temperature: float = float('nan')
-        self.lowest_temperature: float = float('nan')
+        self.highest_temperature: float = -1
+        self.lowest_temperature: float = -1
         self.ready = False
 
     @property
@@ -111,16 +111,16 @@ class BatteryPack:
         for module in self.modules:
             module.update()
 
-        if self.voltage > self.highest_voltage or math.isnan(self.highest_voltage):
+        if self.voltage > self.highest_voltage:
             self.highest_voltage = self.voltage
 
-        if self.voltage < self.lowest_voltage or math.isnan(self.lowest_voltage):
+        if self.voltage < self.lowest_voltage or self.lowest_voltage < 0:
             self.lowest_voltage = self.voltage
 
-        if self.high_temperature > self.highest_temperature or math.isnan(self.highest_temperature):
+        if self.high_temperature > self.highest_temperature:
             self.highest_temperature = self.high_temperature
 
-        if self.low_temperature < self.lowest_temperature or math.isnan(self.lowest_temperature):
+        if self.low_temperature < self.lowest_temperature or self.lowest_temperature < 0:
             self.lowest_temperature = self.low_temperature
 
     def get_dict(self):

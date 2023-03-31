@@ -13,3 +13,5 @@ def connect(ssid, password):
             wlan.connect(ssid, password)
             while not wlan.isconnected():
                 pass
+            print('Connected to network')
+            print('IP Address:', wlan.ifconfig()[0])

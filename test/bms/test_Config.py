@@ -57,7 +57,7 @@ class ConfigTestCase(unittest.TestCase):
         self.assertFalse(path.exists("/tmp/config.json"))
         c = Config("/tmp/config.json")
         c.module_count = 12
-        c.save_config()
+        c.save()
         self.assertTrue(path.exists("/tmp/config.json"))
         with open("/tmp/config.json", "r") as fp:
             savedConfig = json.load(fp)

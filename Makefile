@@ -80,3 +80,7 @@ wipe-rp2:
 .PHONY: wipe-esp32
 wipe-esp32:
 	esptool.py -c esp32 -b 921600 erase_flash
+
+.PHONY: lint
+lint:
+	pylint --recursive=y battery bms emulator hal platforms
