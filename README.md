@@ -117,8 +117,8 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 - [x] Data endpoint
 - [x] Watchdog Timer
 - [x] Add support for I2C ADC reading current sensor
-- [ ] Configure over/under voltage into the Tesla BMS
-- [ ] Configure over/under temperature into the Tesla BMS
+- [x] Configure over/under voltage into the Tesla BMS
+- [x] Configure over/under temperature into the Tesla BMS
 - [ ] State of charge from current sensor
 - [ ] Test fault detection on Tesla BMS board
 - [ ] Design hardware

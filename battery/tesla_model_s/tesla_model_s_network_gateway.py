@@ -17,12 +17,12 @@ class TeslaModelSNetworkGateway:
         message = bytearray(
             [(address << 1) & 0xFF, register & 0xFF, length & 0xFF])
         message.append(crc8(message))
-        if self.__config.debug:
+        if self.__config.debugComms:
             print("Sending register read", [hex(c) for c in message])
         self.__serial.write(message)
         response = self.__receive_response(4 + length)
         if response:
-            if self.__config.debug:
+            if self.__config.debugComms:
                 print("Received response", [hex(c) for c in response])
             return response[3:-1]
         return None
@@ -31,14 +31,14 @@ class TeslaModelSNetworkGateway:
         message = bytearray(
             [((address << 1) & 0xFF) | 0x01, register & 0xFF, value & 0xFF])
         message.append(crc8(message))
-        if self.__config.debug:
+        if self.__config.debugComms:
             print("Sending register write", [hex(c) for c in message])
         self.__serial.write(message)
         # TODO: Check the response message matches the write message
         # TODO: Validate the checksum
         response = self.__receive_response(4)
         if response:
-            if self.__config.debug:
+            if self.__config.debugComms:
                 print("Received response", [hex(c) for c in response])
             return True
         self.receive_buffer = bytearray()
@@ -49,14 +49,14 @@ class TeslaModelSNetworkGateway:
         interval.set(0.1)
         while not interval.ready:
             read_data = self.__serial.read()
-            if read_data and read_data != '':
+            if read_data and str(read_data) != '':
                 for char in read_data:
                     self.receive_buffer.append(char)
                 if len(self.receive_buffer) >= length:
                     result = self.receive_buffer[0:length]
                     self.receive_buffer = bytearray()
                     return result
-        if self.__config.debug:
+        if self.__config.debugComms:
             print("Timed out")
         self.receive_buffer = bytearray()
         return None

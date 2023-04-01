@@ -36,6 +36,8 @@ class Config:
         self.positive_pin: int = 26
         # Whether to print debug information over serial
         self.debug: bool = False
+        # Whether to print debug comms information over serial
+        self.debugComms: bool = False
         # Whether the BMS should balance the modules automatically
         self.auto_balance: bool = True
         # How long to balance the cells for in seconds
@@ -50,6 +52,8 @@ class Config:
         self.max_cell_voltage_difference: float = 0.2
         # The offset from the max and min charge voltages that triggers a warning
         self.voltage_warning_offset: float = 0.1
+        # The offset from the max and min charge voltages that will cause the BMS hardware to raise a fault
+        self.voltage_hardware_offset: float = 0.05
         # The offset from the max and min temperatures that triggers a warning
         self.temperature_warning_offset: float = 5.0
         # The offset from the max and min cell voltage differences that triggers a warning
