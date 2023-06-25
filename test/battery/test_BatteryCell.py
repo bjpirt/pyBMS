@@ -6,7 +6,7 @@ from bms import Config
 
 class BatteryCellTestCase(unittest.TestCase):
     def setUp(self):
-        c = Config()
+        c = Config("config.default.json")
         self.cell = BatteryCell(c)
 
     def test_store_highest_voltage(self):

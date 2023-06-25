@@ -6,7 +6,7 @@ from bms import Config
 
 class BatteryPackTestCase(unittest.TestCase):
     def setUp(self):
-        self.config = Config()
+        self.config = Config("config.default.json")
         self.config.parallel_string_count = 2
         self.pack = BatteryPack(self.config)
         for m in range(4):

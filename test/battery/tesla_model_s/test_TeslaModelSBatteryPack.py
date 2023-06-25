@@ -28,9 +28,9 @@ mockValidRead = [
 class TeslaModelSBatteryPackTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.mockGateway = FakeGateway(None, Config())
+        self.mockGateway = FakeGateway(None, Config("config.default.json"))
         self.mockGateway.write_register = MagicMock(return_value=True)
-        self.config = Config()
+        self.config = Config("config.default.json")
         self.config.module_count = 2
         return super().setUp()
 

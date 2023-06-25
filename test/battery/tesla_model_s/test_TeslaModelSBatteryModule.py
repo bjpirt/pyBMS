@@ -32,8 +32,8 @@ mockStatusRead = [0x03, 0x03, 0x07, 0x38]
 class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
 
     def setUp(self):
-        c = Config()
-        self.mockGateway = FakeGateway(None, Config())
+        c = Config("config.default.json")
+        self.mockGateway = FakeGateway(None, Config("config.default.json"))
         self.mockGateway.write_register = MagicMock(return_value=True)
         self.module = TeslaModelSBatteryModule(1, self.mockGateway, c)
         return super().setUp()

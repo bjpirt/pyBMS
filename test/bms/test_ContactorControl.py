@@ -6,7 +6,7 @@ from bms import Config, ContactorControl, ContactorState
 
 class ContactorControlTestCase(unittest.TestCase):
     def setUp(self):
-        config = Config()
+        config = Config("config.default.json")
         config.contactor_negative_time = 0.1
         config.contactor_precharge_time = 0.1
         self.control = ContactorControl(config)

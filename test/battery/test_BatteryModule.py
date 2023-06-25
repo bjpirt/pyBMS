@@ -7,7 +7,7 @@ from bms import Config
 
 class BatteryModuleTestCase(unittest.TestCase):
     def setUp(self):
-        c = Config()
+        c = Config("config.default.json")
         self.module = BatteryModule(c)
         for i in range(4):
             cell = BatteryCell(c)
