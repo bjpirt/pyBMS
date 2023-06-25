@@ -26,5 +26,6 @@
     [4.2, 1.0]
   ],
   "wifi_network": "",
-  "wifi_password": ""
+  "wifi_password": "",
+  "hardware_fault_detection": false
 }

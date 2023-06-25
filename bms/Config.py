@@ -77,6 +77,8 @@ class Config:
         self.contactor_negative_time: float = 1
         # The amount of time for the precharge contactor to be on before turning on the positive contactor
         self.contactor_precharge_time: float = 5.0
+        # Use the hardware fault detection built in to the Tesla BMS modules
+        self.hardware_fault_detection = False
 
         self.read()
 

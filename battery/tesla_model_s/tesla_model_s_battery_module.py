@@ -3,9 +3,10 @@ import math
 import time
 from typing import TYPE_CHECKING
 from .tesla_model_s_constants import CELL_COUNT, REG_ADC_CONTROL, REG_ADC_CONVERT, \
-    REG_ALERT_STATUS, REG_CB_CTRL, REG_CB_TIME, REG_DEVICE_STATUS, REG_GPAI, REG_IO_CONTROL, \
-    REG_TEMPERATURE1, REG_TEMPERATURE2, REG_VCELL1, REG_CONFIG_COV, REG_CONFIG_COVT, \
-    REG_CONFIG_CUV, REG_CONFIG_CUVT, REG_CONFIG_OT, REG_CONFIG_OTT
+    REG_ALERT_STATUS, REG_CB_CTRL, REG_CB_TIME, REG_DEVICE_STATUS, REG_FAULT_STATUS, \
+    REG_GPAI, REG_IO_CONTROL, REG_SHDW_CONTROL, REG_TEMPERATURE1, REG_TEMPERATURE2, \
+    REG_VCELL1, REG_CONFIG_COV, REG_CONFIG_COVT, REG_CONFIG_CUV, REG_CONFIG_CUVT, \
+    REG_CONFIG_OT, REG_CONFIG_OTT, SHDW_CONTROL_VALUE
 from .. import BatteryModule, BatteryCell
 if TYPE_CHECKING:
     from bms import Config
@@ -28,13 +29,14 @@ class TeslaModelSBatteryModule(BatteryModule):
         for _ in range(2):
             self.temperatures.append(float("nan"))
 
-        self.__set_bms_cov(config.cell_high_voltage_setpoint +
-                           config.voltage_hardware_offset)
+        if config.hardware_fault_detection:
+            self.set_bms_cov(config.cell_high_voltage_setpoint +
+                             config.voltage_hardware_offset)
 
-        self.__set_bms_cuv(config.cell_low_voltage_setpoint -
-                           config.voltage_hardware_offset)
+            self.set_bms_cuv(config.cell_low_voltage_setpoint -
+                             config.voltage_hardware_offset)
 
-        self.__set_bms_ot(int(config.high_temperature_setpoint))
+            self.set_bms_ot(int(config.high_temperature_setpoint))
 
     def update(self) -> None:
         self.__read_module()
@@ -84,7 +86,10 @@ class TeslaModelSBatteryModule(BatteryModule):
                 cell.under_voltage_fault = result[3] & (1 << i) > 0
             self.__last_communication_time = time.time()
 
-    def __write_register(self, register: int, value: int):
+    def __write_register(self, register: int, value: int, set_shadow_control=False):
+        if set_shadow_control:
+            self.__gateway.write_register(
+                self.address, REG_SHDW_CONTROL, SHDW_CONTROL_VALUE)
         return self.__gateway.write_register(self.address, register, value)
 
     def __read_register(self, register: int, length: int):
@@ -122,22 +127,28 @@ class TeslaModelSBatteryModule(BatteryModule):
         except:
             print("Error calculating temperature", temp)
 
-    def __set_bms_cov(self, voltage: float, seconds=1.0) -> None:
+    def clearFaults(self):
+        self.__write_register(REG_ALERT_STATUS, 0x80)
+        self.__write_register(REG_ALERT_STATUS, 0x00)
+        self.__write_register(REG_ALERT_STATUS, 0x00)
+        self.__write_register(REG_FAULT_STATUS, 0x08)
+        self.__write_register(REG_FAULT_STATUS, 0x00)
+        self.__write_register(REG_FAULT_STATUS, 0x00)
+
+    def set_bms_cov(self, voltage: float, seconds=1.0) -> None:
         cov = int((voltage - 2) * 20)
-        self.__gateway.write_register(self.address, REG_CONFIG_COV, cov)
+        self.__write_register(REG_CONFIG_COV, cov, True)
         covt = int(seconds * 10)
-        self.__gateway.write_register(
-            self.address, REG_CONFIG_COVT, covt | 0b10000000)
+        self.__write_register(REG_CONFIG_COVT, covt | 0b10000000, True)
 
-    def __set_bms_cuv(self, voltage: float, seconds=1.0) -> None:
+    def set_bms_cuv(self, voltage: float, seconds=1.0) -> None:
         cuv = int((voltage - 0.7) * 10)
-        self.__gateway.write_register(self.address, REG_CONFIG_CUV, cuv)
+        self.__write_register(REG_CONFIG_CUV, cuv, True)
         cuvt = int(seconds * 10)
-        self.__gateway.write_register(
-            self.address, REG_CONFIG_CUVT, cuvt | 0b10000000)
+        self.__write_register(REG_CONFIG_CUVT, cuvt | 0b10000000, True)
 
-    def __set_bms_ot(self, temperature: int, seconds=1.0) -> None:
+    def set_bms_ot(self, temperature: int, seconds=1.0) -> None:
         ot = int(((temperature - 40) / 5) + 1)
-        self.__gateway.write_register(self.address, REG_CONFIG_OT, ot)
+        self.__write_register(REG_CONFIG_OT, ot, True)
         ott = int(seconds * 100)
-        self.__gateway.write_register(self.address, REG_CONFIG_OTT, ott)
+        self.__write_register(REG_CONFIG_OTT, ott, True)

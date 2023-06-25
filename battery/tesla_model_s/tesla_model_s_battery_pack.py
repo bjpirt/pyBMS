@@ -49,8 +49,10 @@ class TeslaModelSBatteryPack(BatteryPack):
                     next_address, REG_ADDRESS_CONTROL, 1)
 
                 if read_result and read_result[0] & 0b00111111 == next_address:
-                    self.modules.append(TeslaModelSBatteryModule(
-                        next_address, self.__gateway, self._config))
+                    module = TeslaModelSBatteryModule(
+                        next_address, self.__gateway, self._config)
+                    module.clearFaults()
+                    self.modules.append(module)
             else:
                 break
 
