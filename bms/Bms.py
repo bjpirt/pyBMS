@@ -1,11 +1,13 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from hal.interval import get_interval
+from hal import WDT
 from .led import Led
 from .config import Config
 from .contactor_control import ContactorControl
 from .state_of_charge import StateOfCharge
 if TYPE_CHECKING:
+    from typing import Union
     from battery import BatteryPack
 
 
@@ -18,6 +20,9 @@ class Bms:
         self.__interval = get_interval()
         self.__interval.set(self.__poll_interval)
         self.__led = Led(self.__config.led_pin)
+        self.__wdt: Union[WDT, None] = None
+        if self.__config.wdt_timeout > 0:
+            self.__wdt = WDT(timeout=self.__config.wdt_timeout)
         self.__state_of_charge = StateOfCharge(
             self.battery_pack, self.__config)
 
@@ -35,6 +40,8 @@ class Bms:
 
         self.contactors.process()
         self.__led.process()
+        if self.__wdt:
+            self.__wdt.feed()
 
     @property
     def state_of_charge(self):

@@ -1,6 +1,6 @@
 from bms import Bms, Config, VictronOutput, WebServer
 from battery.tesla_model_s import TeslaModelSBatteryPack, TeslaModelSNetworkGateway
-from machine import UART, WDT  # type: ignore
+from machine import UART  # type: ignore
 from esp32 import CAN  # type: ignore
 
 
@@ -12,14 +12,14 @@ def main():
     gateway = TeslaModelSNetworkGateway(uart, config)
     pack = TeslaModelSBatteryPack(gateway, config)
     bms = Bms(pack, config)
-    victronOutput = VictronOutput(can, bms, 0.5)
+    # victronOutput = VictronOutput(can, bms, 0.5)
     WebServer(bms, config)
-    wdt = WDT(timeout=5000)
+    #
 
     while True:
-        wdt.feed()
+        # wdt.feed()
         bms.process()
-        victronOutput.process()
+        # victronOutput.process()
 
 
 main()
