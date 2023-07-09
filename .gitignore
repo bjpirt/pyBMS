@@ -132,3 +132,4 @@ dmypy.json
 build/out
 config.json
 config_json.py
+ui/node_modules

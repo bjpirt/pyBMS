@@ -1,0 +1,36 @@
+#modules{
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 10px;
+  row-gap: 10px;
+}
+
+.module{
+  border: 1px solid #111;
+  flex-basis: 49%;
+  box-sizing: border-box;
+  padding:5px;
+}
+
+.module .cell {
+  border: 1px solid #111;
+  margin: 3px 0;
+  padding:3px;
+}
+
+.label {
+  display: inline-block;
+  padding:2px 4px 0;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.warning {
+  background: orange;
+  color:#333
+}
+
+.alarm {
+  background: #900;
+  color:#FFF
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>pyBms UI</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/ui.css">
+</head>
+
+<body>
+  <h1>pyBms UI</h1>
+  <table id="packDetail">
+    <tr>
+      <td></td>
+      <td>Min</td>
+      <td>Now</td>
+      <td>Max</td>
+    </tr>
+    <tr class="voltage">
+      <td>Voltage</td>
+      <td class="min"></td>
+      <td class="now"></td>
+      <td class="max"></td>
+    </tr>
+    <tr class="temperature">
+      <td>Temperature</td>
+      <td class="min"></td>
+      <td class="now"></td>
+      <td class="max"></td>
+    </tr>
+    <tr>
+      <td>Current</td>
+      <td colspan="3" class="current"></td>
+    </tr>
+    <tr>
+      <td>State of Charge</td>
+      <td colspan="3" class="soc"></td>
+    </tr>
+    <tr>
+      <td>Warnings</td>
+      <td colspan="3" class="warnings"></td>
+    </tr>
+    <tr>
+      <td>Alarms</td>
+      <td colspan="3" class="alarms"></td>
+    </tr>
+    <tr>
+      <td>Fault</td>
+      <td colspan="3" class="fault"></td>
+    </tr>
+  </table>
+  <div id="modules"></div>
+</body>
+
+<template id="module">
+  <div class="module">
+    <h2></h2>
+    <table class="moduleDetail">
+      <tr>
+        <td>Voltage</td>
+        <td class="voltage"></td>
+      </tr>
+      <tr>
+        <td>Temperature</td>
+        <td class="temperature"></td>
+      </tr>
+    </table>
+    <div class="cells"></div>
+  </div>
+</template>
+
+<template id="cell">
+  <div class="cell">
+    <div class="voltage"></div>
+  </div>
+</template>
+
+<script type="text/javascript" src="js/lib.js"></script>
+<script type="text/javascript" src="js/ui.js"></script>
+
+</html>

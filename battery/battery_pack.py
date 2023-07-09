@@ -131,6 +131,8 @@ class BatteryPack:
             "lowest_voltage": self.lowest_voltage,
             "highest_temperature": self.highest_temperature,
             "lowest_temperature": self.lowest_temperature,
+            "current": 0,
+            "state_of_charge": 0.5,
             "alarms": self.alarms,
             "warnings": self.warnings,
             "fault": self.has_fault,

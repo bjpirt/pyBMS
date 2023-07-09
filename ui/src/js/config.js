@@ -1,5 +1,4 @@
-bms_config = """
-<!DOCTYPE html> <html> <head> <title>pyBms Config</title> <style> *, *::before, *::after{ box-sizing:border-box;} body, h1, h2, h3, h4, p, figure, blockquote, dl, dd{ margin:0;} ul[role='list'], ol[role='list']{ list-style:none;} html:focus-within{ scroll-behavior:smooth;} body{ min-height:100vh;text-rendering:optimizeSpeed;line-height:1.5;} a:not([class]){ text-decoration-skip-ink:auto;} input, button, textarea, select{ font:inherit;}</style> <style>body{ background:#333;padding:10px;}*{ color:#CCC;font-family:sans-serif;}input, button{ color:#333;}</style> <style>#modules{ display:flex;flex-wrap:wrap;column-gap:10px;row-gap:10px;}.module{ border:1px solid #111;flex-basis:49%;box-sizing:border-box;padding:5px;}.module .cell{ border:1px solid #111;margin:3px 0;padding:3px;}.label{ display:inline-block;padding:2px 4px 0;font-weight:bold;border-radius:5px;}.warning{ background:orange;color:#333 }.alarm{ background:#900;color:#FFF }</style> </head> <body> <h1>pyBms Config</h1> <table id="config"> </table> <button>Update Configuration</button> <span id="message"></span> </body> <script type="text/javascript">const fetchUrl = async (url) => fetch(url).then((response) => response.json());</script> <script type="text/javascript">const getInput = (key, value) => {
+const getInput = (key, value) => {
   if (typeof value === "boolean") {
     return `<input type="checkbox" name="${key}" checked="${value}" />`;
   } else if (typeof value === "number") {
@@ -85,5 +84,4 @@ const init = async () => {
   renderConfig(config);
 };
 
-init();</script> </html> 
-"""
+init();

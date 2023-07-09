@@ -1,0 +1,13 @@
+body {
+  background: #333;
+  padding:10px;
+}
+
+* {
+  color: #CCC;
+  font-family: sans-serif;
+}
+
+input, button {
+  color:#333;
+}

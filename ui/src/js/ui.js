@@ -1,5 +1,4 @@
-bms_ui = """
-<!DOCTYPE html> <html> <head> <title>pyBms UI</title> <style> *, *::before, *::after{ box-sizing:border-box;} body, h1, h2, h3, h4, p, figure, blockquote, dl, dd{ margin:0;} ul[role='list'], ol[role='list']{ list-style:none;} html:focus-within{ scroll-behavior:smooth;} body{ min-height:100vh;text-rendering:optimizeSpeed;line-height:1.5;} a:not([class]){ text-decoration-skip-ink:auto;} input, button, textarea, select{ font:inherit;}</style> <style>body{ background:#333;padding:10px;}*{ color:#CCC;font-family:sans-serif;}input, button{ color:#333;}</style> <style>#modules{ display:flex;flex-wrap:wrap;column-gap:10px;row-gap:10px;}.module{ border:1px solid #111;flex-basis:49%;box-sizing:border-box;padding:5px;}.module .cell{ border:1px solid #111;margin:3px 0;padding:3px;}.label{ display:inline-block;padding:2px 4px 0;font-weight:bold;border-radius:5px;}.warning{ background:orange;color:#333 }.alarm{ background:#900;color:#FFF }</style> </head> <body> <h1>pyBms UI</h1> <table id="packDetail"> <tr> <td></td> <td>Min</td> <td>Now</td> <td>Max</td> </tr> <tr class="voltage"> <td>Voltage</td> <td class="min"></td> <td class="now"></td> <td class="max"></td> </tr> <tr class="temperature"> <td>Temperature</td> <td class="min"></td> <td class="now"></td> <td class="max"></td> </tr> <tr> <td>Current</td> <td colspan="3" class="current"></td> </tr> <tr> <td>State of Charge</td> <td colspan="3" class="soc"></td> </tr> <tr> <td>Warnings</td> <td colspan="3" class="warnings"></td> </tr> <tr> <td>Alarms</td> <td colspan="3" class="alarms"></td> </tr> <tr> <td>Fault</td> <td colspan="3" class="fault"></td> </tr> </table> <div id="modules"></div> </body> <template id="module"> <div class="module"> <h2></h2> <table class="moduleDetail"> <tr> <td>Voltage</td> <td class="voltage"></td> </tr> <tr> <td>Temperature</td> <td class="temperature"></td> </tr> </table> <div class="cells"></div> </div> </template> <template id="cell"> <div class="cell"> <div class="voltage"></div> </div> </template> <script type="text/javascript">const fetchUrl = async (url) => fetch(url).then((response) => response.json());</script> <script type="text/javascript">const graphColor = "#42758a";
+const graphColor = "#42758a";
 
 const createTableRow = (content, table) => {
   const row = document.createElement("tr");
@@ -115,5 +114,4 @@ const init = async () => {
   await render(config);
 };
 
-init();</script> </html> 
-"""
+init();

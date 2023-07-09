@@ -2,8 +2,8 @@ from microdot import Microdot  # type: ignore
 from hal.wifi import connect
 from .bms import Bms
 from .config import Config
-from .pages.bms_ui import bmsUi
-from .pages.bms_config import bmsConfig
+from .pages.bms_ui import bms_ui
+from .pages.bms_config import bms_config
 
 
 class WebServer:
@@ -14,11 +14,11 @@ class WebServer:
 
         @app.get("/")
         def get_bms_ui(_):
-            return bmsUi, 200, {'Content-Type': 'text/html'}
+            return bms_ui, 200, {'Content-Type': 'text/html'}
 
         @app.get("/config")
         def get_config_ui(_):
-            return bmsConfig, 200, {'Content-Type': 'text/html'}
+            return bms_config, 200, {'Content-Type': 'text/html'}
 
         @app.get("/config.json")
         def get_config(_):
@@ -44,5 +44,10 @@ class WebServer:
             thread.start()
 
     def __run(self):
-        connect(self.__config.wifi_network, self.__config.wifi_password)
-        self.__app.run(port=6001)
+        try:
+            print(
+                f"Connecting to WiFi [{self.__config.wifi_network}] with password [{self.__config.wifi_password}]")
+            connect(self.__config.wifi_network, self.__config.wifi_password)
+            self.__app.run(port=6001)
+        except OSError:
+            print("Error connecting to WiFi")

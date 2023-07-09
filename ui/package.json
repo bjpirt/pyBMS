@@ -1,0 +1,17 @@
+{
+  "name": "ui",
+  "version": "1.0.0",
+  "description": "The UI build for pyBms",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dev-server/index.js",
+    "build": "node scripts/build.js"
+  },
+  "author": "Ben Pirt",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "express": "^4.18.2",
+    "inliner": "^1.13.1"
+  }
+}
