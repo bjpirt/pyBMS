@@ -95,9 +95,10 @@ class Config:
         else:
             try:
                 import config_json  # type: ignore
-                data = config_json.data().tobytes()
+                data = bytearray(config_json.data()).decode()
             except:
-                pass
+                print("Error reading default python config")
+
         if data:
             new_config = json.loads(data)
             self.update(new_config)
