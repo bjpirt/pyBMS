@@ -15,7 +15,7 @@ class StateOfCharge:
             if voltage > low_point[0] and voltage < high_point[0]:
                 return low_point[1] + (high_point[1] - low_point[1]) * (
                     voltage - low_point[0]) / (high_point[0] - low_point[0])
-        raise Exception("Could not calculate state of charge from voltage")
+        raise ValueError("Could not calculate state of charge from voltage")
 
     @property
     def level(self) -> float:

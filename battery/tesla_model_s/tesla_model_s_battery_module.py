@@ -1,6 +1,5 @@
 from __future__ import annotations
 import math
-import time
 from typing import TYPE_CHECKING
 from .tesla_model_s_constants import CELL_COUNT, REG_ADC_CONTROL, REG_ADC_CONVERT, \
     REG_ALERT_STATUS, REG_CB_CTRL, REG_CB_TIME, REG_DEVICE_STATUS, REG_FAULT_STATUS, \
@@ -18,7 +17,7 @@ class TeslaModelSBatteryModule(BatteryModule):
         super().__init__(config)
         self.__gateway: TeslaModelSNetworkGateway = gateway
         self.address: int = address
-        self.__last_communication_time: float = float('nan')
+        # self.__last_communication_time: float = float('nan')
 
         self.alert: bool = False
         self.fault: bool = False
@@ -56,7 +55,8 @@ class TeslaModelSBatteryModule(BatteryModule):
 
     def __check_communication_time(self):
         # TODO: Use hal time abstraction
-        self.__fault = time.time() - self.__last_communication_time > self._config.comms_timeout
+        # self.__fault = time.time() - self.__last_communication_time > self._config.comms_timeout
+        pass
 
     def __read_module(self) -> None:
         self.__write_register(REG_ADC_CONTROL, 0b00111101)
@@ -72,7 +72,7 @@ class TeslaModelSBatteryModule(BatteryModule):
                 0, result[REG_TEMPERATURE1:REG_TEMPERATURE1+2])
             self.__update_temperature(
                 1, result[REG_TEMPERATURE2:REG_TEMPERATURE2+2])
-            self.__last_communication_time = time.time()
+            # self.__last_communication_time = time.time()
 
     def __read_module_status(self):
         result = self.__read_register(REG_ALERT_STATUS, 4)
@@ -84,7 +84,7 @@ class TeslaModelSBatteryModule(BatteryModule):
                 cell.over_voltage_fault = result[2] & (1 << i) > 0
             for i, cell in enumerate(self.cells):
                 cell.under_voltage_fault = result[3] & (1 << i) > 0
-            self.__last_communication_time = time.time()
+            # self.__last_communication_time = time.time()
 
     def __write_register(self, register: int, value: int, set_shadow_control=False):
         if set_shadow_control:
@@ -124,7 +124,7 @@ class TeslaModelSBatteryModule(BatteryModule):
                                                   ) + (math.pow(math.log(temp_temp), 3) * 0.0000001022822735))
 
             self.temperatures[temp_id] = round(temp_calc - 273.15, 3)
-        except Exception:
+        except ValueError:
             print("Error calculating temperature", temp)
 
     def clearFaults(self):

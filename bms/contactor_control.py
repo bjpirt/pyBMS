@@ -1,6 +1,6 @@
 from __future__ import annotations
-from hal.interval import get_interval
 from typing import TYPE_CHECKING
+from hal.interval import get_interval
 from hal import Pin
 if TYPE_CHECKING:
     from .config import Config
