@@ -11,7 +11,7 @@ class DummyPin():
     def off(self):
         pass
 
-    def on(self):
+    def on(self):  # pylint: disable=C0103
         pass
 
     def value(self, state):

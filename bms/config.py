@@ -94,9 +94,10 @@ class Config:
                 data = file.read()
         else:
             try:
+                # pylint: disable=E0401
                 import config_json  # type: ignore
                 data = bytearray(config_json.data()).decode()
-            except Exception:
+            except ModuleNotFoundError:
                 print("Error reading default python config")
 
         if data:
@@ -109,5 +110,5 @@ class Config:
                 setattr(self, key, value)
 
     def save(self):
-        with open(self.__file, 'w') as file:
+        with open(self.__file, 'w', encoding="utf-8") as file:
             json.dump(self.get_dict(), file)
