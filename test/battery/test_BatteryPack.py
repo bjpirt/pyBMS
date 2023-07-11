@@ -1,6 +1,6 @@
 from battery import BatteryCell, BatteryModule, BatteryPack
 import unittest
-from battery.constants import *
+from battery.constants import OVER_VOLTAGE, OVER_TEMPERATURE, UNDER_VOLTAGE, UNDER_TEMPERATURE, BALANCE
 from bms import Config
 
 
