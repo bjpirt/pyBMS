@@ -124,7 +124,7 @@ class TeslaModelSBatteryModule(BatteryModule):
                                                   ) + (math.pow(math.log(temp_temp), 3) * 0.0000001022822735))
 
             self.temperatures[temp_id] = round(temp_calc - 273.15, 3)
-        except:
+        except Exception:
             print("Error calculating temperature", temp)
 
     def clearFaults(self):

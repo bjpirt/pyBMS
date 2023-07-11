@@ -12,14 +12,12 @@ def main():
     gateway = TeslaModelSNetworkGateway(uart, config)
     pack = TeslaModelSBatteryPack(gateway, config)
     bms = Bms(pack, config)
-    # victronOutput = VictronOutput(can, bms, 0.5)
+    victronOutput = VictronOutput(can, bms, 0.5)
     WebServer(bms, config)
-    #
 
     while True:
-        # wdt.feed()
         bms.process()
-        # victronOutput.process()
+        victronOutput.process()
 
 
 main()

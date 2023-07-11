@@ -4,8 +4,8 @@ from .interval import Interval
 
 MPY = True
 try:
-    import machine  # type: ignore
-except:
+    import machine as machine  # type: ignore
+except ModuleNotFoundError:
     MPY = False
 
 

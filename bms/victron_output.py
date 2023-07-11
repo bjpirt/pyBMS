@@ -187,7 +187,8 @@ class VictronOutput:
         msg.buf[0] = lowByte(uint16_t(settings.Pstrings * settings.CAP));
         msg.buf[1] = highByte(uint16_t(settings.Pstrings * settings.CAP));
         msg.buf[2] = contstat; //contactor state
-        msg.buf[3] = (digitalRead(OUT1) | (digitalRead(OUT2) << 1) | (digitalRead(OUT3) << 2) | (digitalRead(OUT4) << 3));
+        msg.buf[3] = (digitalRead(OUT1) | (digitalRead(OUT2) << 1) | \
+            (digitalRead(OUT3) << 2) | (digitalRead(OUT4) << 3));
         msg.buf[4] = bmsstatus;
         """
         message = CanMessage(0x379)

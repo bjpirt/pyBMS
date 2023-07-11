@@ -1,5 +1,4 @@
-from .crc8 import crc8
-from .tesla_model_s_battery_module import TeslaModelSBatteryModule
-from .tesla_model_s_battery_pack import TeslaModelSBatteryPack
-from .tesla_model_s_network_gateway import TeslaModelSNetworkGateway
-from .tesla_model_s_constants import *
+from .crc8 import crc8 as crc8
+from .tesla_model_s_battery_module import TeslaModelSBatteryModule as TeslaModelSBatteryModule
+from .tesla_model_s_battery_pack import TeslaModelSBatteryPack as TeslaModelSBatteryPack
+from .tesla_model_s_network_gateway import TeslaModelSNetworkGateway as TeslaModelSNetworkGateway

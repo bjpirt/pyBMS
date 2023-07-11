@@ -96,7 +96,7 @@ class Config:
             try:
                 import config_json  # type: ignore
                 data = bytearray(config_json.data()).decode()
-            except:
+            except Exception:
                 print("Error reading default python config")
 
         if data:

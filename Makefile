@@ -84,3 +84,7 @@ wipe-esp32:
 .PHONY: lint
 lint:
 	pylint --recursive=y battery bms emulator hal platforms
+
+.PHONY: ruff
+ruff:
+	ruff --format=github --target-version=py39 --line-length=120 .
