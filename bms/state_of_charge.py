@@ -13,7 +13,8 @@ class StateOfCharge:
     def calculate_from_voltage(self, voltage: float) -> float:
         for low_point, high_point in zip(self.__config.soc_lookup, self.__config.soc_lookup[1:]):
             if voltage > low_point[0] and voltage < high_point[0]:
-                return low_point[1] + (high_point[1] - low_point[1]) * (voltage - low_point[0]) / (high_point[0] - low_point[0])
+                return low_point[1] + (high_point[1] - low_point[1]) * (
+                    voltage - low_point[0]) / (high_point[0] - low_point[0])
         raise Exception("Could not calculate state of charge from voltage")
 
     @property

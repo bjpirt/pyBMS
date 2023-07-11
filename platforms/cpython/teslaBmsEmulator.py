@@ -1,3 +1,4 @@
+# ruff: noqa: E402
 import random
 import serial  # type: ignore
 import sys

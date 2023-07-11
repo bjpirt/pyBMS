@@ -101,7 +101,8 @@ class BatteryPack:
             warnings.append(OVER_TEMPERATURE)
         if self.low_temperature < self._config.low_temperature_setpoint + self._config.temperature_warning_offset:
             warnings.append(UNDER_TEMPERATURE)
-        if self.cell_voltage_difference > self._config.max_cell_voltage_difference - self._config.voltage_difference_warning_offset:
+        if self.cell_voltage_difference > (
+                self._config.max_cell_voltage_difference - self._config.voltage_difference_warning_offset):
             warnings.append(BALANCE)
         return warnings if len(warnings) > 0 else None
 

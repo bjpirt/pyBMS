@@ -1,7 +1,7 @@
-from .contactor_control import ContactorControl, ContactorState
-from .bms import Bms
-from .led import Led
-from .victron_output import VictronOutput
-from .config import Config
-from .state_of_charge import StateOfCharge
-from .web_server import WebServer
+from .contactor_control import ContactorControl as ContactorControl, ContactorState as ContactorState
+from .bms import Bms as Bms
+from .led import Led as Led
+from .victron_output import VictronOutput as VictronOutput
+from .config import Config as Config
+from .state_of_charge import StateOfCharge as StateOfCharge
+from .web_server import WebServer as WebServer

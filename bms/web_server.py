@@ -37,7 +37,7 @@ class WebServer:
         try:
             import _thread
             _thread.start_new_thread(self.__run, ())
-        except:
+        except ModuleNotFoundError:
             import threading
             thread = threading.Thread(target=self.__run, args=())
             thread.daemon = True

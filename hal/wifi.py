@@ -1,7 +1,7 @@
 MPY = True
 try:
     import network  # type: ignore
-except:
+except ModuleNotFoundError:
     MPY = False
 
 

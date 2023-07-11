@@ -14,14 +14,14 @@ def get_dummy_config():
 def remove_json():
     try:
         os.remove("/tmp/config.json")
-    except:
+    except Exception:
         pass
 
 
 def remove_py():
     try:
         os.remove("config_json.py")
-    except:
+    except Exception:
         pass
 
 

@@ -1,3 +1,4 @@
+# ruff: noqa: E402
 import sys
 import serial  # type: ignore
 from os import path  # type: ignore
