@@ -1,12 +1,10 @@
 from __future__ import annotations
-import math
 from typing import TYPE_CHECKING
-from battery.constants import BALANCE, OVER_TEMPERATURE, OVER_VOLTAGE, \
-    UNDER_TEMPERATURE, UNDER_VOLTAGE
+from .constants import BALANCE, OVER_TEMPERATURE, OVER_VOLTAGE, UNDER_TEMPERATURE, UNDER_VOLTAGE
 if TYPE_CHECKING:
     from typing import List, Union
     from bms import Config
-    from battery import BatteryModule
+    from . import BatteryModule
 
 
 class BatteryPack:

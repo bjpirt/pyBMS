@@ -1,6 +1,7 @@
 import unittest
 from battery.tesla_model_s import crc8
-from battery.tesla_model_s.tesla_model_s_constants import BROADCAST_ADDRESS, REG_ADDRESS_CONTROL, REG_CB_CTRL, REG_RESET, RESET_VALUE
+from battery.tesla_model_s.tesla_model_s_constants import (
+    BROADCAST_ADDRESS, REG_ADDRESS_CONTROL, REG_CB_CTRL, REG_RESET, RESET_VALUE)
 from emulator.tesla_bms import TeslaBmsEmulator
 from unittest.mock import MagicMock
 
