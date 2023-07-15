@@ -58,7 +58,11 @@ class TeslaBmsEmulator:
         elif self.__receive_timeout.ready:
             self.buff = bytearray()
 
-        if len(self.buff) >= 4 and crc8(self.buff[0:-1]) == self.buff[-1]:
+        if len(self.buff) >= 4:
+            incoming = bytearray([i for i in self.buff[0:-1]])
+            incoming[0] = incoming[0] & 0b01111111
+            if crc8(incoming) != self.buff[-1]:
+                return
             if self.__debug_comms:
                 print(f"Received by device {self.name} address {self.address}", [
                     hex(char) for char in self.buff])
@@ -82,12 +86,11 @@ class TeslaBmsEmulator:
             self.__interval.set(self.__debug_interval)
 
     def __handle_message(self):
+        current_address = self.address
         msg_address = self.buff[0] >> 1
         msg_write = bool(self.buff[0] & 1)
         register = self.buff[1]
         response: bytearray = bytearray(list(self.buff[0:-1]))
-        if msg_address == 0 and self.address == 0:
-            response[0] = self.buff[0] | 0x80
         if msg_write:
             if self.__debug_comms:
                 print(
@@ -111,6 +114,8 @@ class TeslaBmsEmulator:
             for i in range(self.buff[2]):
                 response.append(self.registers[self.buff[1] + i] & 0xFF)
         response.append(crc8(response))
+        if msg_address == 0 and current_address == 0:
+            response[0] = self.buff[0] | 0x80
         if self.__debug_comms:
             print(f"Sending response from {self.name}", [
                   hex(c) for c in response])

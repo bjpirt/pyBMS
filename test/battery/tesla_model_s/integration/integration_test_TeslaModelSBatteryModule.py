@@ -32,7 +32,7 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
 
     def test_update(self):
         moduleSerialPort = serial.Serial('port1-end-b', 115200, timeout=0.01)
-        gateway = TeslaModelSNetworkGateway(moduleSerialPort)
+        gateway = TeslaModelSNetworkGateway(moduleSerialPort, Config())
         module = TeslaModelSBatteryModule(1, gateway, Config())
 
         module.update()
