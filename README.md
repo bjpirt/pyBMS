@@ -119,11 +119,11 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 - [x] Add support for I2C ADC reading current sensor
 - [x] Configure over/under voltage into the Tesla BMS
 - [x] Configure over/under temperature into the Tesla BMS
-- [ ] Support for contactors per string
+- [x] Monitoring UI (first pass)
+- [x] Handle communication faults
 - [ ] State of charge from current sensor
-- [ ] Handle communication faults
 - [ ] Design hardware
-- [ ] Monitoring UI
+- [ ] Support for contactors per string
 - [ ] HTTPS
 - [ ] Basic Auth
 - [ ] Get fault detection working on Tesla BMS board - blocked

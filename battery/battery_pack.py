@@ -1,8 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-from .constants import BALANCE, OVER_TEMPERATURE, OVER_VOLTAGE, UNDER_TEMPERATURE, UNDER_VOLTAGE
+from .constants import BALANCE
 if TYPE_CHECKING:
-    from typing import List, Union
+    from typing import List
     from bms import Config
     from . import BatteryModule
 
@@ -20,8 +20,39 @@ class BatteryPack:
         self.ready = False
 
     @property
-    def has_fault(self) -> bool:
-        return any((m.has_fault for m in self.modules))
+    def balance_alert(self) -> bool:
+        return self.cell_voltage_difference > (
+            self._config.max_cell_voltage_difference - self._config.voltage_difference_warning_offset)
+
+    @property
+    def alert(self) -> bool:
+        return any((m.alert for m in self.modules)) or self.balance_alert
+
+    @property
+    def alerts(self) -> List[str]:
+        alerts = []
+        for module in self.modules:
+            alerts.extend(module.alerts)
+        if self.balance_alert:
+            alerts.append(BALANCE)
+        return list(dict.fromkeys(alerts))
+
+    @property
+    def balance_fault(self) -> bool:
+        return self.cell_voltage_difference > self._config.max_cell_voltage_difference
+
+    @property
+    def fault(self) -> bool:
+        return any((m.fault for m in self.modules)) or self.balance_fault
+
+    @property
+    def faults(self) -> List[str]:
+        faults = []
+        for module in self.modules:
+            faults.extend(module.faults)
+        if self.balance_fault:
+            faults.append(BALANCE)
+        return list(dict.fromkeys(faults))
 
     @property
     def voltage(self) -> float:
@@ -75,37 +106,6 @@ class BatteryPack:
             return max((module.cell_voltage_difference for module in self.modules))
         return 0.0
 
-    @property
-    def alarms(self) -> Union[List[int], None]:
-        alarms = []
-        if self.high_cell_voltage > self._config.cell_high_voltage_setpoint:
-            alarms.append(OVER_VOLTAGE)
-        if self.low_cell_voltage < self._config.cell_low_voltage_setpoint:
-            alarms.append(UNDER_VOLTAGE)
-        if self.high_temperature > self._config.high_temperature_setpoint:
-            alarms.append(OVER_TEMPERATURE)
-        if self.low_temperature < self._config.low_temperature_setpoint:
-            alarms.append(UNDER_TEMPERATURE)
-        if self.cell_voltage_difference > self._config.max_cell_voltage_difference:
-            alarms.append(BALANCE)
-        return alarms if len(alarms) > 0 else None
-
-    @property
-    def warnings(self) -> Union[List[int], None]:
-        warnings = []
-        if self.high_cell_voltage > self._config.cell_high_voltage_setpoint - self._config.voltage_warning_offset:
-            warnings.append(OVER_VOLTAGE)
-        if self.low_cell_voltage < self._config.cell_low_voltage_setpoint + self._config.voltage_warning_offset:
-            warnings.append(UNDER_VOLTAGE)
-        if self.high_temperature > self._config.high_temperature_setpoint - self._config.temperature_warning_offset:
-            warnings.append(OVER_TEMPERATURE)
-        if self.low_temperature < self._config.low_temperature_setpoint + self._config.temperature_warning_offset:
-            warnings.append(UNDER_TEMPERATURE)
-        if self.cell_voltage_difference > (
-                self._config.max_cell_voltage_difference - self._config.voltage_difference_warning_offset):
-            warnings.append(BALANCE)
-        return warnings if len(warnings) > 0 else None
-
     def update(self) -> None:
         for module in self.modules:
             module.update()
@@ -132,8 +132,9 @@ class BatteryPack:
             "lowest_temperature": self.lowest_temperature,
             "current": 0,
             "state_of_charge": 0.5,
-            "alarms": self.alarms,
-            "warnings": self.warnings,
-            "fault": self.has_fault,
+            "fault": self.fault,
+            "faults": self.faults,
+            "alert": self.alert,
+            "alerts": self.alerts,
             "modules": [m.get_dict() for m in self.modules]
         }

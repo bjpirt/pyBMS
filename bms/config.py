@@ -25,7 +25,7 @@ class Config:
         # The high temperature setpoint
         self.high_temperature_setpoint: float = 65.0
         # The low temperature setpoint
-        self.low_temperature_setpoint: float = 5.0
+        self.low_temperature_setpoint: float = 10.0
         # The number of seconds without communication before raising an alarm
         self.comms_timeout: float = 10.0
         # The pin number for the negative contactor

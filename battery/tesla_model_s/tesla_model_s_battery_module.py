@@ -1,6 +1,8 @@
 from __future__ import annotations
 import math
 from typing import TYPE_CHECKING
+
+from hal import get_interval
 from .tesla_model_s_constants import CELL_COUNT, REG_ADC_CONTROL, REG_ADC_CONVERT, \
     REG_ALERT_STATUS, REG_CB_CTRL, REG_CB_TIME, REG_DEVICE_STATUS, REG_FAULT_STATUS, \
     REG_GPAI, REG_IO_CONTROL, REG_SHDW_CONTROL, REG_TEMPERATURE1, REG_TEMPERATURE2, \
@@ -15,12 +17,10 @@ if TYPE_CHECKING:
 class TeslaModelSBatteryModule(BatteryModule):
     def __init__(self, address: int, gateway: TeslaModelSNetworkGateway, config: Config) -> None:
         super().__init__(config)
-        self.__gateway: TeslaModelSNetworkGateway = gateway
         self.address: int = address
-        # self.__last_communication_time: float = float('nan')
-
-        self.alert: bool = False
-        self.fault: bool = False
+        self.__gateway: TeslaModelSNetworkGateway = gateway
+        self.__comms_timeout = get_interval()
+        self.__comms_timeout.set(config.comms_timeout)
 
         for _ in range(CELL_COUNT):
             self.cells.append(BatteryCell(config))
@@ -54,9 +54,7 @@ class TeslaModelSBatteryModule(BatteryModule):
                 self.__write_register(REG_CB_CTRL, balance_value)
 
     def __check_communication_time(self):
-        # TODO: Use hal time abstraction
-        # self.__fault = time.time() - self.__last_communication_time > self._config.comms_timeout
-        pass
+        self.comms_fault = self.__comms_timeout.ready
 
     def __read_module(self) -> None:
         self.__write_register(REG_ADC_CONTROL, 0b00111101)
@@ -72,7 +70,7 @@ class TeslaModelSBatteryModule(BatteryModule):
                 0, result[REG_TEMPERATURE1:REG_TEMPERATURE1+2])
             self.__update_temperature(
                 1, result[REG_TEMPERATURE2:REG_TEMPERATURE2+2])
-            # self.__last_communication_time = time.time()
+            self.__comms_timeout.reset()
 
     def __read_module_status(self):
         result = self.__read_register(REG_ALERT_STATUS, 4)
@@ -81,10 +79,10 @@ class TeslaModelSBatteryModule(BatteryModule):
             self.alert = bool(result[0])
             self.fault = bool(result[1])
             for i, cell in enumerate(self.cells):
-                cell.over_voltage_fault = result[2] & (1 << i) > 0
+                cell.over_voltage_fault_override = result[2] & (1 << i) > 0
             for i, cell in enumerate(self.cells):
-                cell.under_voltage_fault = result[3] & (1 << i) > 0
-            # self.__last_communication_time = time.time()
+                cell.under_voltage_fault_override = result[3] & (1 << i) > 0
+            self.__comms_timeout.reset()
 
     def __write_register(self, register: int, value: int, set_shadow_control=False):
         if set_shadow_control:
@@ -100,8 +98,8 @@ class TeslaModelSBatteryModule(BatteryModule):
             self.alert = False
             self.fault = False
             for cell in self.cells:
-                cell.over_voltage_fault = False
-                cell.under_voltage_fault = False
+                cell.over_voltage_fault_override = False
+                cell.under_voltage_fault_override = False
         else:
             self.__read_module_status()
 

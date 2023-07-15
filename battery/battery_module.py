@@ -1,6 +1,8 @@
 from __future__ import annotations
 import math
+from .constants import COMMS, OVER_TEMPERATURE, UNDER_TEMPERATURE
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from bms import Config
     from typing import List
@@ -21,13 +23,76 @@ class BatteryModule:
         self.highest_temperature: float = float('nan')
         self.lowest_temperature: float = float('nan')
 
+        self.__alert: bool = False
         self.__fault: bool = False
+        self.__comms_fault: bool = False
 
     @property
-    def has_fault(self) -> bool:
-        return any((c.has_fault for c in self.cells)) \
-            or self.high_temperature > self._config.high_temperature_setpoint \
-            or self.__fault
+    def over_temperature_alert(self) -> bool:
+        return self.high_temperature > self._config.high_temperature_setpoint - self._config.temperature_warning_offset
+
+    @property
+    def under_temperature_alert(self) -> bool:
+        return self.low_temperature < self._config.low_temperature_setpoint + self._config.temperature_warning_offset
+
+    @property
+    def alert(self) -> bool:
+        return any((c.alert for c in self.cells)) \
+            or self.over_temperature_alert or self.under_temperature_alert or self.__alert
+
+    @alert.setter
+    def alert(self, value: bool):
+        self.__alert = value
+
+    @property
+    def alerts(self) -> List[str]:
+        alerts = []
+        for cell in self.cells:
+            alerts.extend(cell.alerts)
+        if self.over_temperature_alert:
+            alerts.append(OVER_TEMPERATURE)
+        if self.under_temperature_alert:
+            alerts.append(UNDER_TEMPERATURE)
+        return list(dict.fromkeys(alerts))
+
+    @property
+    def comms_fault(self) -> bool:
+        return self.__comms_fault
+
+    @comms_fault.setter
+    def comms_fault(self, value: bool):
+        self.__comms_fault = value
+
+    @property
+    def over_temperature_fault(self) -> bool:
+        return self.high_temperature > self._config.high_temperature_setpoint
+
+    @property
+    def under_temperature_fault(self) -> bool:
+        return self.low_temperature < self._config.low_temperature_setpoint
+
+    @property
+    def fault(self) -> bool:
+        return any((c.fault for c in self.cells)) \
+            or self.over_temperature_fault or self.under_temperature_fault \
+            or self.__comms_fault or self.__fault
+
+    @fault.setter
+    def fault(self, value: bool):
+        self.__fault = value
+
+    @property
+    def faults(self) -> List[str]:
+        faults = []
+        for cell in self.cells:
+            faults.extend(cell.faults)
+        if self.over_temperature_fault:
+            faults.append(OVER_TEMPERATURE)
+        if self.under_temperature_fault:
+            faults.append(UNDER_TEMPERATURE)
+        if self.comms_fault:
+            faults.append(COMMS)
+        return list(dict.fromkeys(faults))
 
     @property
     def voltage(self):
@@ -103,6 +168,9 @@ class BatteryModule:
             "lowest_voltage": self.lowest_voltage,
             "highest_temperature": self.highest_temperature,
             "lowest_temperature": self.lowest_temperature,
-            "fault": self.has_fault,
+            "fault": self.fault,
+            "faults": self.faults,
+            "alert": self.alert,
+            "alerts": self.alerts,
             "cells": [c.get_dict() for c in self.cells]
         }
