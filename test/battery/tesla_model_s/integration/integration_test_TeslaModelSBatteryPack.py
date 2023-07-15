@@ -48,7 +48,7 @@ def run_bms2(name):
         bms2.process()
 
 
-class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
+class TeslaModelSBatteryPackTestCase(unittest.TestCase):
 
     def setUp(self):
         self.bmsThread1 = threading.Thread(target=run_bms1, args=(1,))
@@ -65,9 +65,9 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
         return super().tearDown()
 
     def test_update(self):
-        gateway = TeslaModelSNetworkGateway(compoundPort1, Config())
         config = Config()
         config.module_count = 2
+        gateway = TeslaModelSNetworkGateway(compoundPort1, config)
         pack = TeslaModelSBatteryPack(gateway, config)
 
         timeoutTime = time.time() + 5

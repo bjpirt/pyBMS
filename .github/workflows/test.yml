@@ -16,6 +16,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install ruff
+          sudo apt install -y socat
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Lint with ruff
         run: |
@@ -26,3 +27,9 @@ jobs:
         run: make lint
       - name: Test
         run: make test
+      - name: Build conf py
+        run: make build-conf
+      - name: Run fake serial ports
+        run: make pack-fake-serial
+      - name: Run integration tests
+        run: make integration-test

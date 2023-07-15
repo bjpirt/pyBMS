@@ -7,7 +7,9 @@ from unittest.mock import MagicMock
 
 
 def add_crc(message):
-    message.append(crc8(message))
+    message_copy = bytearray([x for x in message])
+    message_copy[0] = message_copy[0] & 0b01111111
+    message.append(crc8(message_copy))
     return message
 
 
