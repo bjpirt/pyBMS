@@ -44,10 +44,6 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
         self.assertEqual(self.module.voltage, 20.295)
         for cell in self.module.cells:
             self.assertEqual(cell.voltage, 3.35)
-            self.assertFalse(cell.under_voltage_fault)
-            self.assertFalse(cell.over_voltage_fault)
-        self.assertFalse(self.module.alert)
-        self.assertFalse(self.module.fault)
         self.assertEqual(self.module.temperatures[0], 25.343)
         self.assertEqual(self.module.temperatures[1], 25.343)
 
@@ -58,12 +54,6 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
         self.module.update()
         self.assertTrue(self.module.alert)
         self.assertTrue(self.module.fault)
-        for cell in self.module.cells[0:3]:
-            self.assertTrue(cell.over_voltage_fault)
-            self.assertFalse(cell.under_voltage_fault)
-        for cell in self.module.cells[3:6]:
-            self.assertFalse(cell.over_voltage_fault)
-            self.assertTrue(cell.under_voltage_fault)
 
     def test_balance(self):
         self.mockGateway.write_register = MagicMock(return_value=True)

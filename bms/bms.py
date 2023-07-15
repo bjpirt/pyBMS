@@ -31,7 +31,7 @@ class Bms:
             self.__interval.set(self.__poll_interval)
             self.battery_pack.update()
 
-            if self.battery_pack.has_fault or not self.battery_pack.ready:
+            if self.battery_pack.fault or not self.battery_pack.ready:
                 self.contactors.disable()
             else:
                 self.contactors.enable()
@@ -60,6 +60,6 @@ class Bms:
         for i, module in enumerate(self.battery_pack.modules):
             print(
                 f"Module: {i} Voltage: {module.voltage} Temperature: \
-                    {module.temperatures[0]} {module.temperatures[1]} Fault: {module.has_fault}")
+                    {module.temperatures[0]} {module.temperatures[1]} Fault: {module.fault}")
             for j, cell in enumerate(module.cells):
                 print(f"  |- Cell: {j} voltage: {cell.voltage}")

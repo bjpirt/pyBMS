@@ -4,7 +4,7 @@
   "cell_high_voltage_setpoint": 4.1,
   "cell_low_voltage_setpoint": 3.6,
   "high_temperature_setpoint": 65.0,
-  "low_temperature_setpoint": 5.0,
+  "low_temperature_setpoint": 10.0,
   "comms_timeout": 10.0,
   "negative_pin": 16,
   "precharge_pin": 17,
