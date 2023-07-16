@@ -1,5 +1,5 @@
 bms_ui = """
-<!DOCTYPE html> <html> <head> <title>pyBms UI</title> <style> *, *::before, *::after{ box-sizing:border-box;} body, h1, h2, h3, h4, p, figure, blockquote, dl, dd{ margin:0;} ul[role='list'], ol[role='list']{ list-style:none;} html:focus-within{ scroll-behavior:smooth;} body{ min-height:100vh;text-rendering:optimizeSpeed;line-height:1.5;} a:not([class]){ text-decoration-skip-ink:auto;} input, button, textarea, select{ font:inherit;}</style> <style>body{ background:#333;padding:10px;}*{ color:#CCC;font-family:sans-serif;}input, button{ color:#333;}</style> <style>#modules{ display:flex;flex-wrap:wrap;column-gap:10px;row-gap:10px;}.module{ border:1px solid #111;flex-basis:49%;box-sizing:border-box;padding:5px;}.module .cell{ border:1px solid #111;margin:3px 0;padding:3px;}.label{ display:inline-block;padding:2px 4px 0;font-weight:bold;border-radius:5px;}.warning{ background:orange;color:#333 }.alarm{ background:#900;color:#FFF }</style> </head> <body> <h1>pyBms UI</h1> <table id="packDetail"> <tr> <td></td> <td>Min</td> <td>Now</td> <td>Max</td> </tr> <tr class="voltage"> <td>Voltage</td> <td class="min"></td> <td class="now"></td> <td class="max"></td> </tr> <tr class="temperature"> <td>Temperature</td> <td class="min"></td> <td class="now"></td> <td class="max"></td> </tr> <tr> <td>Current</td> <td colspan="3" class="current"></td> </tr> <tr> <td>State of Charge</td> <td colspan="3" class="soc"></td> </tr> <tr> <td>Warnings</td> <td colspan="3" class="warnings"></td> </tr> <tr> <td>Alarms</td> <td colspan="3" class="alarms"></td> </tr> <tr> <td>Fault</td> <td colspan="3" class="fault"></td> </tr> </table> <div id="modules"></div> </body> <template id="module"> <div class="module"> <h2></h2> <table class="moduleDetail"> <tr> <td>Voltage</td> <td class="voltage"></td> </tr> <tr> <td>Temperature</td> <td class="temperature"></td> </tr> </table> <div class="cells"></div> </div> </template> <template id="cell"> <div class="cell"> <div class="voltage"></div> </div> </template> <script type="text/javascript">const fetchUrl = async (url) => fetch(url).then((response) => response.json());</script> <script type="text/javascript">const graphColor = "#42758a";
+<!DOCTYPE html> <html> <head> <title>pyBms UI</title> <style> *, *::before, *::after{ box-sizing:border-box;} body, h1, h2, h3, h4, p, figure, blockquote, dl, dd{ margin:0;} ul[role='list'], ol[role='list']{ list-style:none;} html:focus-within{ scroll-behavior:smooth;} body{ min-height:100vh;text-rendering:optimizeSpeed;line-height:1.5;} a:not([class]){ text-decoration-skip-ink:auto;} input, button, textarea, select{ font:inherit;}</style> <style>body{ background:#333;padding:10px;}*{ color:#CCC;font-family:sans-serif;}input, button{ color:#333;}</style> <style>#modules{ display:flex;flex-wrap:wrap;column-gap:10px;row-gap:10px;}.module{ border:1px solid #111;flex-basis:49%;box-sizing:border-box;padding:5px;}.module .cell{ border:1px solid #111;margin:3px 0;padding:3px;}.label{ display:inline-block;padding:2px 4px 0;font-weight:bold;border-radius:5px;margin:0 5px }.alert{ background:orange;color:#333 }.fault{ background:#900;color:#FFF }</style> </head> <body> <h1>pyBms UI</h1> <table id="packDetail"> <tr> <td></td> <td>Min</td> <td>Now</td> <td>Max</td> </tr> <tr class="voltage"> <td>Voltage</td> <td class="min"></td> <td class="now"></td> <td class="max"></td> </tr> <tr class="temperature"> <td>Temperature</td> <td class="min"></td> <td class="now"></td> <td class="max"></td> </tr> <tr> <td>Current</td> <td colspan="3" class="current"></td> </tr> <tr> <td>State of Charge</td> <td colspan="3" class="soc"></td> </tr> <tr> <td>Alerts</td> <td colspan="3" class="alerts"></td> </tr> <tr> <td>Faults</td> <td colspan="3" class="faults"></td> </tr> </table> <div id="modules"></div> </body> <template id="module"> <div class="module"> <h2></h2> <table class="moduleDetail"> <tr> <td>Voltage</td> <td class="voltage"></td> </tr> <tr> <td>Temperature</td> <td class="temperature"></td> </tr> </table> <div class="labels"></div> <div class="cells"></div> </div> </template> <template id="cell"> <div class="cell"> <div class="voltage"></div> </div> </template> <script type="text/javascript">const fetchUrl = async (url) => fetch(url).then((response) => response.json());</script> <script type="text/javascript">const graphColor = "#42758a";
 
 const createTableRow = (content, table) => {
   const row = document.createElement("tr");
@@ -14,12 +14,11 @@ const createTableRow = (content, table) => {
 const setElementValue = (id, value, unit) =>
   (document.querySelector(id).innerHTML = `${value}${unit ?? ""}`);
 
+const createLabel = (value, type) =>
+  `<span class="${type} label">${value.replace("_", " ")}</span>`;
+
 const labels = (input, type) =>
-  input
-    ? input
-        .map((i) => `<span class="${type} label">${i.replace("_", " ")}</span>`)
-        .join("")
-    : "None";
+  input ? input.map((value) => createLabel(value, type)).join("") : "None";
 
 const updatePackDetail = (status) => {
   setElementValue("#packDetail .voltage .min", status.lowest_voltage, "V");
@@ -39,9 +38,8 @@ const updatePackDetail = (status) => {
   setElementValue("#packDetail .current", status.current, "A");
   setElementValue("#packDetail .soc", status.state_of_charge * 100, "%");
 
-  setElementValue("#packDetail .warnings", labels(status.warnings, "warning"));
-  setElementValue("#packDetail .alarms", labels(status.alarms, "alarm"));
-  setElementValue("#packDetail .fault", status.fault ? "Yes" : "No");
+  setElementValue("#packDetail .alerts", labels(status.alerts, "alert"));
+  setElementValue("#packDetail .faults", labels(status.faults, "fault"));
 };
 
 const createModuleElement = (module, moduleIndex) => {
@@ -83,6 +81,12 @@ const updateModuleElement = (moduleElement, module, config) => {
   moduleElement.querySelector(
     ".temperature"
   ).innerHTML = `${module.temperatures[0]}&deg;C`;
+
+  const alerts = module.alerts.map((alert) => createLabel(alert, "alert"));
+  const faults = module.faults.map((fault) => createLabel(fault, "fault"));
+  moduleElement.querySelector(".labels").innerHTML = alerts
+    .concat(faults)
+    .join("");
   for (const [cellIndex, cell] of module.cells.entries()) {
     updateCell(moduleElement, cell, cellIndex, config);
   }

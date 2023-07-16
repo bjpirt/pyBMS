@@ -13,12 +13,11 @@ const createTableRow = (content, table) => {
 const setElementValue = (id, value, unit) =>
   (document.querySelector(id).innerHTML = `${value}${unit ?? ""}`);
 
+const createLabel = (value, type) =>
+  `<span class="${type} label">${value.replace("_", " ")}</span>`;
+
 const labels = (input, type) =>
-  input
-    ? input
-        .map((i) => `<span class="${type} label">${i.replace("_", " ")}</span>`)
-        .join("")
-    : "None";
+  input ? input.map((value) => createLabel(value, type)).join("") : "None";
 
 const updatePackDetail = (status) => {
   setElementValue("#packDetail .voltage .min", status.lowest_voltage, "V");
@@ -38,9 +37,8 @@ const updatePackDetail = (status) => {
   setElementValue("#packDetail .current", status.current, "A");
   setElementValue("#packDetail .soc", status.state_of_charge * 100, "%");
 
-  setElementValue("#packDetail .warnings", labels(status.warnings, "warning"));
-  setElementValue("#packDetail .alarms", labels(status.alarms, "alarm"));
-  setElementValue("#packDetail .fault", status.fault ? "Yes" : "No");
+  setElementValue("#packDetail .alerts", labels(status.alerts, "alert"));
+  setElementValue("#packDetail .faults", labels(status.faults, "fault"));
 };
 
 const createModuleElement = (module, moduleIndex) => {
@@ -82,6 +80,12 @@ const updateModuleElement = (moduleElement, module, config) => {
   moduleElement.querySelector(
     ".temperature"
   ).innerHTML = `${module.temperatures[0]}&deg;C`;
+
+  const alerts = module.alerts.map((alert) => createLabel(alert, "alert"));
+  const faults = module.faults.map((fault) => createLabel(fault, "fault"));
+  moduleElement.querySelector(".labels").innerHTML = alerts
+    .concat(faults)
+    .join("");
   for (const [cellIndex, cell] of module.cells.entries()) {
     updateCell(moduleElement, cell, cellIndex, config);
   }
