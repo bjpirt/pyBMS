@@ -63,7 +63,8 @@ class TeslaModelSBatteryModule(BatteryModule):
         result = self.__read_register(REG_DEVICE_STATUS, 19)
 
         if result is not None:
-            self.__check_status(result[REG_DEVICE_STATUS])
+            if self._config.hardware_fault_detection:
+                self.__check_status(result[REG_DEVICE_STATUS])
             self.__update_module_voltage(result[REG_GPAI:REG_GPAI+2])
             self.__update_cell_voltages(result[REG_VCELL1:REG_VCELL1+12])
             self.__update_temperature(
