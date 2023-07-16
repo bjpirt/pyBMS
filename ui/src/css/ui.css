@@ -23,14 +23,15 @@
   padding:2px 4px 0;
   font-weight: bold;
   border-radius: 5px;
+  margin: 0 5px
 }
 
-.warning {
+.alert {
   background: orange;
   color:#333
 }
 
-.alarm {
+.fault {
   background: #900;
   color:#FFF
 }
