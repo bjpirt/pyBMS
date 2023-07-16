@@ -81,6 +81,8 @@ class Config:
         self.wdt_timeout: int = 5000
         # Use the hardware fault detection built in to the Tesla BMS modules
         self.hardware_fault_detection = False
+        # The port to use for the web server
+        self.web_server_port: int = 80
 
         self.read()
 

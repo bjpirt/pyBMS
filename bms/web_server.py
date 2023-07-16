@@ -48,6 +48,6 @@ class WebServer:
             print(
                 f"Connecting to WiFi [{self.__config.wifi_network}] with password [{self.__config.wifi_password}]")
             connect(self.__config.wifi_network, self.__config.wifi_password)
-            self.__app.run(port=6001)
+            self.__app.run(port=self.__config.web_server_port)
         except OSError:
             print("Error connecting to WiFi")
