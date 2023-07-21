@@ -14,6 +14,7 @@ class BatteryModule:
         self.cells: List[BatteryCell] = []
         self.temperatures: List[float] = []
         self._config: Config = config
+        self.__cell_count = 0
 
         self.__voltage: float = 0.0
 
@@ -26,6 +27,14 @@ class BatteryModule:
         self.__alert: bool = False
         self.__fault: bool = False
         self.__comms_fault: bool = False
+
+    @property
+    def cell_count(self) -> int:
+        return self.__cell_count
+
+    @cell_count.setter
+    def cell_count(self, count: int):
+        self.__cell_count = count
 
     @property
     def over_temperature_alert(self) -> bool:
