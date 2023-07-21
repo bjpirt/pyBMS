@@ -19,6 +19,7 @@ class TeslaModelSBatteryModule(BatteryModule):
         super().__init__(config)
         self.address: int = address
         self.__gateway: TeslaModelSNetworkGateway = gateway
+        self.cell_count = 6
         self.__comms_timeout = get_interval()
         self.__comms_timeout.set(config.comms_timeout)
 

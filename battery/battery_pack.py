@@ -19,6 +19,23 @@ class BatteryPack:
         self.lowest_temperature: float = -1
         self.ready = False
 
+
+    @property
+    def series_modules(self) -> int:
+        return int(self._config.module_count / self._config.parallel_string_count)
+
+    @property
+    def series_cells(self) -> int:
+        return self.series_modules * self.modules[0].cell_count
+
+    @property
+    def max_voltage_setpoint(self) -> float:
+        return self.series_cells * self._config.cell_high_voltage_setpoint
+
+    @property
+    def min_voltage_setpoint(self) -> float:
+        return self.series_cells * self._config.cell_low_voltage_setpoint
+
     @property
     def balance_alert(self) -> bool:
         return self.cell_voltage_difference > (
