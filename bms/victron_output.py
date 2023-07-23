@@ -49,7 +49,7 @@ class VictronOutput:
             self.send_message_9()
         except ValueError as err:
             print("ValueError sending Victron data", err)
-        except Exception as err:
+        except Exception as err: # pylint: disable=broad-except
             print("Unknown error sending Victron data", err)
 
 
