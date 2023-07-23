@@ -37,6 +37,21 @@ class StateOfChargeTestCase(unittest.TestCase):
         self.assertAlmostEqual(self.soc.level, 0.58)
 
     def test_scaled_level(self):
-        self.assertAlmostEqual(self.soc.scaled_level, 0.5)
         self.pack.fakeaverage_cell_voltage = 3.7
         self.assertAlmostEqual(self.soc.scaled_level, 0.625)
+
+    def test_scaled_level_at_minimum(self):
+        self.pack.fakeaverage_cell_voltage = 3.0
+        self.assertAlmostEqual(self.soc.scaled_level, 0.0)
+
+    def test_scaled_level_below_minimum(self):
+        self.pack.fakeaverage_cell_voltage = 2.9
+        self.assertAlmostEqual(self.soc.scaled_level, 0.0)
+
+    def test_scaled_level_at_maximum(self):
+        self.pack.fakeaverage_cell_voltage = 4.2
+        self.assertAlmostEqual(self.soc.scaled_level, 1.0)
+
+    def test_scaled_level_above_maximum(self):
+        self.pack.fakeaverage_cell_voltage = 4.3
+        self.assertAlmostEqual(self.soc.scaled_level, 1.0)
