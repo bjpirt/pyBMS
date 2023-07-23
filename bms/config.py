@@ -78,7 +78,7 @@ class Config:
         # The amount of time for the precharge contactor to be on before turning on the positive contactor
         self.contactor_precharge_time: float = 5.0
         # Watchdog timer time (0 to disable)
-        self.wdt_timeout: int = 5000
+        self.wdt_timeout: int = 0
         # Use the hardware fault detection built in to the Tesla BMS modules
         self.hardware_fault_detection = False
         # The port to use for the web server
