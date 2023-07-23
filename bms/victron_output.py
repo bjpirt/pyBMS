@@ -37,15 +37,22 @@ class VictronOutput:
             self.__interval.reset()
 
     def send(self) -> None:
-        self.send_message_1()
-        self.send_message_2()
-        self.send_message_3()
-        self.send_message_4()
-        self.send_message_5()
-        self.send_message_6()
-        self.send_message_7()
-        self.send_message_8()
-        self.send_message_9()
+        try:
+            self.send_message_1()
+            self.send_message_2()
+            self.send_message_3()
+            self.send_message_4()
+            self.send_message_5()
+            self.send_message_6()
+            self.send_message_7()
+            self.send_message_8()
+            self.send_message_9()
+        except ValueError as err:
+            print("ValueError sending Victron data", err)
+        except Exception as err:
+            print("Unknown error sending Victron data", err)
+
+
 
     def send_message_1(self) -> None:
         """
@@ -74,7 +81,6 @@ class VictronOutput:
         message.add_int(int(self.__bms.state_of_charge))
         message.add_int(100)
         message.add_int(int(self.__bms.state_of_charge * 10))
-        message.add_int(0)
         message.send(self.__can)
 
     def send_message_3(self) -> None:
@@ -89,7 +95,6 @@ class VictronOutput:
         message.add_int(int(self.__bms.battery_pack.voltage * 100))
         message.add_int(0) # TODO: Current / 100
         message.add_int(int(self.__bms.battery_pack.average_temperature * 10))
-        message.add_int(0)
         message.send(self.__can)
 
     def send_message_4(self) -> None:
@@ -184,8 +189,6 @@ class VictronOutput:
         message.add_byte(0)
         message.add_byte(0)
         message.add_byte(0)
-        message.add_byte(0)
-        message.add_int(0)
         message.send(self.__can)
 
     def send_message_9(self) -> None:
@@ -195,7 +198,4 @@ class VictronOutput:
         """
         message = CanMessage(0x372)
         message.add_int(len(self.__bms.battery_pack.modules))
-        message.add_int(0)
-        message.add_int(0)
-        message.add_int(0)
         message.send(self.__can)
