@@ -36,6 +36,7 @@ class WebServer:
 
         try:
             import _thread
+            _thread.stack_size(16*1024)
             _thread.start_new_thread(self.__run, ())
         except ModuleNotFoundError:
             import threading

@@ -59,11 +59,11 @@ class Bms:
             print("Battery pack not ready")
         else:
             print(
-                f"Modules: {len(self.battery_pack.modules)} Alerts: {self.battery_pack.alerts}"
-                f" Faults: {self.battery_pack.faults}")
+                f"Modules: {len(self.battery_pack.modules)} Alerts: {self.battery_pack.alerts}",
+                f"Faults: {self.battery_pack.faults}")
         for i, module in enumerate(self.battery_pack.modules):
             print(
-                f"Module: {i} Voltage: {module.voltage} Temperature: {(module.temperatures[0])}"
-                f" {module.temperatures[1]} Alerts: {module.alerts} Faults: {module.faults}")
+                f"Module: {i} Voltage: {module.voltage} Temperature: {(module.temperatures[0])}",
+                f"{module.temperatures[1]} Alerts: {module.alerts} Faults: {module.faults}")
             for j, cell in enumerate(module.cells):
                 print(f"  |- Cell: {j} voltage: {cell.voltage} Alerts: {cell.alerts} Faults: {cell.faults}")
