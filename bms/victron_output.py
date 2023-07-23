@@ -16,12 +16,12 @@ class CanMessage:
         self.__message.append(value & 0xFF)
 
     def add_string(self, value: str) -> None:
-        self.__message.extend(map(ord, value))
+        self.__message.extend(bytearray(value, "ascii"))
 
     def send(self, can) -> None:
         for _ in range(8 - len(self.__message)):
             self.__message.append(0)
-        can.send(self.__message, self.__id)
+        can.send(list(self.__message), self.__id)
 
 
 class VictronOutput:
