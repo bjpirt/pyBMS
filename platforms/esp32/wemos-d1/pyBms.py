@@ -1,6 +1,6 @@
-from bms import Bms, Config, VictronOutput, WebServer
+from bms import Bms, Config, VictronOutput, WebServer, C2TTransducer
 from battery.tesla_model_s import TeslaModelSBatteryPack, TeslaModelSNetworkGateway
-from machine import UART  # type: ignore
+from machine import UART
 from esp32 import CAN  # type: ignore
 
 
@@ -11,7 +11,8 @@ def main():
     config = Config()
     gateway = TeslaModelSNetworkGateway(uart, config)
     pack = TeslaModelSBatteryPack(gateway, config)
-    bms = Bms(pack, config)
+    current_sensor = C2TTransducer(config, sda_pin=19, sck_pin=18)
+    bms = Bms(pack, current_sensor, config)
     victronOutput = VictronOutput(can, bms, 0.5)
     WebServer(bms, config)
 

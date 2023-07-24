@@ -6,16 +6,18 @@ from .led import Led
 from .config import Config
 from .contactor_control import ContactorControl
 from .state_of_charge import StateOfCharge
+from .current_sensor import CurrentSensor
 if TYPE_CHECKING:
     from typing import Union
     from battery import BatteryPack
 
 
 class Bms:
-    def __init__(self, battery_pack: BatteryPack, config: Config):
+    def __init__(self, battery_pack: BatteryPack, current_sensor: CurrentSensor, config: Config):
         self.__config = config
         self.battery_pack = battery_pack
         self.contactors = ContactorControl(config)
+        self.__current_sensor = current_sensor
         self.__poll_interval: float = self.__config.poll_interval
         self.__interval = get_interval()
         self.__interval.set(self.__poll_interval)
@@ -44,12 +46,17 @@ class Bms:
             self.__wdt.feed()
 
     @property
-    def state_of_charge(self):
+    def state_of_charge(self) -> float:
         return self.__state_of_charge.scaled_level
+
+    @property
+    def current(self) -> float:
+        return self.__current_sensor.read()
 
     def get_dict(self) -> dict:
         return {
             "state_of_charge": self.__state_of_charge.level,
+            "current": self.current,
             "contactors": self.contactors.get_dict(),
             "pack": self.battery_pack.get_dict()
         }
@@ -58,9 +65,8 @@ class Bms:
         if not self.battery_pack.ready:
             print("Battery pack not ready")
         else:
-            print(
-                f"Modules: {len(self.battery_pack.modules)} Alerts: {self.battery_pack.alerts}",
-                f"Faults: {self.battery_pack.faults}")
+            print(f"Modules: {len(self.battery_pack.modules)} Current: {self.current}A")
+            print(f"Alerts: {self.battery_pack.alerts} Faults: {self.battery_pack.faults}")
         for i, module in enumerate(self.battery_pack.modules):
             print(
                 f"Module: {i} Voltage: {module.voltage} Temperature: {(module.temperatures[0])}",
