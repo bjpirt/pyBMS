@@ -93,7 +93,7 @@ class VictronOutput:
         """
         message = CanMessage(0x356)
         message.add_int(int(self.__bms.battery_pack.voltage * 100))
-        message.add_int(0) # TODO: Current / 100
+        message.add_int(int(self.__bms.current * 10))
         message.add_int(int(self.__bms.battery_pack.average_temperature * 10))
         message.send(self.__can)
 

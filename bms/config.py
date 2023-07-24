@@ -83,6 +83,8 @@ class Config:
         self.hardware_fault_detection = False
         # The port to use for the web server
         self.web_server_port: int = 80
+        # The zero-point reference voltage for the C2T current sensor
+        self.current_zero_point: float = 1.6025
 
         self.read()
 

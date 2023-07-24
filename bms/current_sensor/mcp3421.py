@@ -1,4 +1,4 @@
-from machine import I2C, Pin
+from hal import I2C, Pin
 
 DEFAULT_ADDRESS = 0x68
 
@@ -32,11 +32,18 @@ CONFIG_GAIN_X4 = 0x02
 CONFIG_GAIN_X8 = 0x03
 
 
+def twos_complement(value, bits):
+    if (value & (1 << (bits - 1))) != 0:
+        value = value - (1 << bits)
+    return value
+
 class MCP3421:
 
-    def __init__(self, sda_pin, scl_pin, address=DEFAULT_ADDRESS):
+    def __init__(self, sda_pin, scl_pin, address=DEFAULT_ADDRESS, sample_rate=CONFIG_RATE_3_75SPS, gain=CONFIG_GAIN_X1):
         self.__address = address
         self.__bus = I2C(0, sda=Pin(sda_pin), scl=Pin(scl_pin))
+        self.__gain = gain
+        self.__sample_rate = sample_rate
         self.ready = False
         self.__device_search()
         self.__configure()
@@ -47,13 +54,19 @@ class MCP3421:
             self.ready = True
 
     def __configure(self):
-        config = CONFIG_RDY_ON | CONFIG_CONV_CONTINUOUS | CONFIG_RATE_3_75SPS | CONFIG_GAIN_X1
-        self.__bus.writeto(self.__address, bytes(config))
+        config = CONFIG_RDY_ON | CONFIG_CONV_CONTINUOUS | self.__sample_rate | self.__gain
+        self.__bus.writeto(self.__address, bytearray([config]))
 
-    def read(self) -> int:
+    def read(self) -> float:
         if self.ready:
-            data = self.__bus.readfrom(self.__address, 3)
-
-            return ((data[0] & 0b00000011) << 16) + (data[1] << 8) + data[2]
+            if self.__sample_rate == CONFIG_RATE_3_75SPS:
+                data = self.__bus.readfrom(self.__address, 3)
+                rawValue = ((data[0] & 0b00000011) << 16) + (data[1] << 8) + data[2]
+                value = twos_complement(rawValue, 18)
+            else:
+                data = self.__bus.readfrom(self.__address, 2)
+                rawValue =  (data[0] << 8) + data[1]
+                value = twos_complement(rawValue, 16)
+            return (value / 0x1FFFF) * 2.048
         else:
-            raise Exception("No ADC found")
+            raise RuntimeError("No ADC found")
