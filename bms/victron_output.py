@@ -64,8 +64,8 @@ class VictronOutput:
         """
         message = CanMessage(0x351)
         message.add_int(int(self.__bms.battery_pack.max_voltage_setpoint * 10))
-        message.add_int(0) # TODO: charge current
-        message.add_int(0) # TODO: discharge current
+        message.add_int(1000) # TODO: dynamic charge current
+        message.add_int(1000) # TODO: dynamic discharge current
         message.add_int(int(self.__bms.battery_pack.min_voltage_setpoint * 10))
         message.send(self.__can)
 
@@ -78,16 +78,16 @@ class VictronOutput:
             Bytes 6, 7 - 0
         """
         message = CanMessage(0x355)
-        message.add_int(int(self.__bms.state_of_charge))
+        message.add_int(int(self.__bms.state_of_charge * 100))
         message.add_int(100)
-        message.add_int(int(self.__bms.state_of_charge * 10))
+        message.add_int(int(self.__bms.state_of_charge * 1000))
         message.send(self.__can)
 
     def send_message_3(self) -> None:
         """
         Sends:
             Bytes 0, 1 - Pack voltage (mV)
-            Bytes 2, 3 - Current / 100
+            Bytes 2, 3 - Current * 10
             Bytes 4, 5 - Average temperature (0.1)
             Bytes 6, 7 - 0
         """
