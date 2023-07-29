@@ -99,7 +99,7 @@ class BatteryPackTestCase(unittest.TestCase):
 
     def test_over_voltage_faults(self):
         for cell in self.pack.modules[0].cells:
-            cell.voltage = 4.05
+            cell.voltage = 4.1
         self.pack.modules[0].cells[1].voltage = 4.15
         self.pack.modules[0].cells[2].voltage = 4.15
         self.pack.modules[0].cells[3].voltage = 4.15
@@ -108,10 +108,10 @@ class BatteryPackTestCase(unittest.TestCase):
 
     def test_under_voltage_faults(self):
         for cell in self.pack.modules[0].cells:
-            cell.voltage = 3.65
-        self.pack.modules[0].cells[1].voltage = 3.55
-        self.pack.modules[0].cells[2].voltage = 3.55
-        self.pack.modules[0].cells[3].voltage = 3.55
+            cell.voltage = 3.4
+        self.pack.modules[0].cells[1].voltage = 3.35
+        self.pack.modules[0].cells[2].voltage = 3.35
+        self.pack.modules[0].cells[3].voltage = 3.35
         self.assertEqual(self.pack.faults, [UNDER_VOLTAGE])
         self.assertTrue(self.pack.fault)
 
@@ -140,13 +140,17 @@ class BatteryPackTestCase(unittest.TestCase):
 
     def test_over_voltage_alerts(self):
         for cell in self.pack.modules[0].cells:
-            cell.voltage = 4.05
-        self.pack.modules[0].cells[3].voltage = 4.15
+            cell.voltage = 4.1
+        self.pack.modules[0].cells[3].voltage = 4.125
         self.assertEqual(self.pack.alerts, [OVER_VOLTAGE])
         self.assertTrue(self.pack.alert)
 
     def test_under_voltage_alerts(self):
-        self.pack.modules[0].cells[3].voltage = 3.65
+        for module in self.pack.modules:
+            for cell in module.cells:
+                cell.voltage = 3.6
+
+        self.pack.modules[0].cells[3].voltage = 3.575
         self.assertEqual(self.pack.alerts, [UNDER_VOLTAGE])
         self.assertTrue(self.pack.alert)
 

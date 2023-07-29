@@ -33,11 +33,11 @@ class BatteryCellTestCase(unittest.TestCase):
         self.assertEqual(self.cell.lowest_voltage, 2.9)
 
     def test_over_voltage_fault(self):
-        self.cell.voltage = 5.0
+        self.cell.voltage = 4.2
         self.assertTrue(self.cell.over_voltage_fault)
 
     def test_over_voltage_alert(self):
-        self.cell.voltage = 4.05
+        self.cell.voltage = 4.125
         self.assertTrue(self.cell.over_voltage_alert)
 
     def test_under_voltage_fault(self):
@@ -45,7 +45,7 @@ class BatteryCellTestCase(unittest.TestCase):
         self.assertTrue(self.cell.under_voltage_fault)
 
     def test_under_voltage_alert(self):
-        self.cell.voltage = 3.65
+        self.cell.voltage = 3.575
         self.assertTrue(self.cell.under_voltage_alert)
 
     def test_fault(self):
@@ -67,7 +67,7 @@ class BatteryCellTestCase(unittest.TestCase):
     def test_alerts(self):
         self.cell.voltage = 3.9
         self.assertEqual(self.cell.alerts, [])
-        self.cell.voltage = 3.65
+        self.cell.voltage = 3.574
         self.assertEqual(self.cell.alerts, [UNDER_VOLTAGE])
-        self.cell.voltage = 4.05
+        self.cell.voltage = 4.2
         self.assertEqual(self.cell.alerts, [OVER_VOLTAGE])
