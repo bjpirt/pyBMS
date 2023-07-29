@@ -158,8 +158,7 @@ class VictronOutput:
             Bytes 0, 1 - Lowest cell voltage (mV)
             Bytes 2, 3 - Highest cell voltage (mV)
             Bytes 4, 5 - Low temperature (K)
-            Bytes 4, 5 - High temperature (K)
-            Bytes 6, 7 - 0
+            Bytes 6, 7 - High temperature (K)
         """
         message = CanMessage(0x373)
         message.add_int(int(self.__bms.battery_pack.low_cell_voltage * 1000))
@@ -177,8 +176,6 @@ class VictronOutput:
             Bytes 4       - BMS status
             Bytes 5, 6, 7 - 0
 
-        msg.buf[0] = lowByte(uint16_t(settings.Pstrings * settings.CAP));
-        msg.buf[1] = highByte(uint16_t(settings.Pstrings * settings.CAP));
         msg.buf[2] = contstat; //contactor state
         msg.buf[3] = (digitalRead(OUT1) | (digitalRead(OUT2) << 1) | \
             (digitalRead(OUT3) << 2) | (digitalRead(OUT4) << 3));

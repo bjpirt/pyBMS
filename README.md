@@ -121,9 +121,9 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 - [x] Configure over/under temperature into the Tesla BMS
 - [x] Monitoring UI (first pass)
 - [x] Handle communication faults
+- [x] Re-work fault level settings
 - [ ] State of charge from current sensor
 - [ ] Design hardware
 - [ ] Support for contactors per string
 - [ ] HTTPS
 - [ ] Basic Auth
-- [ ] Get fault detection working on Tesla BMS board - blocked

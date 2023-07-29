@@ -50,8 +50,10 @@ class Config:
         self.module_capacity: float = 232.0
         # The maximum allowed difference in cell voltages
         self.max_cell_voltage_difference: float = 0.2
-        # The offset from the max and min charge voltages that triggers a warning
-        self.voltage_warning_offset: float = 0.1
+        # The offset from the max and min charge voltages that triggers an alert
+        self.voltage_alert_offset: float = 0.025
+        # The offset from the max and min charge voltages that triggers a fault
+        self.voltage_fault_offset: float = 0.05
         # The offset from the max and min charge voltages that will cause the BMS hardware to raise a fault
         self.voltage_hardware_offset: float = 0.05
         # The offset from the max and min temperatures that triggers a warning
@@ -87,6 +89,22 @@ class Config:
         self.current_zero_point: float = 1.6025
 
         self.read()
+
+    @property
+    def high_voltage_alert_level(self):
+        return self.cell_high_voltage_setpoint + self.voltage_alert_offset
+
+    @property
+    def high_voltage_fault_level(self):
+        return self.cell_high_voltage_setpoint + self.voltage_fault_offset
+
+    @property
+    def low_voltage_alert_level(self):
+        return self.cell_low_voltage_setpoint - self.voltage_alert_offset
+
+    @property
+    def low_voltage_fault_level(self):
+        return self.cell_low_voltage_setpoint - self.voltage_fault_offset
 
     def get_dict(self):
         return {k: v for k, v in self.__dict__.items() if not k.startswith("_Config__")}

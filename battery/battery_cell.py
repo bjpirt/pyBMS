@@ -16,11 +16,11 @@ class BatteryCell:
 
     @property
     def over_voltage_fault(self) -> bool:
-        return self.voltage > self._config.cell_high_voltage_setpoint or self.over_voltage_fault_override
+        return self.voltage >= self._config.high_voltage_fault_level or self.over_voltage_fault_override
 
     @property
     def under_voltage_fault(self) -> bool:
-        return self.voltage < self._config.cell_low_voltage_setpoint or self.under_voltage_fault_override
+        return self.voltage <= self._config.low_voltage_fault_level or self.under_voltage_fault_override
 
     @property
     def fault(self) -> bool:
@@ -37,11 +37,11 @@ class BatteryCell:
 
     @property
     def over_voltage_alert(self) -> bool:
-        return self.voltage > self._config.cell_high_voltage_setpoint - self._config.voltage_warning_offset
+        return self.voltage >= self._config.high_voltage_alert_level
 
     @property
     def under_voltage_alert(self) -> bool:
-        return self.voltage < self._config.cell_low_voltage_setpoint + self._config.voltage_warning_offset
+        return self.voltage <= self._config.low_voltage_alert_level
 
     @property
     def alert(self) -> bool:
