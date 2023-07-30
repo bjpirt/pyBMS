@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from hal.interval import get_interval
-from . import crc8
+from .crc8 import crc8
 if TYPE_CHECKING:
     from typing import Union
     from bms import Config

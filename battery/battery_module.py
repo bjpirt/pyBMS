@@ -166,6 +166,9 @@ class BatteryModule:
         if self.low_temperature < self.lowest_temperature or math.isnan(self.lowest_temperature):
             self.lowest_temperature = self.low_temperature
 
+    def balance(self, low_cell_voltage: float) -> None:
+        pass
+
     def __cell_voltages(self):
         return [cell.voltage for cell in self.cells]
 

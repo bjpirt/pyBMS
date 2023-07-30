@@ -88,3 +88,10 @@ lint:
 .PHONY: ruff
 ruff:
 	ruff --format=github --target-version=py39 --line-length=120 .
+
+.PHONY: mypy
+mypy:
+	mypy --exclude scripts --exclude test --check-untyped-defs .
+
+.PHONY: check
+check: lint ruff mypy

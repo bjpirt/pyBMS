@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import Union
 import unittest
 from unittest.mock import MagicMock, call
 
@@ -9,10 +9,10 @@ from bms import Config
 
 
 class FakeGateway(TeslaModelSNetworkGateway):
-    def read_register(self, address: int, register: int, length: int) -> Union[List[int], None]:
+    def read_register(self, address: int, register: int, length: int, attempts: int = 5) -> Union[bytearray, None]:
         return None
 
-    def write_register(self, address: int, register: int, value: int) -> bool:
+    def write_register(self, address: int, register: int, value: int, attempts: int = 5) -> bool:
         return True
 
 

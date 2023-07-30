@@ -3,13 +3,14 @@ from typing import TYPE_CHECKING
 
 from hal import get_interval
 if TYPE_CHECKING:
+    from typing import Optional
     from bms.current_sensor.current_sensor import CurrentSensor
     from battery import BatteryPack
     from .config import Config
 
 
 class StateOfCharge:
-    def __init__(self, pack: BatteryPack, current_sensor: CurrentSensor, config: Config):
+    def __init__(self, pack: BatteryPack, config: Config, current_sensor: Optional[CurrentSensor] = None):
         self.__pack = pack
         self.__current_sensor = current_sensor
         self.__interval = get_interval()
@@ -39,6 +40,8 @@ class StateOfCharge:
         raise ValueError("Could not calculate state of charge from voltage")
     
     def process(self):
+        if self.__current_sensor is None:
+            return
         if self.__interval.ready:
             self.__interval.reset()
             current = self.__current_sensor.read()
@@ -50,6 +53,8 @@ class StateOfCharge:
 
     @property
     def level_from_current(self) -> float:
+        if self.__current_sensor is None:
+            return self.level_from_voltage
         return self.__remaining_amp_seconds / self.__capacity
 
     @property
