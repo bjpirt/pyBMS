@@ -6,7 +6,6 @@ from . import TeslaModelSBatteryModule
 from .tesla_model_s_constants import BROADCAST_ADDRESS, REG_ADDRESS_CONTROL, REG_DEVICE_STATUS, \
     REG_RESET, RESET_VALUE
 if TYPE_CHECKING:
-    from typing import List
     from . import TeslaModelSNetworkGateway
     from bms import Config
 
@@ -18,7 +17,7 @@ class TeslaModelSBatteryPack(BatteryPack):
                  config: Config
                  ) -> None:
         super().__init__(config)
-        self.modules: List[TeslaModelSBatteryModule] = []
+        self.modules = []
         self.__gateway: TeslaModelSNetworkGateway = gateway
         self.__setup_interval = get_interval()
         self.__setup_modules()

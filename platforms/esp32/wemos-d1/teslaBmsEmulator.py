@@ -14,7 +14,7 @@ def main():
 
     bms = TeslaBmsEmulator(uart, debug_interval=1, debug_comms=True)
     while True:
-        moduleVoltage = 0
+        moduleVoltage = 0.0
         for id in range(6):
             cellVoltage = 3.6 + random.random()/2
             bms.set_cell_voltage(id, cellVoltage)

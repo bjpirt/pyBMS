@@ -25,6 +25,8 @@ jobs:
           make ruff
       - name: pylint
         run: make lint
+      - name: mypy
+        run: make mypy
       - name: Test
         run: make test
       - name: Build conf py

@@ -34,7 +34,7 @@ class StateOfChargeTestCase(unittest.TestCase):
         self.config = FakeConfig()
         self.pack = FakePack()
         self.current_sensor = FakeCurrentSensor()
-        self.soc = StateOfCharge(self.pack, self.current_sensor, self.config)
+        self.soc = StateOfCharge(self.pack, self.config, self.current_sensor)
         return super().setUp()
     
     def test_initialise_current_soc_from_voltage(self):

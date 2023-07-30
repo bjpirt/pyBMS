@@ -61,14 +61,14 @@ class TeslaBmsEmulator:
         if len(self.buff) >= 4:
             incoming = bytearray([i for i in self.buff[0:-1]])
             incoming[0] = incoming[0] & 0b01111111
-            if crc8(incoming) != self.buff[-1]:
+            if crc8(incoming) != self.buff[-1]: # type: ignore
                 return
             if self.__debug_comms:
                 print(f"Received by device {self.name} address {self.address}", [
                     hex(char) for char in self.buff])
             msg_address = self.buff[0] >> 1
             if msg_address in (self.address, BROADCAST_ADDRESS):
-                if crc8(self.buff[0:-1]) == self.buff[-1]:
+                if crc8(self.buff[0:-1]) == self.buff[-1]: # type: ignore
                     self.__handle_message()
             else:
                 if self.__debug_comms:
@@ -113,7 +113,7 @@ class TeslaBmsEmulator:
                     f"Reading {hex(self.buff[2])} registers from {hex(register)}")
             for i in range(self.buff[2]):
                 response.append(self.registers[self.buff[1] + i] & 0xFF)
-        response.append(crc8(response))
+        response.append(crc8(response)) # type: ignore
         if msg_address == 0 and current_address == 0:
             response[0] = self.buff[0] | 0x80
         if self.__debug_comms:

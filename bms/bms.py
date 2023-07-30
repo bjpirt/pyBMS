@@ -8,12 +8,12 @@ from .contactor_control import ContactorControl
 from .state_of_charge import StateOfCharge
 from .current_sensor import CurrentSensor
 if TYPE_CHECKING:
-    from typing import Union
+    from typing import Optional
     from battery import BatteryPack
 
 
 class Bms:
-    def __init__(self, battery_pack: BatteryPack, current_sensor: CurrentSensor, config: Config):
+    def __init__(self, battery_pack: BatteryPack, config: Config, current_sensor: Optional[CurrentSensor] = None):
         self.__config = config
         self.battery_pack = battery_pack
         self.contactors = ContactorControl(config)
@@ -22,11 +22,11 @@ class Bms:
         self.__interval = get_interval()
         self.__interval.set(self.__poll_interval)
         self.__led = Led(self.__config.led_pin)
-        self.__wdt: Union[WDT, None] = None
+        self.__wdt: Optional[WDT] = None
         if self.__config.wdt_timeout > 0:
             self.__wdt = WDT(timeout=self.__config.wdt_timeout)
         self.__state_of_charge = StateOfCharge(
-            self.battery_pack, self.__current_sensor, self.__config)
+            self.battery_pack, self.__config, self.__current_sensor)
 
     def process(self):
         if self.__interval.ready:
@@ -52,7 +52,9 @@ class Bms:
 
     @property
     def current(self) -> float:
-        return self.__current_sensor.read()
+        if self.__current_sensor is not None:
+            return self.__current_sensor.current
+        return 0.0
 
     def get_dict(self) -> dict:
         return {
