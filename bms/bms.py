@@ -26,7 +26,7 @@ class Bms:
         if self.__config.wdt_timeout > 0:
             self.__wdt = WDT(timeout=self.__config.wdt_timeout)
         self.__state_of_charge = StateOfCharge(
-            self.battery_pack, self.__config)
+            self.battery_pack, self.__current_sensor, self.__config)
 
     def process(self):
         if self.__interval.ready:
@@ -40,6 +40,7 @@ class Bms:
             if self.__config.debug:
                 self.print_debug()
 
+        self.__state_of_charge.process()
         self.contactors.process()
         self.__led.process()
         if self.__wdt:
@@ -47,7 +48,7 @@ class Bms:
 
     @property
     def state_of_charge(self) -> float:
-        return self.__state_of_charge.scaled_level
+        return self.__state_of_charge.level_from_current
 
     @property
     def current(self) -> float:
@@ -55,7 +56,8 @@ class Bms:
 
     def get_dict(self) -> dict:
         return {
-            "state_of_charge": self.__state_of_charge.level,
+            "voltage_state_of_charge": self.__state_of_charge.level_from_voltage,
+            "current_state_of_charge": self.__state_of_charge.level_from_current,
             "current": self.current,
             "contactors": self.contactors.get_dict(),
             "pack": self.battery_pack.get_dict()

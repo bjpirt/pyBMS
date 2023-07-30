@@ -1,4 +1,5 @@
 from hal import I2C, Pin
+from hal.interval import get_interval
 
 DEFAULT_ADDRESS = 0x68
 
@@ -44,9 +45,16 @@ class MCP3421:
         self.__bus = I2C(0, sda=Pin(sda_pin), scl=Pin(scl_pin))
         self.__gain = gain
         self.__sample_rate = sample_rate
+        self.__last_value: float = 0.0
+        self.__interval = get_interval()
+        self.__interval.set(self.__sample_period())
         self.ready = False
         self.__device_search()
         self.__configure()
+
+    def __sample_period(self) -> float:
+        per_second = 240 >> ((self.__sample_rate >> 2) * 2)
+        return 1 / per_second
 
     def __device_search(self) -> None:
         addresses = self.__bus.scan()
@@ -59,6 +67,10 @@ class MCP3421:
 
     def read(self) -> float:
         if self.ready:
+            if not self.__interval.ready:
+                return self.__last_value
+
+            self.__interval.reset()
             if self.__sample_rate == CONFIG_RATE_3_75SPS:
                 data = self.__bus.readfrom(self.__address, 3)
                 rawValue = ((data[0] & 0b00000011) << 16) + (data[1] << 8) + data[2]
@@ -67,6 +79,8 @@ class MCP3421:
                 data = self.__bus.readfrom(self.__address, 2)
                 rawValue =  (data[0] << 8) + data[1]
                 value = twos_complement(rawValue, 16)
-            return (value / 0x1FFFF) * 2.048
+            scaled_value = (value / 0x1FFFF) * 2.048
+            self.__last_value = scaled_value
+            return scaled_value
         else:
             raise RuntimeError("No ADC found")
