@@ -1,3 +1,4 @@
+from .low_pass_filter import LowPassFilter
 from ..config import Config
 from .mcp3421 import MCP3421
 from .current_sensor import CurrentSensor
@@ -8,6 +9,7 @@ class C2TTransducer(CurrentSensor):
         self.__adc = MCP3421(sda_pin, sck_pin)
         self.__max_current = 200.0
         self.__current = 0.0
+        self.__filter = LowPassFilter(0.85)
   
     def read(self) -> float:
         if not self.__adc.ready:
@@ -15,7 +17,7 @@ class C2TTransducer(CurrentSensor):
         
         rawVoltage = self.__adc.read()
         scaledVoltage = rawVoltage / self.__ratio
-        self.__current = ((scaledVoltage - 5.0) / 2.0) * self.__max_current
+        self.__current = self.__filter.process(((scaledVoltage - 5.0) / 2.0) * self.__max_current)
         return self.__current
     
     @property
