@@ -29,5 +29,8 @@
   "wifi_network": "",
   "wifi_password": "",
   "hardware_fault_detection": false,
-  "web_server_port": 80
+  "web_server_port": 80,
+  "current_zero_point": 1.6025,
+  "current_reversed": false,
+  "current_sensor_max": 200
 }

@@ -1,336 +1,339 @@
 {
-  "ready": true,
-  "voltage": 84.541,
-  "highest_voltage": 84.545,
-  "lowest_voltage": 84.531,
-  "highest_temperature": 21.804,
-  "lowest_temperature": 21.011,
-  "current": 0,
-  "state_of_charge": 0.5,
-  "fault": true,
-  "faults": ["UNDER_VOLTAGE", "BALANCE"],
-  "alert": true,
-  "alerts": ["UNDER_VOLTAGE", "BALANCE"],
-  "modules": [
-    {
-      "temperatures": [21.708, 21.046],
-      "voltage": 21.256,
-      "highest_voltage": 21.258,
-      "lowest_voltage": 21.252,
-      "highest_temperature": 21.804,
-      "lowest_temperature": 21.011,
-      "fault": false,
-      "faults": [],
-      "alert": false,
-      "alerts": [],
-      "cells": [
-        {
-          "voltage": 3.561,
-          "highest_voltage": 3.561,
-          "lowest_voltage": 3.56,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.563,
-          "highest_voltage": 3.563,
-          "lowest_voltage": 3.562,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.563,
-          "highest_voltage": 3.563,
-          "lowest_voltage": 3.562,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.564,
-          "highest_voltage": 3.564,
-          "lowest_voltage": 3.563,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.562,
-          "highest_voltage": 3.563,
-          "lowest_voltage": 3.562,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.562,
-          "highest_voltage": 3.563,
-          "lowest_voltage": 3.562,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        }
-      ]
-    },
-    {
-      "temperatures": [21.526, 21.456],
-      "voltage": 21.26,
-      "highest_voltage": 21.262,
-      "lowest_voltage": 21.256,
-      "highest_temperature": 21.535,
-      "lowest_temperature": 21.439,
-      "fault": false,
-      "faults": [],
-      "alert": false,
-      "alerts": [],
-      "cells": [
-        {
-          "voltage": 3.56,
-          "highest_voltage": 3.561,
-          "lowest_voltage": 3.56,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.564,
-          "highest_voltage": 3.564,
-          "lowest_voltage": 3.563,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.562,
-          "highest_voltage": 3.562,
-          "lowest_voltage": 3.561,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.564,
-          "highest_voltage": 3.565,
-          "lowest_voltage": 3.564,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.563,
-          "highest_voltage": 3.564,
-          "lowest_voltage": 3.562,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.562,
-          "highest_voltage": 3.563,
-          "lowest_voltage": 3.562,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        }
-      ]
-    },
-    {
-      "temperatures": [21.665, 21.552],
-      "voltage": 20.912,
-      "highest_voltage": 20.912,
-      "lowest_voltage": 20.902,
-      "highest_temperature": 21.778,
-      "lowest_temperature": 21.508,
-      "fault": true,
-      "faults": ["UNDER_VOLTAGE"],
-      "alert": true,
-      "alerts": ["UNDER_VOLTAGE"],
-      "cells": [
-        {
-          "voltage": 3.496,
-          "highest_voltage": 3.496,
-          "lowest_voltage": 3.495,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": true,
-          "alerts": ["UNDER_VOLTAGE"]
-        },
-        {
-          "voltage": 3.499,
-          "highest_voltage": 3.499,
-          "lowest_voltage": 3.498,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": true,
-          "alerts": ["UNDER_VOLTAGE"]
-        },
-        {
-          "voltage": 3.498,
-          "highest_voltage": 3.499,
-          "lowest_voltage": 3.498,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": true,
-          "alerts": ["UNDER_VOLTAGE"]
-        },
-        {
-          "voltage": 3.5,
-          "highest_voltage": 3.501,
-          "lowest_voltage": 3.5,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.508,
-          "highest_voltage": 3.509,
-          "lowest_voltage": 3.508,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 0.0,
-          "highest_voltage": 0.0,
-          "lowest_voltage": 0.0,
-          "over_voltage_fault": false,
-          "under_voltage_fault": true,
-          "fault": true,
-          "faults": ["UNDER_VOLTAGE"],
-          "alert": true,
-          "alerts": ["UNDER_VOLTAGE"]
-        }
-      ]
-    },
-    {
-      "temperatures": [21.795, 21.447],
-      "voltage": 21.113,
-      "highest_voltage": 21.117,
-      "lowest_voltage": 21.111,
-      "highest_temperature": 21.795,
-      "lowest_temperature": 21.404,
-      "fault": false,
-      "faults": [],
-      "alert": false,
-      "alerts": [],
-      "cells": [
-        {
-          "voltage": 3.538,
-          "highest_voltage": 3.538,
-          "lowest_voltage": 3.537,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.54,
-          "highest_voltage": 3.54,
-          "lowest_voltage": 3.539,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.54,
-          "highest_voltage": 3.54,
-          "lowest_voltage": 3.539,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.54,
-          "highest_voltage": 3.54,
-          "lowest_voltage": 3.539,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.537,
-          "highest_voltage": 3.538,
-          "lowest_voltage": 3.536,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        },
-        {
-          "voltage": 3.538,
-          "highest_voltage": 3.538,
-          "lowest_voltage": 3.537,
-          "over_voltage_fault": false,
-          "under_voltage_fault": false,
-          "fault": false,
-          "faults": [],
-          "alert": false,
-          "alerts": []
-        }
-      ]
-    }
-  ]
+  "voltage_state_of_charge": 0.8223216,
+  "current": -0.4957084,
+  "pack": {
+    "fault": false,
+    "faults": [],
+    "highest_voltage": 47.476,
+    "voltage": 47.468,
+    "alert": false,
+    "modules": [
+      {
+        "fault": false,
+        "faults": [],
+        "highest_voltage": 23.74,
+        "voltage": 23.736,
+        "temperatures": [22.02, 21.142],
+        "alert": false,
+        "highest_temperature": 22.029,
+        "lowest_temperature": 21.098,
+        "lowest_voltage": 23.734,
+        "alerts": [],
+        "cells": [
+          {
+            "highest_voltage": 3.974,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.973,
+            "fault": false,
+            "lowest_voltage": 3.973,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.976,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.975,
+            "fault": false,
+            "lowest_voltage": 3.975,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.976,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.976,
+            "fault": false,
+            "lowest_voltage": 3.976,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.977,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.977,
+            "fault": false,
+            "lowest_voltage": 3.976,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.976,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.976,
+            "fault": false,
+            "lowest_voltage": 3.975,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.975,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.974,
+            "fault": false,
+            "lowest_voltage": 3.974,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          }
+        ]
+      },
+      {
+        "fault": false,
+        "faults": [],
+        "highest_voltage": 23.74,
+        "voltage": 23.738,
+        "temperatures": [21.665, 21.569],
+        "alert": false,
+        "highest_temperature": 21.674,
+        "lowest_temperature": 21.526,
+        "lowest_voltage": 23.732,
+        "alerts": [],
+        "cells": [
+          {
+            "highest_voltage": 3.973,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.973,
+            "fault": false,
+            "lowest_voltage": 3.972,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.976,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.976,
+            "fault": false,
+            "lowest_voltage": 3.975,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.98,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.98,
+            "fault": false,
+            "lowest_voltage": 3.979,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.976,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.976,
+            "fault": false,
+            "lowest_voltage": 3.976,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.976,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.975,
+            "fault": false,
+            "lowest_voltage": 3.974,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.975,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.974,
+            "fault": false,
+            "lowest_voltage": 3.974,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          }
+        ]
+      },
+      {
+        "fault": false,
+        "faults": [],
+        "highest_voltage": 23.616,
+        "voltage": 23.614,
+        "temperatures": [22.055, 21.925],
+        "alert": false,
+        "highest_temperature": 22.055,
+        "lowest_temperature": 21.873,
+        "lowest_voltage": 23.604,
+        "alerts": [],
+        "cells": [
+          {
+            "highest_voltage": 3.948,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.947,
+            "fault": false,
+            "lowest_voltage": 3.947,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.952,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.951,
+            "fault": false,
+            "lowest_voltage": 3.95,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.95,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.95,
+            "fault": false,
+            "lowest_voltage": 3.95,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.953,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.953,
+            "fault": false,
+            "lowest_voltage": 3.952,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.962,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.961,
+            "fault": false,
+            "lowest_voltage": 3.961,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.991,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.99,
+            "fault": false,
+            "lowest_voltage": 3.99,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          }
+        ]
+      },
+      {
+        "fault": false,
+        "faults": [],
+        "highest_voltage": 23.86,
+        "voltage": 23.848,
+        "temperatures": [22.862, 22.305],
+        "alert": false,
+        "highest_temperature": 22.871,
+        "lowest_temperature": 22.244,
+        "lowest_voltage": 23.834,
+        "alerts": [],
+        "cells": [
+          {
+            "highest_voltage": 3.992,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.991,
+            "fault": false,
+            "lowest_voltage": 3.991,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.995,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.995,
+            "fault": false,
+            "lowest_voltage": 3.994,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.994,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.994,
+            "fault": false,
+            "lowest_voltage": 3.993,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.995,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.994,
+            "fault": false,
+            "lowest_voltage": 3.994,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.992,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.991,
+            "fault": false,
+            "lowest_voltage": 3.99,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          },
+          {
+            "highest_voltage": 3.993,
+            "alert": false,
+            "alerts": [],
+            "voltage": 3.993,
+            "fault": false,
+            "lowest_voltage": 3.992,
+            "over_voltage_fault": false,
+            "under_voltage_fault": false,
+            "faults": []
+          }
+        ]
+      }
+    ],
+    "highest_temperature": 22.871,
+    "lowest_temperature": 21.098,
+    "ready": true,
+    "lowest_voltage": 47.458,
+    "alerts": []
+  },
+  "current_state_of_charge": 0.0
 }

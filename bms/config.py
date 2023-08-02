@@ -87,6 +87,10 @@ class Config:
         self.web_server_port: int = 80
         # The zero-point reference voltage for the C2T current sensor
         self.current_zero_point: float = 1.6025
+        # Whether to reverse the direction of the current sensor in software
+        self.current_reversed: bool = False
+        # The maximum amps for the full reading of the current sensor
+        self.current_sensor_max: int = 200
 
         self.read()
 
@@ -107,7 +111,7 @@ class Config:
         return self.cell_low_voltage_setpoint - self.voltage_fault_offset
 
     def get_dict(self):
-        return {k: v for k, v in self.__dict__.items() if not k.startswith("_Config__")}
+        return {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
 
     def read(self):
         data = None

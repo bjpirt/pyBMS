@@ -61,7 +61,6 @@ class Bms:
             "voltage_state_of_charge": self.__state_of_charge.level_from_voltage,
             "current_state_of_charge": self.__state_of_charge.level_from_current,
             "current": self.current,
-            "contactors": self.contactors.get_dict(),
             "pack": self.battery_pack.get_dict()
         }
 

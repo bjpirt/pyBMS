@@ -18,7 +18,7 @@ class StateOfCharge:
         self.__config = config
         self.__capacity =  self.__config.module_capacity * self.__config.parallel_string_count * 3600
         self.__remaining_amp_seconds = 0.0
-        self.__initialise_from_voltage()
+        self.__initialised = False
 
     def __reset(self):
         self.__remaining_amp_seconds = self.__capacity
@@ -40,9 +40,14 @@ class StateOfCharge:
         raise ValueError("Could not calculate state of charge from voltage")
     
     def process(self):
+        if not self.__initialised and self.__pack.ready:
+            self.__initialise_from_voltage()
+            self.__initialised = True
+
         if self.__current_sensor is None:
             return
-        if self.__interval.ready:
+
+        if self.__pack.ready and self.__interval.ready:
             self.__interval.reset()
             current = self.__current_sensor.read()
             self.__remaining_amp_seconds = self.__remaining_amp_seconds + (current * 0.5)
