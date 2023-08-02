@@ -51,6 +51,7 @@ class TeslaModelSBatteryPack(BatteryPack):
                     module = TeslaModelSBatteryModule(
                         next_address, self.__gateway, self._config)
                     module.clearFaults()
+                    module.update()
                     self.modules.append(module)
             else:
                 break

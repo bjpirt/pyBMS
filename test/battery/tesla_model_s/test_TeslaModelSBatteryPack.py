@@ -37,7 +37,8 @@ class TeslaModelSBatteryPackTestCase(unittest.TestCase):
     def test_setup_modules(self):
         self.mockGateway.read_register = MagicMock()
         self.mockGateway.read_register.side_effect = [
-            mockDeviceStatusRead, mockDeviceAddressRead1, mockDeviceStatusRead, mockDeviceAddressRead2, None]
+            mockDeviceStatusRead, mockDeviceAddressRead1, mockValidRead,
+            mockDeviceStatusRead, mockDeviceAddressRead2, mockValidRead, None]
         self.pack = TeslaModelSBatteryPack(self.mockGateway, self.config)
         self.assertEqual(len(self.pack.modules), 2)
         self.assertEqual(self.pack.modules[0].address, 1)
@@ -46,7 +47,8 @@ class TeslaModelSBatteryPackTestCase(unittest.TestCase):
     def test_balance(self):
         self.mockGateway.read_register = MagicMock()
         self.mockGateway.read_register.side_effect = [
-            mockDeviceStatusRead, mockDeviceAddressRead1, mockDeviceStatusRead, mockDeviceAddressRead2, None,
+            mockDeviceStatusRead, mockDeviceAddressRead1, mockValidRead,
+            mockDeviceStatusRead, mockDeviceAddressRead2, mockValidRead, None,
             mockValidRead, mockValidRead]
         self.pack = TeslaModelSBatteryPack(self.mockGateway, self.config)
         self.assertEqual(len(self.pack.modules), 2)

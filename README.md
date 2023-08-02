@@ -122,7 +122,7 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 - [x] Monitoring UI (first pass)
 - [x] Handle communication faults
 - [x] Re-work fault level settings
-- [ ] State of charge from current sensor
+- [x] State of charge from current sensor
 - [ ] Design hardware
 - [ ] Support for contactors per string
 - [ ] HTTPS

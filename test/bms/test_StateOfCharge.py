@@ -20,6 +20,7 @@ class FakeConfig(Config):
 class FakePack(BatteryPack):
     def __init__(self):
         self.fakeaverage_cell_voltage = 3.6
+        self.ready = True
 
     @property
     def average_cell_voltage(self):
@@ -35,6 +36,7 @@ class StateOfChargeTestCase(unittest.TestCase):
         self.pack = FakePack()
         self.current_sensor = FakeCurrentSensor()
         self.soc = StateOfCharge(self.pack, self.config, self.current_sensor)
+        self.soc.process()
         return super().setUp()
     
     def test_initialise_current_soc_from_voltage(self):

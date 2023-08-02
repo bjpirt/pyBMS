@@ -32,7 +32,7 @@ class WebServer:
 
         @app.get("/status.json")
         def get_status(_):
-            return self.__bms.battery_pack.get_dict()
+            return self.__bms.get_dict()
 
         try:
             import _thread
