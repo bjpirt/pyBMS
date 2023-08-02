@@ -335,5 +335,5 @@
     "lowest_voltage": 47.458,
     "alerts": []
   },
-  "current_state_of_charge": 0.0
+  "current_state_of_charge": 0.8314215
 }

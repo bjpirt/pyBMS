@@ -17,28 +17,43 @@ const createLabel = (value, type) =>
   `<span class="${type} label">${value.replace("_", " ")}</span>`;
 
 const labels = (input, type) =>
-  input ? input.map((value) => createLabel(value, type)).join("") : "None";
+  input.length > 0
+    ? input.map((value) => createLabel(value, type)).join("")
+    : "None";
 
 const updatePackDetail = (status) => {
-  setElementValue("#packDetail .voltage .min", status.lowest_voltage, "V");
-  setElementValue("#packDetail .voltage .now", status.voltage, "V");
-  setElementValue("#packDetail .voltage .max", status.highest_voltage, "V");
+  setElementValue("#packDetail .voltage .min", status.pack.lowest_voltage, "V");
+  setElementValue("#packDetail .voltage .now", status.pack.voltage, "V");
+  setElementValue(
+    "#packDetail .voltage .max",
+    status.pack.highest_voltage,
+    "V"
+  );
 
   setElementValue(
     "#packDetail .temperature .min",
-    status.lowest_temperature,
+    status.pack.lowest_temperature,
     "&deg;C"
   );
   setElementValue(
     "#packDetail .temperature .max",
-    status.highest_temperature,
+    status.pack.highest_temperature,
     "&deg;C"
   );
   setElementValue("#packDetail .current", status.current, "A");
-  setElementValue("#packDetail .soc", status.state_of_charge * 100, "%");
+  setElementValue(
+    "#packDetail .vsoc",
+    status.voltage_state_of_charge * 100,
+    "%"
+  );
+  setElementValue(
+    "#packDetail .isoc",
+    status.current_state_of_charge * 100,
+    "%"
+  );
 
-  setElementValue("#packDetail .alerts", labels(status.alerts, "alert"));
-  setElementValue("#packDetail .faults", labels(status.faults, "fault"));
+  setElementValue("#packDetail .alerts", labels(status.pack.alerts, "alert"));
+  setElementValue("#packDetail .faults", labels(status.pack.faults, "fault"));
 };
 
 const createModuleElement = (module, moduleIndex) => {
@@ -92,7 +107,7 @@ const updateModuleElement = (moduleElement, module, config) => {
 };
 
 const updateModuleDetails = (status, config) => {
-  for (const [moduleIndex, module] of status.modules.entries()) {
+  for (const [moduleIndex, module] of status.pack.modules.entries()) {
     let moduleElement = document.querySelector(
       `#modules .module-${moduleIndex}`
     );
