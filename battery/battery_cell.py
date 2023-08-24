@@ -74,8 +74,6 @@ class BatteryCell:
             "voltage": self.voltage,
             "highest_voltage": self.highest_voltage,
             "lowest_voltage": self.lowest_voltage,
-            "over_voltage_fault": self.over_voltage_fault,
-            "under_voltage_fault": self.under_voltage_fault,
             "fault": self.fault,
             "faults": self.faults,
             "alert": self.alert,
