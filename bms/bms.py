@@ -1,5 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+
+from .bms_interface import BmsInterface
+from .mqtt_output import MqttOutput
 from hal.interval import get_interval
 from hal import WDT
 from .led import Led
@@ -12,11 +15,12 @@ if TYPE_CHECKING:
     from battery import BatteryPack
 
 
-class Bms:
+class Bms(BmsInterface):
     def __init__(self, battery_pack: BatteryPack, config: Config, current_sensor: Optional[CurrentSensor] = None):
+        super().__init__(battery_pack)
         self.__config = config
         self.battery_pack = battery_pack
-        self.contactors = ContactorControl(config)
+        self.__contactors = ContactorControl(config)
         self.__current_sensor = current_sensor
         self.__poll_interval: float = self.__config.poll_interval
         self.__interval = get_interval()
@@ -27,6 +31,8 @@ class Bms:
             self.__wdt = WDT(timeout=self.__config.wdt_timeout)
         self.__state_of_charge = StateOfCharge(
             self.battery_pack, self.__config, self.__current_sensor)
+        if self.__config.mqtt_host is not None:
+            self._mqtt = MqttOutput(self.__config, self)
 
     def process(self):
         if self.__interval.ready:
@@ -34,17 +40,20 @@ class Bms:
             self.battery_pack.update()
 
             if self.battery_pack.fault or not self.battery_pack.ready:
-                self.contactors.disable()
+                self.__contactors.disable()
             else:
-                self.contactors.enable()
+                self.__contactors.enable()
             if self.__config.debug:
-                self.print_debug()
+                self.__print_debug()
 
         self.__state_of_charge.process()
-        self.contactors.process()
+        self.__contactors.process()
         self.__led.process()
         if self.__wdt:
             self.__wdt.feed()
+
+        if self.__config.mqtt_host is not None:
+            self._mqtt.process()
 
     @property
     def state_of_charge(self) -> float:
@@ -64,15 +73,18 @@ class Bms:
             "pack": self.battery_pack.get_dict()
         }
 
-    def print_debug(self):
+    def __print_debug(self):
         if not self.battery_pack.ready:
             print("Battery pack not ready")
         else:
-            print(f"Modules: {len(self.battery_pack.modules)} Current: {self.current}A")
-            print(f"Alerts: {self.battery_pack.alerts} Faults: {self.battery_pack.faults}")
+            print(
+                f"Modules: {len(self.battery_pack.modules)} Current: {self.current}A")
+            print(
+                f"Alerts: {self.battery_pack.alerts} Faults: {self.battery_pack.faults}")
         for i, module in enumerate(self.battery_pack.modules):
             print(
                 f"Module: {i} Voltage: {module.voltage} Temperature: {(module.temperatures[0])}",
                 f"{module.temperatures[1]} Alerts: {module.alerts} Faults: {module.faults}")
             for j, cell in enumerate(module.cells):
-                print(f"  |- Cell: {j} voltage: {cell.voltage} Alerts: {cell.alerts} Faults: {cell.faults}")
+                print(
+                    f"  |- Cell: {j} voltage: {cell.voltage} Alerts: {cell.alerts} Faults: {cell.faults}")

@@ -1,4 +1,5 @@
 import os
+from typing import Union
 import json
 
 
@@ -91,6 +92,12 @@ class Config:
         self.current_reversed: bool = False
         # The maximum amps for the full reading of the current sensor
         self.current_sensor_max: int = 200
+        # The host for the MQTT broker
+        self.mqtt_host: Union[str, None] = None
+        # The host for the MQTT broker
+        self.mqtt_topic_prefix: Union[str, None] = None
+        # The host for the MQTT broker
+        self.mqtt_output_interval: float = 5.0
 
         self.read()
 

@@ -4,6 +4,10 @@ BMS_BOARD = wemos-d1
 BOARD = GENERIC
 FIRMWARE_FORMAT = bin
 
+.PHONY: install
+install:
+	pip install -r requirements.txt
+
 .PHONY: test
 test:
 	python -m unittest --verbose
