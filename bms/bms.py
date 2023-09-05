@@ -26,6 +26,12 @@ class Bms(BmsInterface):
         self.__interval = get_interval()
         self.__interval.set(self.__poll_interval)
         self.__led = Led(self.__config.led_pin)
+        self.__charging_enabled = True
+        self.__discharging_enabled = True
+        self.__charging_timer = get_interval()
+        self.__charging_timer.set(self.__config.charge_hysteresis_time)
+        self.__discharging_timer = get_interval()
+        self.__discharging_timer.set(self.__config.charge_hysteresis_time)
         self.__wdt: Optional[WDT] = None
         if self.__config.wdt_timeout > 0:
             self.__wdt = WDT(timeout=self.__config.wdt_timeout)
@@ -65,9 +71,29 @@ class Bms(BmsInterface):
             return self.__current_sensor.current
         return 0.0
 
+    @property
+    def charge_current_setpoint(self) -> float:
+        self.__charging_enabled = self.battery_pack.should_charge(self.__charging_enabled)
+        if self.__charging_enabled is True:
+            if self.__charging_timer.ready:
+                return self.__config.max_charge_current
+        else:
+            self.__charging_timer.reset()
+        return 0
+
+    @property
+    def discharge_current_setpoint(self) -> float:
+        self.__discharging_enabled = self.battery_pack.should_discharge(self.__discharging_enabled)
+        if self.__discharging_enabled is True:
+            if self.__discharging_timer.ready:
+                return self.__config.max_discharge_current
+        else:
+            self.__discharging_timer.reset()
+        return 0
+
     def get_dict(self) -> dict:
         return {
-            "voltage_state_of_charge": self.__state_of_charge.level_from_voltage,
+            "voltage_state_of_charge": self.__state_of_charge.scaled_level_from_voltage,
             "current_state_of_charge": self.__state_of_charge.level_from_current,
             "current": self.current,
             "pack": self.battery_pack.get_dict()

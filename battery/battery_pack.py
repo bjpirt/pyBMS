@@ -19,14 +19,13 @@ class BatteryPack:
         self.lowest_temperature: float = -1
         self.ready = False
 
-
     @property
-    def series_modules(self) -> int:
+    def series_module_count(self) -> int:
         return int(self._config.module_count / self._config.parallel_string_count)
 
     @property
     def series_cells(self) -> int:
-        return self.series_modules * self.modules[0].cell_count
+        return self.series_module_count * self.modules[0].cell_count
 
     @property
     def max_voltage_setpoint(self) -> float:
@@ -122,6 +121,18 @@ class BatteryPack:
         if len(self.modules) > 0:
             return max((module.cell_voltage_difference for module in self.modules))
         return 0.0
+
+    def should_charge(self, current_state: bool) -> bool:
+        if current_state is True:
+            return self.high_cell_voltage < self._config.cell_high_voltage_setpoint
+        else:
+            return self.high_cell_voltage < self._config.cell_high_voltage_setpoint - self._config.charge_hysteresis_voltage
+
+    def should_discharge(self, current_state: bool) -> bool:
+        if current_state is True:
+            return self.low_cell_voltage > self._config.cell_low_voltage_setpoint
+        else:
+            return self.low_cell_voltage > self._config.cell_low_voltage_setpoint + self._config.charge_hysteresis_voltage
 
     def update(self) -> None:
         for module in self.modules:
