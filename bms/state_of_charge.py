@@ -16,18 +16,22 @@ class StateOfCharge:
         self.__interval = get_interval()
         self.__interval.set(0.5)
         self.__config = config
-        self.__capacity =  self.__config.module_capacity * self.__config.parallel_string_count * 3600
+        self.__total_capacity = self.__config.module_capacity * self.__config.parallel_string_count * 3600
+        self.__available_capacity = self.available_capacity
         self.__remaining_amp_seconds = 0.0
         self.__initialised = False
 
     def __reset(self):
-        self.__remaining_amp_seconds = self.__capacity
+        self.__remaining_amp_seconds = self.__available_capacity
 
     def __initialise_from_voltage(self):
-        voltage_soc = self.level_from_voltage
-        self.__remaining_amp_seconds = self.__capacity * voltage_soc
+        voltage_soc = self.scaled_level_from_voltage
+        self.__remaining_amp_seconds = self.__available_capacity * voltage_soc
 
     def __calculate_from_voltage(self, voltage: float) -> float:
+        """
+        Calculate the state of charge based on the charge curve in the config
+        """
         if voltage <= self.__config.soc_lookup[0][0]:
             return self.__config.soc_lookup[0][1]
         if voltage >= self.__config.soc_lookup[-1][0]:
@@ -38,7 +42,7 @@ class StateOfCharge:
                     voltage - low_point[0]) / (high_point[0] - low_point[0])
         print(f"Could not calculate state of charge. Voltage: {voltage}, SOC Lookup: {self.__config.soc_lookup}")
         raise ValueError("Could not calculate state of charge from voltage")
-    
+
     def process(self):
         if not self.__initialised and self.__pack.ready:
             self.__initialise_from_voltage()
@@ -51,7 +55,7 @@ class StateOfCharge:
             self.__interval.reset()
             current = self.__current_sensor.read()
             self.__remaining_amp_seconds = self.__remaining_amp_seconds + (current * 0.5)
-            if self.__remaining_amp_seconds > self.__capacity:
+            if self.__remaining_amp_seconds > self.__available_capacity:
                 self.__reset()
             if self.__remaining_amp_seconds < 0:
                 self.__remaining_amp_seconds = 0
@@ -59,8 +63,8 @@ class StateOfCharge:
     @property
     def level_from_current(self) -> float:
         if self.__current_sensor is None:
-            return self.level_from_voltage
-        return self.__remaining_amp_seconds / self.__capacity
+            return self.scaled_level_from_voltage
+        return self.__remaining_amp_seconds / self.__available_capacity
 
     @property
     def scaled_level_from_voltage(self) -> float:
@@ -72,3 +76,10 @@ class StateOfCharge:
         if unscaled_level >= high_offset:
             return 1
         return (unscaled_level - low_offset) / (high_offset - low_offset)
+
+    @property
+    def available_capacity(self) -> float:
+        low_offset = self.__calculate_from_voltage(self.__config.cell_low_voltage_setpoint)
+        high_offset = self.__calculate_from_voltage(self.__config.cell_high_voltage_setpoint)
+        available_percent = high_offset - low_offset
+        return available_percent * self.__total_capacity
