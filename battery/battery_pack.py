@@ -126,13 +126,15 @@ class BatteryPack:
         if current_state is True:
             return self.high_cell_voltage < self._config.cell_high_voltage_setpoint
         else:
-            return self.high_cell_voltage < self._config.cell_high_voltage_setpoint - self._config.charge_hysteresis_voltage
+            return self.high_cell_voltage < (
+                self._config.cell_high_voltage_setpoint - self._config.charge_hysteresis_voltage)
 
     def should_discharge(self, current_state: bool) -> bool:
         if current_state is True:
             return self.low_cell_voltage > self._config.cell_low_voltage_setpoint
         else:
-            return self.low_cell_voltage > self._config.cell_low_voltage_setpoint + self._config.charge_hysteresis_voltage
+            return self.low_cell_voltage > (
+                self._config.cell_low_voltage_setpoint + self._config.charge_hysteresis_voltage)
 
     def update(self) -> None:
         for module in self.modules:

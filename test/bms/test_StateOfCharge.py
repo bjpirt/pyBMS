@@ -26,6 +26,7 @@ class FakePack(BatteryPack):
     def average_cell_voltage(self):
         return self.fakeaverage_cell_voltage
 
+
 class FakeCurrentSensor(CurrentSensor):
     pass
 
