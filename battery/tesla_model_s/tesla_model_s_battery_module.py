@@ -7,9 +7,9 @@ from .tesla_model_s_constants import CELL_COUNT, REG_ADC_CONTROL, REG_ADC_CONVER
     REG_ALERT_STATUS, REG_CB_CTRL, REG_CB_TIME, REG_DEVICE_STATUS, REG_FAULT_STATUS, \
     REG_IO_CONTROL, REG_SHDW_CONTROL, REG_CONFIG_COV, REG_CONFIG_COVT, REG_CONFIG_CUV, \
     REG_CONFIG_CUVT, REG_CONFIG_OT, REG_CONFIG_OTT, SHDW_CONTROL_VALUE
-from .. import BatteryModule, BatteryCell
+from battery import BatteryModule, BatteryCell
 if TYPE_CHECKING:
-    from bms import Config
+    from config import Config
     from .tesla_model_s_network_gateway import TeslaModelSNetworkGateway
 
 
@@ -85,16 +85,14 @@ class TeslaModelSBatteryModule(BatteryModule):
         self.__check_communication_time()
         super().update()
 
-    def balance(self, low_cell_voltage: float) -> None:
-        if self.high_cell_voltage > self._config.balance_voltage and \
-                self.high_cell_voltage - self.low_cell_voltage > self._config.balance_difference:
-            balance_value: int = 0
-            for i, cell in enumerate(self.cells):
-                if cell.voltage > low_cell_voltage:
-                    balance_value = balance_value | (1 << i)
-            if balance_value != 0:
-                self.__write_register(REG_CB_TIME, self._config.balance_time)
-                self.__write_register(REG_CB_CTRL, balance_value)
+    def balance(self) -> None:
+        balance_value: int = 0
+        for i, cell in enumerate(self.cells):
+            if cell.balancing is True:
+                balance_value = balance_value | (1 << i)
+        if balance_value != 0:
+            self.__write_register(REG_CB_TIME, self._config.balance_time)
+            self.__write_register(REG_CB_CTRL, balance_value)
 
     def __check_communication_time(self):
         self.comms_fault = self.__comms_timeout.ready

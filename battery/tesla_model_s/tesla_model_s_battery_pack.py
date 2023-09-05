@@ -7,7 +7,7 @@ from .tesla_model_s_constants import BROADCAST_ADDRESS, REG_ADDRESS_CONTROL, REG
     REG_RESET, RESET_VALUE
 if TYPE_CHECKING:
     from . import TeslaModelSNetworkGateway
-    from bms import Config
+    from config import Config
 
 
 class TeslaModelSBatteryPack(BatteryPack):
@@ -25,8 +25,6 @@ class TeslaModelSBatteryPack(BatteryPack):
     def update(self) -> None:
         if self.ready:
             super().update()
-            if self._config.auto_balance:
-                self.__balance()
         elif self.__setup_interval.ready:
             self.__setup_modules()
 
@@ -58,10 +56,6 @@ class TeslaModelSBatteryPack(BatteryPack):
 
         if len(self.modules) == self._config.module_count:
             self.ready = True
+            self._setup_strings()
         else:
             self.__setup_interval.set(1)
-
-    def __balance(self):
-        low_cell_voltage = self.low_cell_voltage
-        for module in self.modules:
-            module.balance(low_cell_voltage)

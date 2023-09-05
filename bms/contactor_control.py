@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from hal.interval import get_interval
 from hal import Pin
 if TYPE_CHECKING:
-    from .config import Config
+    from config import Config
 
 
 class ContactorState():

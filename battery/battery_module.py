@@ -4,7 +4,7 @@ from .constants import COMMS, OVER_TEMPERATURE, UNDER_TEMPERATURE
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from bms import Config
+    from config import Config
     from typing import List
     from battery import BatteryCell
 
@@ -166,7 +166,7 @@ class BatteryModule:
         if self.low_temperature < self.lowest_temperature or math.isnan(self.lowest_temperature):
             self.lowest_temperature = self.low_temperature
 
-    def balance(self, low_cell_voltage: float) -> None:
+    def balance(self) -> None:
         pass
 
     def __cell_voltages(self):

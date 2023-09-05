@@ -2,7 +2,7 @@ from battery import BatteryCell
 import unittest
 from battery.constants import OVER_VOLTAGE, UNDER_VOLTAGE
 
-from bms import Config
+from config import Config
 
 
 class BatteryCellTestCase(unittest.TestCase):

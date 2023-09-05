@@ -6,7 +6,7 @@ from .mqtt_output import MqttOutput
 from hal.interval import get_interval
 from hal import WDT
 from .led import Led
-from .config import Config
+from config import Config
 from .contactor_control import ContactorControl
 from .state_of_charge import StateOfCharge
 from .current_sensor import CurrentSensor
@@ -112,5 +112,6 @@ class Bms(BmsInterface):
                 f"Module: {i} Voltage: {module.voltage} Temperature: {(module.temperatures[0])}",
                 f"{module.temperatures[1]} Alerts: {module.alerts} Faults: {module.faults}")
             for j, cell in enumerate(module.cells):
+                balancing = "B" if cell.balancing else " "
                 print(
-                    f"  |- Cell: {j} voltage: {cell.voltage} Alerts: {cell.alerts} Faults: {cell.faults}")
+                    f"  |- Cell:{balancing}{j} voltage: {cell.voltage} Alerts: {cell.alerts} Faults: {cell.faults}")

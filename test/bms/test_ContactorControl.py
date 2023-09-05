@@ -1,7 +1,8 @@
 import time
 import unittest
 
-from bms import Config, ContactorControl, ContactorState
+from config import Config
+from bms import ContactorControl, ContactorState
 
 
 class ContactorControlTestCase(unittest.TestCase):

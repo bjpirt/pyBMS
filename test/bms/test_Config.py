@@ -2,7 +2,7 @@ import os
 import json
 import unittest
 from os import path  # type: ignore
-from bms import Config
+from config import Config
 from scripts.data_to_py import write_data
 
 

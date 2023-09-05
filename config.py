@@ -40,7 +40,7 @@ class Config:
         # Whether to print debug comms information over serial
         self.debugComms: bool = False
         # Whether the BMS should balance the modules automatically
-        self.auto_balance: bool = True
+        self.balancing_enabled: bool = True
         # How long to balance the cells for in seconds
         self.balance_time: int = 5
         # The voltage above which balancing should be enabled
@@ -104,8 +104,10 @@ class Config:
         self.max_discharge_current: float = 100.0
         # The hysteresis offset voltage for enabling and disabling charging and discharging
         self.charge_hysteresis_voltage: float = 0.1
-        # The hysteresis offset time (in seconds) for enabling and disabling charging and discharging
+        # The hysteresis time (in seconds) for enabling and disabling charging and discharging
         self.charge_hysteresis_time: float = 30.0
+        # The hysteresis time (in seconds) for enabling and disabling balancing for a cell
+        self.balance_hysteresis_time: float = 10.0
 
         self.read()
 

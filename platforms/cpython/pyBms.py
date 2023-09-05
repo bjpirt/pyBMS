@@ -1,11 +1,12 @@
 # ruff: noqa: E402
+from config import Config
 import sys
 import serial  # type: ignore
 from os import path  # type: ignore
 
 sys.path.insert(0, path.join(path.dirname(__file__), "../.."))
 
-from bms import Bms, Config, WebServer  # nopep8
+from bms import Bms, WebServer  # nopep8
 from battery.tesla_model_s import TeslaModelSBatteryPack, TeslaModelSNetworkGateway  # nopep8
 
 port = sys.argv[1]

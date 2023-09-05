@@ -3,7 +3,7 @@ import unittest
 from battery.tesla_model_s.tesla_model_s_battery_module import TeslaModelSBatteryModule
 from battery.tesla_model_s.tesla_model_s_network_gateway import TeslaModelSNetworkGateway
 import serial  # type: ignore
-from bms import Config
+from config import Config
 from emulator.tesla_bms import TeslaBmsEmulator
 
 bmsSerialPort = serial.Serial('port1-end-a', 115200, timeout=0.01)
