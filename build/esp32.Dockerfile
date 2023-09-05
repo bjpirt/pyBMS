@@ -24,6 +24,7 @@ COPY platforms/micropython/__future__.py /code/ports/esp32/modules/__future__.py
 COPY battery /code/ports/esp32/modules/battery/
 COPY bms /code/ports/esp32/modules/bms/
 COPY hal /code/ports/esp32/modules/hal/
+COPY mqtt /code/ports/esp32/modules/mqtt/
 COPY emulator /code/ports/esp32/modules/emulator/
 COPY config_json.py /code/ports/esp32/modules/config_json.py
 COPY platforms/esp32/${BMS_BOARD}/${MAIN}.py /code/ports/esp32/modules/main.py

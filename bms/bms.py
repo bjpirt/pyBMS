@@ -44,7 +44,7 @@ class Bms(BmsInterface):
             else:
                 self.__contactors.enable()
             if self.__config.debug:
-                self.__print_debug()
+                self.print_debug()
 
         self.__state_of_charge.process()
         self.__contactors.process()
@@ -73,7 +73,7 @@ class Bms(BmsInterface):
             "pack": self.battery_pack.get_dict()
         }
 
-    def __print_debug(self):
+    def print_debug(self):
         if not self.battery_pack.ready:
             print("Battery pack not ready")
         else:
