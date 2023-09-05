@@ -1,6 +1,6 @@
 from bms import Bms, Config, VictronOutput, WebServer, C2TTransducer
 from battery.tesla_model_s import TeslaModelSBatteryPack, TeslaModelSNetworkGateway
-from machine import UART # type: ignore
+from machine import UART  # type: ignore
 from esp32 import CAN  # type: ignore
 
 
