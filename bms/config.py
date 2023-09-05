@@ -45,7 +45,7 @@ class Config:
         self.balance_time: int = 5
         # The voltage above which balancing should be enabled
         self.balance_voltage: float = 3.9
-        # The difference between a module's highest and lowest cell voltages that triggers balancing
+        # The difference between the voltage of a cell and the lowest cell voltage in the pack that triggers balancing
         self.balance_difference: float = 0.04
         # The capacity of an individual module in Ah
         self.module_capacity: float = 232.0
@@ -98,6 +98,14 @@ class Config:
         self.mqtt_topic_prefix: Union[str, None] = None
         # The host for the MQTT broker
         self.mqtt_output_interval: float = 5.0
+        # The max desired charge current in A
+        self.max_charge_current: float = 100.0
+        # The max desired discharge current in A
+        self.max_discharge_current: float = 100.0
+        # The hysteresis offset voltage for enabling and disabling charging and discharging
+        self.charge_hysteresis_voltage: float = 0.1
+        # The hysteresis offset time (in seconds) for enabling and disabling charging and discharging
+        self.charge_hysteresis_time: float = 30.0
 
         self.read()
 

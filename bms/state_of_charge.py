@@ -63,7 +63,7 @@ class StateOfCharge:
         return self.__remaining_amp_seconds / self.__capacity
 
     @property
-    def level_from_voltage(self) -> float:
+    def scaled_level_from_voltage(self) -> float:
         low_offset = self.__calculate_from_voltage(self.__config.cell_low_voltage_setpoint)
         high_offset = self.__calculate_from_voltage(self.__config.cell_high_voltage_setpoint)
         unscaled_level = self.__calculate_from_voltage(self.__pack.average_cell_voltage)

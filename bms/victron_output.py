@@ -49,10 +49,8 @@ class VictronOutput:
             self.send_message_9()
         except ValueError as err:
             print("ValueError sending Victron data", err)
-        except Exception as err: # pylint: disable=broad-except
+        except Exception as err:  # pylint: disable=broad-except
             print("Unknown error sending Victron data", err)
-
-
 
     def send_message_1(self) -> None:
         """
@@ -64,8 +62,8 @@ class VictronOutput:
         """
         message = CanMessage(0x351)
         message.add_int(int(self.__bms.battery_pack.max_voltage_setpoint * 10))
-        message.add_int(1000) # TODO: dynamic charge current
-        message.add_int(1000) # TODO: dynamic discharge current
+        message.add_int(int(self.__bms.charge_current_setpoint * 10))
+        message.add_int(int(self.__bms.discharge_current_setpoint * 10))
         message.add_int(int(self.__bms.battery_pack.min_voltage_setpoint * 10))
         message.send(self.__can)
 
