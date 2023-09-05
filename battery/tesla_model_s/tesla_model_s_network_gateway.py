@@ -4,7 +4,7 @@ from hal.interval import get_interval
 from .crc8 import crc8
 if TYPE_CHECKING:
     from typing import Union
-    from bms import Config
+    from config import Config
 
 
 class TeslaModelSNetworkGateway:

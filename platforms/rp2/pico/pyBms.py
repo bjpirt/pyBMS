@@ -1,4 +1,5 @@
-from bms import Bms, Config
+from bms import Bms
+from config import Config
 from battery.tesla_model_s import TeslaModelSBatteryPack, TeslaModelSNetworkGateway
 from machine import Pin, UART  # type: ignore
 

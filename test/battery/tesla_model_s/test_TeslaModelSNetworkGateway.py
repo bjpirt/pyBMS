@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from battery.tesla_model_s.tesla_model_s_network_gateway import TeslaModelSNetworkGateway
-from bms import Config
+from config import Config
 
 
 class FakeSerial:

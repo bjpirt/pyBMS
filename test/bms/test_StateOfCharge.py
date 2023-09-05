@@ -1,6 +1,7 @@
 import unittest
 from battery import BatteryPack
-from bms import Config, StateOfCharge, CurrentSensor
+from config import Config
+from bms import StateOfCharge, CurrentSensor
 
 
 class FakeConfig(Config):

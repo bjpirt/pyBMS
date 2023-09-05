@@ -3,7 +3,7 @@ from battery.battery_module import BatteryModule
 import unittest
 from battery.constants import COMMS, OVER_TEMPERATURE, OVER_VOLTAGE, UNDER_TEMPERATURE, UNDER_VOLTAGE
 
-from bms import Config
+from config import Config
 
 
 class BatteryModuleTestCase(unittest.TestCase):

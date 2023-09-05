@@ -1,6 +1,6 @@
 from .bms_interface import BmsInterface
 from hal import get_interval
-from .config import Config
+from config import Config
 from mqtt import MQTTClient  # type: ignore
 import json
 from typing import Union

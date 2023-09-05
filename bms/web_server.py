@@ -1,7 +1,7 @@
 from microdot import Microdot  # type: ignore
 from hal.wifi import connect
 from .bms import Bms
-from .config import Config
+from config import Config
 from .pages.bms_ui import bms_ui
 from .pages.bms_config import bms_config
 

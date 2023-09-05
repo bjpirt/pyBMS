@@ -11,7 +11,7 @@
   "negative_pin": 16,
   "precharge_pin": 17,
   "positive_pin": 26,
-  "auto_balance": true,
+  "balancing_enabled": true,
   "balance_time": 5,
   "balance_voltage": 3.9,
   "balance_difference": 0.04,

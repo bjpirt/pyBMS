@@ -1,4 +1,3 @@
-
 from battery.battery_pack import BatteryPack
 
 

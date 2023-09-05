@@ -1,16 +1,19 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+from .battery_string import BatteryString
+from .battery_module import BatteryModule
+
 from .constants import BALANCE
 if TYPE_CHECKING:
     from typing import List
-    from bms import Config
-    from . import BatteryModule
+    from config import Config
 
 
 class BatteryPack:
     def __init__(self, config: Config) -> None:
         self._config = config
         self.modules: List[BatteryModule] = []
+        self.strings: List[BatteryString] = []
 
         self.highest_voltage: float = -1
         self.lowest_voltage: float = -1
@@ -137,8 +140,12 @@ class BatteryPack:
                 self._config.cell_low_voltage_setpoint + self._config.charge_hysteresis_voltage)
 
     def update(self) -> None:
+
         for module in self.modules:
             module.update()
+
+        for string in self.strings:
+            string.balance()
 
         if self.voltage > self.highest_voltage:
             self.highest_voltage = self.voltage
@@ -151,6 +158,10 @@ class BatteryPack:
 
         if self.low_temperature < self.lowest_temperature or self.lowest_temperature < 0:
             self.lowest_temperature = self.low_temperature
+
+    def _setup_strings(self) -> None:
+        for i in range(0, len(self.modules), self.series_module_count):
+            self.strings.append(BatteryString(self.modules[i:i+self.series_module_count], self._config))
 
     def get_dict(self):
         return {

@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, call
 from battery.tesla_model_s.tesla_model_s_battery_module import TeslaModelSBatteryModule
 from battery.tesla_model_s.tesla_model_s_constants import REG_CB_CTRL, REG_CB_TIME
 from battery.tesla_model_s.tesla_model_s_network_gateway import TeslaModelSNetworkGateway
-from bms import Config
+from config import Config
 
 
 class FakeGateway(TeslaModelSNetworkGateway):
@@ -33,6 +33,7 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
 
     def setUp(self):
         c = Config("config.default.json")
+        c.balance_hysteresis_time = 0
         self.mockGateway = FakeGateway(None, Config("config.default.json"))
         self.mockGateway.write_register = MagicMock(return_value=True)
         self.module = TeslaModelSBatteryModule(1, self.mockGateway, c)
@@ -58,30 +59,11 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
     def test_balance(self):
         self.mockGateway.write_register = MagicMock(return_value=True)
         for cell in self.module.cells:
-            cell.voltage = 3.4
-        self.module.cells[1].voltage = 3.5
-        self.module.cells[2].voltage = 3.3
-        self.module.cells[3].voltage = 3.95
-        self.module.balance(3.4)
+            cell.balancing = False
+        self.module.cells[1].balancing = True
+        self.module.cells[3].balancing = True
+        self.module.balance()
 
         self.mockGateway.write_register.assert_has_calls(
             [call(self.module.address, REG_CB_TIME, 5), call(self.module.address,
                                                              REG_CB_CTRL, 0b00001010)])
-
-    def test_no_balance_below_threshold(self):
-        self.mockGateway.write_register = MagicMock(return_value=True)
-        for cell in self.module.cells:
-            cell.voltage = 3.4
-        self.module.cells[1].voltage = 3.5
-        self.module.balance(3.4)
-
-        self.mockGateway.write_register.assert_not_called()
-
-    def test_no_balance_within_difference(self):
-        self.mockGateway.write_register = MagicMock(return_value=True)
-        for cell in self.module.cells:
-            cell.voltage = 4.0
-        self.module.cells[1].voltage = 4.01
-        self.module.balance(3.4)
-
-        self.mockGateway.write_register.assert_not_called()

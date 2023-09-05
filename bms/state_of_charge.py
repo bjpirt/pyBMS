@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from typing import Optional
     from bms.current_sensor.current_sensor import CurrentSensor
     from battery import BatteryPack
-    from .config import Config
+    from config import Config
 
 
 class StateOfCharge:

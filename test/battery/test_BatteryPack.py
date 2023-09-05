@@ -1,7 +1,7 @@
 from battery import BatteryCell, BatteryModule, BatteryPack
 import unittest
 from battery.constants import COMMS, OVER_VOLTAGE, OVER_TEMPERATURE, UNDER_VOLTAGE, UNDER_TEMPERATURE, BALANCE
-from bms import Config
+from config import Config
 
 
 class BatteryPackTestCase(unittest.TestCase):
