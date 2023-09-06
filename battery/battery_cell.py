@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from hal.interval import get_interval
 from .constants import OVER_VOLTAGE, UNDER_VOLTAGE
 from typing import TYPE_CHECKING, List
 if TYPE_CHECKING:
@@ -11,9 +10,7 @@ class BatteryCell:
     def __init__(self, config: Config):
         self.__voltage = 0.0
         self._config = config
-        self._balancing = False
-        self._balance_timeout = get_interval()
-        self._balance_timeout.set(self._config.balance_hysteresis_time)
+        self.balancing = False
         self.highest_voltage = -1.0
         self.lowest_voltage = -1.0
         self.over_voltage_fault_override = False
@@ -60,16 +57,6 @@ class BatteryCell:
         if self.over_voltage_alert:
             alerts.append(OVER_VOLTAGE)
         return alerts
-
-    @property
-    def balancing(self) -> bool:
-        return self._balancing
-
-    @balancing.setter
-    def balancing(self, state: bool) -> None:
-        if self._balancing is not state and self._balance_timeout.ready:
-            self._balancing = state
-            self._balance_timeout.reset()
 
     @property
     def voltage(self) -> float:

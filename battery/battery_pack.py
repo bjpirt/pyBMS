@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+
 from .battery_string import BatteryString
 from .battery_module import BatteryModule
 
