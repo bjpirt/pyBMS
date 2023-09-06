@@ -64,6 +64,7 @@ class TeslaModelSBatteryModule(BatteryModule):
         self.cell_count = 6
         self.__comms_timeout = get_interval()
         self.__comms_timeout.set(config.comms_timeout)
+        self.__balancing = False
 
         for _ in range(CELL_COUNT):
             self.cells.append(BatteryCell(config))
@@ -90,7 +91,8 @@ class TeslaModelSBatteryModule(BatteryModule):
         for i, cell in enumerate(self.cells):
             if cell.balancing is True:
                 balance_value = balance_value | (1 << i)
-        if balance_value != 0:
+        self.__balancing = balance_value != 0
+        if self.__balancing:
             self.__write_register(REG_CB_TIME, self._config.balance_time)
             self.__write_register(REG_CB_CTRL, balance_value)
 
@@ -98,6 +100,8 @@ class TeslaModelSBatteryModule(BatteryModule):
         self.comms_fault = self.__comms_timeout.ready
 
     def __read_module_(self) -> Union[list[int], None]:
+        if self.__balancing is True:
+            self.__write_register(REG_CB_CTRL, 0)
         self.__write_register(REG_ADC_CONTROL, 0b00111101)
         self.__write_register(REG_IO_CONTROL, 0b00000011)
         self.__write_register(REG_ADC_CONVERT, 0x01)

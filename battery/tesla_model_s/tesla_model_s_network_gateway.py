@@ -18,7 +18,7 @@ class TeslaModelSNetworkGateway:
             [(address << 1) & 0xFF, register & 0xFF, length & 0xFF])
         message.append(crc8(message))
 
-        if self.__config.debugComms:
+        if self.__config.debug_comms:
             print("Sending register read", [hex(c) for c in message])
 
         self.__serial.write(message)
@@ -26,7 +26,7 @@ class TeslaModelSNetworkGateway:
         response = self.__receive_response(4 + length)
         if response:
             if (response[0] >> 1) == address and response[1] == register and response[2] == length:
-                if self.__config.debugComms:
+                if self.__config.debug_comms:
                     print("Received response", [hex(c) for c in response])
 
                 return response[3:-1]
@@ -41,14 +41,14 @@ class TeslaModelSNetworkGateway:
             [((address << 1) & 0xFF) | 0x01, register & 0xFF, value & 0xFF])
         message.append(crc8(message))
 
-        if self.__config.debugComms:
+        if self.__config.debug_comms:
             print("Sending register write", [hex(c) for c in message])
 
         self.__serial.write(message)
 
         response = self.__receive_response(4)
         if response:
-            if self.__config.debugComms:
+            if self.__config.debug_comms:
                 print("Received response", [hex(c) for c in response])
 
             if (response[0] >> 1) == address and response[1] == register and response[2] == value:
@@ -77,7 +77,7 @@ class TeslaModelSNetworkGateway:
                     else:
                         self.__clear_buffer()
                         return None
-        if self.__config.debugComms:
+        if self.__config.debug_comms:
             print("Timed out")
         self.receive_buffer = bytearray()
         return None

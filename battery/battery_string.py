@@ -13,5 +13,5 @@ class BatteryString:
             min_voltage = min([m.low_cell_voltage for m in self.modules])
             for module in self.modules:
                 for cell in module.cells:
-                    cell.balancing = cell.voltage - min_voltage > self._config.balance_difference
+                    cell.balancing = cell.voltage - min_voltage >= self._config.balance_difference
                 module.balance()
