@@ -33,7 +33,6 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
 
     def setUp(self):
         c = Config("config.default.json")
-        c.balance_hysteresis_time = 0
         self.mockGateway = FakeGateway(None, Config("config.default.json"))
         self.mockGateway.write_register = MagicMock(return_value=True)
         self.module = TeslaModelSBatteryModule(1, self.mockGateway, c)

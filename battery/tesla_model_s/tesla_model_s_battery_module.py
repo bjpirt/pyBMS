@@ -93,7 +93,7 @@ class TeslaModelSBatteryModule(BatteryModule):
                 balance_value = balance_value | (1 << i)
         self.__balancing = balance_value != 0
         if self.__balancing:
-            self.__write_register(REG_CB_TIME, self._config.balance_time)
+            self.__write_register(REG_CB_TIME, int(self._config.balance_time))
             self.__write_register(REG_CB_CTRL, balance_value)
 
     def __check_communication_time(self):

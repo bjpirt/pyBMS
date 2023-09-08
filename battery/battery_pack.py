@@ -141,7 +141,6 @@ class BatteryPack:
                 self._config.cell_low_voltage_setpoint + self._config.charge_hysteresis_voltage)
 
     def update(self) -> None:
-
         for module in self.modules:
             module.update()
 
