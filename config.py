@@ -41,8 +41,6 @@ class Config:
         self.debug_comms: bool = False
         # Whether the BMS should balance the modules automatically
         self.balancing_enabled: bool = True
-        # How long to balance the cells for in seconds
-        self.balance_time: int = 5
         # The voltage above which balancing should be enabled
         self.balance_voltage: float = 3.9
         # The difference between the voltage of a cell and the lowest cell voltage in the pack that triggers balancing
@@ -106,6 +104,10 @@ class Config:
         self.charge_hysteresis_voltage: float = 0.1
         # The hysteresis time (in seconds) for enabling and disabling charging and discharging
         self.charge_hysteresis_time: float = 30.0
+        # The time spent measuring before balancing (seconds)
+        self.balance_measuring_time: float = 2.0
+        # The time spent balancing before checking the voltage again (seconds)
+        self.balance_time: float = 10.0
 
         self.read()
 

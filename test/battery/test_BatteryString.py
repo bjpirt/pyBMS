@@ -12,7 +12,7 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
         self.config.balance_difference = 0.1
         self.config.balancing_enabled = True
         self.config.balance_voltage = 3.6
-        self.config.balance_hysteresis_time = 0
+        self.config.balance_measuring_time = 0
         self.modules = [BatteryModule(self.config), BatteryModule(self.config)]
         for module in self.modules:
             for i in range(0, 6):
@@ -29,8 +29,8 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
         self.assertTrue(self.modules[0].cells[1].balancing)
 
     def test_no_balance_below_threshold(self):
-        self.config.balance_voltage = 4.0
-        self.modules[0].cells[1].voltage = 3.8
+        self.config.balance_voltage = 4.01
+        self.modules[0].cells[1].voltage = 4.0
         self.string.balance()
         self.assertFalse(self.modules[0].cells[1].balancing)
 
