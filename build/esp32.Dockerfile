@@ -30,6 +30,7 @@ COPY config.py /code/ports/esp32/modules/config.py
 COPY config_json.py /code/ports/esp32/modules/config_json.py
 COPY platforms/esp32/${BMS_BOARD}/${MAIN}.py /code/ports/esp32/modules/main.py
 RUN curl -s -o /code/ports/esp32/modules/microdot.py https://raw.githubusercontent.com/miguelgrinberg/microdot/main/src/microdot.py
+RUN curl -s -o /code/ports/esp32/modules/microdot_asyncio.py https://raw.githubusercontent.com/miguelgrinberg/microdot/main/src/microdot_asyncio.py
 
 RUN . /opt/esp/idf/export.sh && \
   cd /code/ports/esp32 && \

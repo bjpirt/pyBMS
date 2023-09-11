@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from .bms_interface import BmsInterface
-from .mqtt_output import MqttOutput
 from hal.interval import get_interval
 from hal import WDT
 from .led import Led
@@ -37,8 +36,6 @@ class Bms(BmsInterface):
             self.__wdt = WDT(timeout=self.__config.wdt_timeout)
         self.__state_of_charge = StateOfCharge(
             self.battery_pack, self.__config, self.__current_sensor)
-        if self.__config.mqtt_host is not None:
-            self._mqtt = MqttOutput(self.__config, self)
 
     def process(self):
         if self.__interval.ready:
@@ -57,9 +54,6 @@ class Bms(BmsInterface):
         self.__led.process()
         if self.__wdt:
             self.__wdt.feed()
-
-        if self.__config.mqtt_host is not None:
-            self._mqtt.process()
 
     @property
     def state_of_charge(self) -> float:

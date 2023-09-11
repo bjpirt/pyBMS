@@ -15,6 +15,7 @@ class Config:
     def __init__(self, file="config.json"):
         self.__file = file
         # Initialise the defaults
+
         # The number of modules in the pack
         self.module_count: int = 2
         # The number of parallel strings of modules in the pack
@@ -90,6 +91,8 @@ class Config:
         self.current_reversed: bool = False
         # The maximum amps for the full reading of the current sensor
         self.current_sensor_max: int = 200
+        # Whether MQTT is enabled
+        self.mqtt_enabled: bool = False
         # The host for the MQTT broker
         self.mqtt_host: Union[str, None] = None
         # The host for the MQTT broker
