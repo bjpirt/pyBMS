@@ -1,4 +1,4 @@
-from bms import Bms, VictronOutput, WebServer, C2TTransducer
+from bms import Bms, VictronOutput, Network, C2TTransducer
 from config import Config
 from battery.tesla_model_s import TeslaModelSBatteryPack, TeslaModelSNetworkGateway
 from machine import UART  # type: ignore
@@ -15,7 +15,7 @@ def main():
     current_sensor = C2TTransducer(config, sda_pin=19, sck_pin=18)
     bms = Bms(pack, config, current_sensor)
     victronOutput = VictronOutput(can, bms, 0.5)
-    WebServer(bms, config)
+    Network(bms, config)
 
     while True:
         bms.process()
