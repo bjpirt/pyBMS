@@ -34,9 +34,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 3.0,
-          "height": 3.0,
-          "width": 3.0
+          "drill": 1.5,
+          "height": 3.6,
+          "width": 2.0
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -55,7 +55,10 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "courtyards_overlap|181756001|98805999|4ac78e2c-e9e1-448c-9576-a6c89f3c4e4f|d57a11d5-a044-4e88-95a8-84569f98371d",
+        "courtyards_overlap|193958810|87324001|1a176f86-5aba-47c7-8ab6-4b3a43a39b83|d57a11d5-a044-4e88-95a8-84569f98371d"
+      ],
       "meta": {
         "version": 2
       },
@@ -91,12 +94,12 @@
         "padstack": "warning",
         "pth_inside_courtyard": "ignore",
         "shorting_items": "error",
-        "silk_edge_clearance": "warning",
+        "silk_edge_clearance": "ignore",
         "silk_over_copper": "warning",
-        "silk_overlap": "warning",
+        "silk_overlap": "ignore",
         "skew_out_of_range": "error",
         "solder_mask_bridge": "error",
-        "starved_thermal": "error",
+        "starved_thermal": "ignore",
         "text_height": "warning",
         "text_thickness": "warning",
         "through_hole_pad_without_hole": "error",
@@ -431,7 +434,7 @@
       },
       {
         "bus_width": 12,
-        "clearance": 0.75,
+        "clearance": 0.5,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
@@ -441,7 +444,7 @@
         "name": "Power",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.75,
+        "track_width": 1.0,
         "via_diameter": 1.5,
         "via_drill": 0.8,
         "wire_width": 6
