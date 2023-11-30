@@ -1,6 +1,7 @@
 from battery import BatteryCell
 import unittest
 from battery.constants import OVER_VOLTAGE, UNDER_VOLTAGE
+from time import sleep
 
 from config import Config
 
@@ -8,6 +9,7 @@ from config import Config
 class BatteryCellTestCase(unittest.TestCase):
     def setUp(self):
         c = Config("config.default.json")
+        c.over_voltage_hysteresis_time = 0.01
         self.cell = BatteryCell(c)
 
     def test_store_highest_voltage(self):
@@ -34,6 +36,8 @@ class BatteryCellTestCase(unittest.TestCase):
 
     def test_over_voltage_fault(self):
         self.cell.voltage = 4.2
+        self.assertFalse(self.cell.over_voltage_fault)
+        sleep(0.01)
         self.assertTrue(self.cell.over_voltage_fault)
 
     def test_over_voltage_alert(self):
@@ -54,6 +58,8 @@ class BatteryCellTestCase(unittest.TestCase):
         self.cell.voltage = 3.0
         self.assertTrue(self.cell.fault)
         self.cell.voltage = 5.0
+        self.assertFalse(self.cell.fault)
+        sleep(0.01)
         self.assertTrue(self.cell.fault)
 
     def test_faults(self):
@@ -62,6 +68,8 @@ class BatteryCellTestCase(unittest.TestCase):
         self.cell.voltage = 3.0
         self.assertEqual(self.cell.faults, [UNDER_VOLTAGE])
         self.cell.voltage = 5.0
+        self.assertEqual(self.cell.faults, [])
+        sleep(0.01)
         self.assertEqual(self.cell.faults, [OVER_VOLTAGE])
 
     def test_alerts(self):
