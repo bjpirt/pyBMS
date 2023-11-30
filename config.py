@@ -111,6 +111,8 @@ class Config:
         self.balance_measuring_time: float = 2.0
         # The time spent balancing before checking the voltage again (seconds)
         self.balance_time: float = 10.0
+        # The hysteresis time for over voltage faults in seconds
+        self.over_voltage_hysteresis_time: float = 10.0
 
         self.read()
 

@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+<<<<<<< HEAD
+=======
+from hal import get_interval
+>>>>>>> 763c272 (Add hysteresis on detecting over voltage errors)
 from .constants import OVER_VOLTAGE, UNDER_VOLTAGE
 from typing import TYPE_CHECKING, List
 if TYPE_CHECKING:
@@ -15,10 +19,22 @@ class BatteryCell:
         self.lowest_voltage = -1.0
         self.over_voltage_fault_override = False
         self.under_voltage_fault_override = False
+        self._config = config
+        self._over_voltage_interval = get_interval()
+        self._over_voltage_fault = False
 
     @property
     def over_voltage_fault(self) -> bool:
-        return self.voltage >= self._config.high_voltage_fault_level or self.over_voltage_fault_override
+        if self.voltage >= self._config.high_voltage_fault_level or self.over_voltage_fault_override:
+            if not self._over_voltage_fault:
+                self._over_voltage_fault = True
+                self._over_voltage_interval.set(
+                    self._config.over_voltage_hysteresis_time)
+            else:
+                return self._over_voltage_interval.ready
+        else:
+            self._over_voltage_fault = False
+        return False
 
     @property
     def under_voltage_fault(self) -> bool:

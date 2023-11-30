@@ -2,6 +2,7 @@ from battery.battery_cell import BatteryCell
 from battery.battery_module import BatteryModule
 import unittest
 from battery.constants import COMMS, OVER_TEMPERATURE, OVER_VOLTAGE, UNDER_TEMPERATURE, UNDER_VOLTAGE
+from time import sleep
 
 from config import Config
 
@@ -9,6 +10,7 @@ from config import Config
 class BatteryModuleTestCase(unittest.TestCase):
     def setUp(self):
         c = Config("config.default.json")
+        c.over_voltage_hysteresis_time = 0.01
         self.module = BatteryModule(c)
         for i in range(4):
             cell = BatteryCell(c)
@@ -129,6 +131,8 @@ class BatteryModuleTestCase(unittest.TestCase):
         self.module.cells[1].voltage = 4.2
         self.module.cells[2].voltage = 4.2
         self.module.cells[3].voltage = 4.2
+        self.assertEqual(self.module.faults, [])
+        sleep(0.01)
         self.assertEqual(self.module.faults, [OVER_VOLTAGE])
         self.assertTrue(self.module.fault)
 

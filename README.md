@@ -93,6 +93,8 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 
 ## To Do
 
+- [ ] Dynamically scale back the charge current to avoid going over voltage
+- [x] Add hysteresis on over voltage faults
 - [x] Simulator for integration testing over socat virtual serial port
 - [x] Cell balancing
 - [x] Battery Management System controlling contactors
@@ -126,6 +128,5 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 - [x] String balancing
 - [x] MQTT Support
 - [x] Design hardware
-- [ ] Support for contactors per string
 - [ ] HTTPS
 - [ ] Basic Auth
