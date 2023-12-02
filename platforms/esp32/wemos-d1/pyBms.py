@@ -1,7 +1,9 @@
 from bms import Bms, VictronOutput, Network, C2TTransducer
+from bms.web_server import WebServer
 from config import Config
 from battery.tesla_model_s import TeslaModelSBatteryPack, TeslaModelSNetworkGateway
 from machine import UART  # type: ignore
+from bms.battery_heating import BatteryHeating
 from esp32 import CAN  # type: ignore
 
 
@@ -14,12 +16,15 @@ def main():
     pack = TeslaModelSBatteryPack(gateway, config)
     current_sensor = C2TTransducer(config, sda_pin=14, sck_pin=15)
     bms = Bms(pack, config, current_sensor)
-    victronOutput = VictronOutput(can, bms, 0.5)
     Network(bms, config)
+    victron_output = VictronOutput(can, bms, 0.5)
+    heating_control = BatteryHeating(config, pack)
+    WebServer(bms, config)
 
     while True:
         bms.process()
-        victronOutput.process()
+        victron_output.process()
+        heating_control.process()
 
 
 main()
