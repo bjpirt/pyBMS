@@ -25,3 +25,7 @@ class C2TTransducer(CurrentSensor):
     @property
     def current(self) -> float:
         return self.__current
+
+    @property
+    def ready(self):
+        return self.__adc.ready
