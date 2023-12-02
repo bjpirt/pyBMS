@@ -56,6 +56,8 @@ class MqttOutput:
                             f"/modules/{module_index}/cells/{cell_index}/fault", int(cell.fault))
                         self._publish_topic(
                             f"/modules/{module_index}/cells/{cell_index}/alert", int(cell.alert))
+                        self._publish_topic(
+                            f"/modules/{module_index}/cells/{cell_index}/balancing", int(cell.balancing))
 
     def _publish_topic(self, topic: str, value: Union[int, bool, float]) -> None:
         self._client.publish(f"{self._config.mqtt_topic_prefix}{topic}", json.dumps(
