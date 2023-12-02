@@ -113,6 +113,10 @@ class Config:
         self.balance_time: float = 10.0
         # The hysteresis time for over voltage faults in seconds
         self.over_voltage_hysteresis_time: float = 10.0
+        # The temperature the battery heater should heat to
+        self.battery_heating_temperature: float = 15.0
+        # The pin to use for controlling the battery heating
+        self.battery_heating_pin: int = 21
 
         self.read()
 
