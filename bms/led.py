@@ -1,10 +1,15 @@
+from typing import Union
 from hal.interval import get_interval
 from hal.pin import Pin
+from hal.pin.dummy_pin import DummyPin
 
 
 class Led:
-    def __init__(self, led_pin: int, frequency: float = 1, duration: float = 0.05):
-        self.__led = Pin(led_pin, Pin.OUT)
+    def __init__(self, led_pin: Union[int, None], frequency: float = 1, duration: float = 0.05):
+        if led_pin is not None:
+            self.__led = Pin(led_pin, Pin.OUT)
+        else:
+            self.__led = DummyPin(0, Pin.OUT)
         self.__led_on: bool = False
         self.__frequency = frequency
         self.__duration = duration
