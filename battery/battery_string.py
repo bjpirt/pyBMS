@@ -17,7 +17,7 @@ class BatteryString:
             if self._balancing_timer.ready:
                 if self._balancing_state == "MEASURING":
                     min_voltage = min([m.low_cell_voltage for m in self.modules])
-                    max_voltage = min([m.low_cell_voltage for m in self.modules])
+                    max_voltage = max([m.high_cell_voltage for m in self.modules])
                     for module in self.modules:
                         for cell in module.cells:
                             cell.balancing = (max_voltage > self._config.balance_voltage) and (
