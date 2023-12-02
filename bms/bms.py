@@ -25,10 +25,10 @@ class Bms(BmsInterface):
         self.__interval = get_interval()
         self.__interval.set(self.__poll_interval)
         self.__led = Led(self.__config.led_pin)
-        self.__charging_enabled = True
         self.__discharging_enabled = True
         self.__charging_timer = get_interval()
         self.__charging_timer.set(self.__config.charge_hysteresis_time)
+        self.__charge_current = self.__config.max_charge_current
         self.__discharging_timer = get_interval()
         self.__discharging_timer.set(self.__config.charge_hysteresis_time)
         self.__wdt: Optional[WDT] = None
@@ -67,17 +67,37 @@ class Bms(BmsInterface):
 
     @property
     def charge_current_setpoint(self) -> float:
-        self.__charging_enabled = self.battery_pack.should_charge(self.__charging_enabled)
-        if self.__charging_enabled is True:
-            if self.__charging_timer.ready:
-                return self.__config.max_charge_current
-        else:
-            self.__charging_timer.reset()
-        return 0
+        voltage_difference = self.battery_pack.high_cell_voltage - \
+            self.__config.cell_high_voltage_setpoint
+        if voltage_difference > 0:
+            scale_factor = 0.5
+
+            # Scale back the charge current in proportion to how much the voltage is over the threshold
+            # If the voltage difference is > 0.25V then set the charge current to 50% of actual
+            max_difference = 0.25
+            most_reduction = 0.5
+            # If the voltage is not much over (0.025V), then set the charge current to 90% of actual
+            min_difference = 0.025
+            least_reduction = 0.9
+
+            if voltage_difference >= max_difference:
+                scale_factor = most_reduction
+            elif voltage_difference < min_difference:
+                scale_factor = least_reduction
+            else:
+                scale_factor = most_reduction + ((voltage_difference - min_difference) /
+                                                 (max_difference - min_difference)) * (least_reduction - most_reduction)
+
+            self.__charge_current = self.current * scale_factor
+        elif voltage_difference <= -0.02:
+            self.__charge_current = min(
+                self.__charge_current * 1.1, self.__config.max_charge_current)
+        return self.__charge_current
 
     @property
     def discharge_current_setpoint(self) -> float:
-        self.__discharging_enabled = self.battery_pack.should_discharge(self.__discharging_enabled)
+        self.__discharging_enabled = self.battery_pack.should_discharge(
+            self.__discharging_enabled)
         if self.__discharging_enabled is True:
             if self.__discharging_timer.ready:
                 return self.__config.max_discharge_current

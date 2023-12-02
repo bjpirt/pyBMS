@@ -126,13 +126,6 @@ class BatteryPack:
             return max((module.cell_voltage_difference for module in self.modules))
         return 0.0
 
-    def should_charge(self, current_state: bool) -> bool:
-        if current_state is True:
-            return self.high_cell_voltage < self._config.cell_high_voltage_setpoint
-        else:
-            return self.high_cell_voltage < (
-                self._config.cell_high_voltage_setpoint - self._config.charge_hysteresis_voltage)
-
     def should_discharge(self, current_state: bool) -> bool:
         if current_state is True:
             return self.low_cell_voltage > self._config.cell_low_voltage_setpoint
