@@ -51,7 +51,7 @@ class StateOfCharge:
         if self.__current_sensor is None:
             return
 
-        if self.__pack.ready and self.__interval.ready:
+        if self.__pack.ready and self.__interval.ready and self.__current_sensor.ready:
             self.__interval.reset()
             current = self.__current_sensor.read()
             self.__remaining_amp_seconds = self.__remaining_amp_seconds + (current * 0.5)
@@ -62,7 +62,7 @@ class StateOfCharge:
 
     @property
     def level_from_current(self) -> float:
-        if self.__current_sensor is None:
+        if self.__current_sensor is None or self.__current_sensor.ready is False:
             return self.scaled_level_from_voltage
         return self.__remaining_amp_seconds / self.__available_capacity
 

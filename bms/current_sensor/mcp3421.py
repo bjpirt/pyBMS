@@ -50,7 +50,8 @@ class MCP3421:
         self.__interval.set(self.__sample_period())
         self.ready = False
         self.__device_search()
-        self.__configure()
+        if self.ready:
+            self.__configure()
 
     def __sample_period(self) -> float:
         per_second = 240 >> ((self.__sample_rate >> 2) * 2)
@@ -77,7 +78,7 @@ class MCP3421:
                 value = twos_complement(rawValue, 18)
             else:
                 data = self.__bus.readfrom(self.__address, 2)
-                rawValue =  (data[0] << 8) + data[1]
+                rawValue = (data[0] << 8) + data[1]
                 value = twos_complement(rawValue, 16)
             scaled_value = (value / 0x1FFFF) * 2.048
             self.__last_value = scaled_value
