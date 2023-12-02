@@ -6,13 +6,13 @@ from esp32 import CAN  # type: ignore
 
 
 def main():
-    uart = UART(1, 612500, tx=13, rx=15)
-    can = CAN(0, CAN.LOOPBACK, baudrate=500_000, tx=5, rx=23)
+    uart = UART(1, 612500, tx=33, rx=32)
+    can = CAN(0, CAN.LOOPBACK, baudrate=500_000, tx=5, rx=17)
     uart.init(timeout=5, timeout_char=5)
     config = Config()
     gateway = TeslaModelSNetworkGateway(uart, config)
     pack = TeslaModelSBatteryPack(gateway, config)
-    current_sensor = C2TTransducer(config, sda_pin=19, sck_pin=18)
+    current_sensor = C2TTransducer(config, sda_pin=14, sck_pin=15)
     bms = Bms(pack, config, current_sensor)
     victronOutput = VictronOutput(can, bms, 0.5)
     Network(bms, config)
