@@ -93,7 +93,8 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 
 ## To Do
 
-- [ ] Dynamically scale back the charge current to avoid going over voltage
+- [ ] Add support for heating the battery pack in cold weather
+- [x] Dynamically scale back the charge current to avoid going over voltage
 - [x] Add hysteresis on over voltage faults
 - [x] Simulator for integration testing over socat virtual serial port
 - [x] Cell balancing
