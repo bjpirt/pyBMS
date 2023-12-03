@@ -19,7 +19,8 @@ class Bms(BmsInterface):
         super().__init__(battery_pack)
         self.__config = config
         self.battery_pack = battery_pack
-        self.__contactors = ContactorControl(config)
+        if self.__config.contactor_control_enabled:
+            self.__contactors = ContactorControl(config)
         self.__current_sensor = current_sensor
         self.__poll_interval: float = self.__config.poll_interval
         self.__interval = get_interval()
@@ -42,15 +43,20 @@ class Bms(BmsInterface):
             self.__interval.set(self.__poll_interval)
             self.battery_pack.update()
 
-            if self.battery_pack.fault or not self.battery_pack.ready:
-                self.__contactors.disable()
-            else:
-                self.__contactors.enable()
+            if self.__config.contactor_control_enabled:
+                if self.battery_pack.fault or not self.battery_pack.ready:
+                    self.__contactors.disable()
+                else:
+                    self.__contactors.enable()
+
             if self.__config.debug:
                 self.print_debug()
 
         self.__state_of_charge.process()
-        self.__contactors.process()
+
+        if self.__config.contactor_control_enabled:
+            self.__contactors.process()
+
         self.__led.process()
         if self.__wdt:
             self.__wdt.feed()
