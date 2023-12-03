@@ -63,7 +63,9 @@ class Bms(BmsInterface):
 
     @property
     def state_of_charge(self) -> float:
-        return self.__state_of_charge.level_from_current
+        if self.__config.current_sensor_soc:
+            return self.__state_of_charge.level_from_current
+        return self.__state_of_charge.scaled_level_from_voltage
 
     @property
     def current(self) -> float:
