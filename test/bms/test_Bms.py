@@ -1,6 +1,6 @@
 import unittest
 from battery.battery_pack import BatteryPack  # type: ignore
-from bms import Config
+from config import Config
 from bms.bms import Bms
 from bms.current_sensor.current_sensor import CurrentSensor
 

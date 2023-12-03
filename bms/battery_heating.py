@@ -1,5 +1,5 @@
 from battery.battery_pack import BatteryPack
-from bms.config import Config
+from config import Config
 from hal import Pin
 
 

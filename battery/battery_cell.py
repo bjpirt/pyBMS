@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-<<<<<<< HEAD
-=======
 from hal import get_interval
->>>>>>> 763c272 (Add hysteresis on detecting over voltage errors)
 from .constants import OVER_VOLTAGE, UNDER_VOLTAGE
 from typing import TYPE_CHECKING, List
 if TYPE_CHECKING:
