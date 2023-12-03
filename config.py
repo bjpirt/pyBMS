@@ -30,6 +30,8 @@ class Config:
         self.low_temperature_setpoint: float = 10.0
         # The number of seconds without communication before raising an alarm
         self.comms_timeout: float = 10.0
+        # Whether or not to control the contactors
+        self.contactor_control_enabled = False
         # The pin number for the negative contactor
         self.negative_pin: int = 16
         # The pin number for the precharge contactor
