@@ -12,7 +12,7 @@
   "precharge_pin": 17,
   "positive_pin": 26,
   "balancing_enabled": true,
-  "balance_time": 5,
+  "balance_time": 5.0,
   "balance_voltage": 3.9,
   "balance_difference": 0.04,
   "module_capacity": 232.0,

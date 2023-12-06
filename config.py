@@ -1,5 +1,4 @@
 import os
-from typing import Union
 import json
 
 
@@ -93,14 +92,6 @@ class Config:
         self.current_reversed: bool = False
         # The maximum amps for the full reading of the current sensor
         self.current_sensor_max: int = 200
-        # Whether MQTT is enabled
-        self.mqtt_enabled: bool = False
-        # The host for the MQTT broker
-        self.mqtt_host: Union[str, None] = None
-        # The host for the MQTT broker
-        self.mqtt_topic_prefix: Union[str, None] = None
-        # The host for the MQTT broker
-        self.mqtt_output_interval: float = 5.0
         # The max desired charge current in A
         self.max_charge_current: float = 100.0
         # The max desired discharge current in A
@@ -121,6 +112,20 @@ class Config:
         self.battery_heating_pin: int = 4
         # Use the current sensor for state of charge
         self.current_sensor_soc = False
+
+        ######################################################################
+        # MQTT Settings
+        ######################################################################
+        # Whether MQTT is enabled
+        self.mqtt_enabled: bool = False
+        # The host for the MQTT broker
+        self.mqtt_host: str = ""
+        # The host for the MQTT broker
+        self.mqtt_topic_prefix: str = ""
+        # The host for the MQTT broker
+        self.mqtt_output_interval: float = 5.0
+        # How long between sending a full update
+        self.mqtt_full_output_interval: float = 120.0
 
         self.read()
 
@@ -160,10 +165,18 @@ class Config:
             new_config = json.loads(data)
             self.update(new_config)
 
+    def set_value(self, key: str, value):
+        if hasattr(self, key):
+            if type(getattr(self, key)) == type(value) or type(value) == type(None):
+                setattr(self, key, value)
+            else:
+                print(f"Config types did not match: {key} ({type(getattr(self, key))}) ({type(value)})")
+        else:
+            print("Attribute does not exist")
+
     def update(self, new_config: dict) -> None:
         for (key, value) in new_config.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
+            self.set_value(key, value)
 
     def save(self):
         with open(self.__file, 'w', encoding="utf-8") as file:

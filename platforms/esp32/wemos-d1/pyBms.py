@@ -1,5 +1,4 @@
 from bms import Bms, VictronOutput, Network, C2TTransducer
-from bms.web_server import WebServer
 from config import Config
 from battery.tesla_model_s import TeslaModelSBatteryPack, TeslaModelSNetworkGateway
 from machine import UART  # type: ignore
@@ -19,7 +18,6 @@ def main():
     Network(bms, config)
     victron_output = VictronOutput(can, bms, 0.5)
     heating_control = BatteryHeating(config, pack)
-    WebServer(bms, config)
 
     while True:
         bms.process()

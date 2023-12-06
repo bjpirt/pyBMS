@@ -36,4 +36,4 @@ class WiFi(NetworkConnectionInterface):
 
     @property
     def connected(self):
-        return self.wlan.isconnected() if MPY and self.wlan else False
+        return self.wlan.isconnected() if MPY and self.wlan else True

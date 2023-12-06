@@ -26,4 +26,4 @@ class PahoMqttClient:
 
     def _on_message(self, client, userdata, msg):
         if self._callback:
-            self._callback(msg.topic, str(msg.payload))
+            self._callback(msg.topic, msg.payload.decode("utf-8"))
