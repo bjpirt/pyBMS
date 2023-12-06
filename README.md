@@ -94,8 +94,8 @@ Which will produce `build/out/tesla-bms-emulator.uf2`. You can drag and drop thi
 ## To Do
 
 - [ ] Add support for Ethernet networking
-- [ ] Update settings via MQTT
-- [ ] Output buffering for MQTT (send on change)
+- [x] Update settings via MQTT
+- [x] Output buffering for MQTT (send on change)
 - [x] Add support for heating the battery pack in cold weather
 - [x] Dynamically scale back the charge current to avoid going over voltage
 - [x] Add hysteresis on over voltage faults
