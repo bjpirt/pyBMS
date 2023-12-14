@@ -1,7 +1,7 @@
 # ruff: noqa: E722
 from hal.network import NetworkConnectionInterface
 from .bms_interface import BmsInterface
-from hal import get_interval, Memory
+from hal import get_interval, Memory, reset
 from config import Config
 from mqtt import MQTTClient  # type: ignore
 import json
@@ -34,7 +34,10 @@ class MqttOutput:
             try:
                 print(f"Connecting to MQTT server: {self._config.mqtt_host}")
                 self._client.connect()
-                self._client.subscribe(f"{self._config.mqtt_topic_prefix}/set-config/#")
+                self._client.subscribe(
+                    f"{self._config.mqtt_topic_prefix}/set-config/#")
+                self._client.subscribe(
+                    f"{self._config.mqtt_topic_prefix}/reboot")
                 print("Connected to MQTT")
                 self.connected = True
             except OSError:
@@ -88,15 +91,25 @@ class MqttOutput:
     def _publish_topic(self, topic: str, value: Union[int, bool, float]) -> None:
         if self._should_publish(topic, value):
             to_send = json.dumps({"value": value})
-            self._client.publish(f"{self._config.mqtt_topic_prefix}{topic}", to_send)
+            self._client.publish(
+                f"{self._config.mqtt_topic_prefix}{topic}", to_send)
 
     def _sub_cb(self, topic: str, msg) -> None:
         try:
-            setting = topic.replace(f"{self._config.mqtt_topic_prefix}/set-config/", "")
             data = json.loads(msg)
-            print(f"Setting '{setting}' to '{data['value']}'")
-            self._config.set_value(setting, data["value"])
-            self._config.save()
+            if "value" not in data:
+                print("Invalid message received")
+                return
+            if topic.startswith("{self._config.mqtt_topic_prefix}/set-config/"):
+                setting = topic.replace(
+                    f"{self._config.mqtt_topic_prefix}/set-config/", "")
+                print(f"Setting '{setting}' to '{data['value']}'")
+                self._config.set_value(setting, data["value"])
+                self._config.save()
+            elif topic == "{self._config.mqtt_topic_prefix}/reboot":
+                if data["value"] == "reboot":
+                    print("Rebooting device")
+                    reset()
         except:  # pylint: disable=bare-except
             print("Error decoding json from MQTT")
 
