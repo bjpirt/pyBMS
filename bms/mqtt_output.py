@@ -117,10 +117,7 @@ class MqttOutput:
         while True:
             if self.enabled and self._network.connected:
                 self._publish()
-                try:
-                    await asyncio.sleep_ms(1)
-                except:  # pylint: disable=bare-except
-                    await asyncio.sleep(0.001)
+                await asyncio.sleep(0.001)
                 if self.connected:
                     self._client.check_msg()
                 if self._full_publish_interval.ready:
