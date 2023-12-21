@@ -52,7 +52,7 @@ build-rp2: FIRMWARE_FORMAT = uf2
 build-rp2: build
 
 .PHONY: build
-build: build-conf
+build:
 	rm -f ./build/out/${MAIN}.${PLATFORM}.${BMS_BOARD}.${FIRMWARE_FORMAT}
 	docker build -f build/${PLATFORM}.Dockerfile --build-arg BOARD=${BOARD} --build-arg BMS_BOARD=${BMS_BOARD} --build-arg MAIN=${MAIN} -t pybms-build-${PLATFORM} .
 	docker cp "$$(docker create --name tc pybms-build-${PLATFORM}):/code/ports/${PLATFORM}/build-${BOARD}/${MAIN}.${FIRMWARE_FORMAT}" ./build/out/${MAIN}.${PLATFORM}.${BMS_BOARD}.${FIRMWARE_FORMAT} && docker rm tc
