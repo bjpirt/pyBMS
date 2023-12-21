@@ -8,7 +8,7 @@ from config import Config
 
 class BatteryCellTestCase(unittest.TestCase):
     def setUp(self):
-        c = Config("config.default.json")
+        c = Config()
         c.over_voltage_hysteresis_time = 0.01
         self.cell = BatteryCell(c)
 

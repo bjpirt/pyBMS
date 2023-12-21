@@ -51,10 +51,6 @@ build-rp2: BMS_BOARD = pico
 build-rp2: FIRMWARE_FORMAT = uf2
 build-rp2: build
 
-.PHONY: build-conf
-build-conf:
-	scripts/data_to_py.py config.json config_json.py || scripts/data_to_py.py config.default.json config_json.py
-
 .PHONY: build
 build: build-conf
 	rm -f ./build/out/${MAIN}.${PLATFORM}.${BMS_BOARD}.${FIRMWARE_FORMAT}

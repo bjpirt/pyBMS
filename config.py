@@ -1,18 +1,12 @@
-import os
-import json
+from lib import PersistentConfig
+try:
+    from initial_config import config   # type: ignore
+except ImportError:
+    config = {}
 
 
-def exists(filename: str) -> bool:
-    try:
-        os.stat(filename)
-        return True
-    except OSError:
-        return False
-
-
-class Config:
-    def __init__(self, file="config.json"):
-        self.__file = file
+class Config (PersistentConfig):
+    def __init__(self):
         # Initialise the defaults
 
         # The number of modules in the pack
@@ -127,7 +121,7 @@ class Config:
         # How long between sending a full update
         self.mqtt_full_output_interval: float = 120.0
 
-        self.read()
+        super().__init__(config)
 
     @property
     def high_voltage_alert_level(self):
@@ -144,40 +138,3 @@ class Config:
     @property
     def low_voltage_fault_level(self):
         return self.cell_low_voltage_setpoint - self.voltage_fault_offset
-
-    def get_dict(self):
-        return {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
-
-    def read(self):
-        data = None
-        if exists(self.__file):
-            with open(self.__file, 'r', encoding="UTF-8") as file:
-                data = file.read()
-        else:
-            try:
-                # pylint: disable=E0401
-                import config_json  # type: ignore
-                data = bytearray(config_json.data()).decode()
-            except ModuleNotFoundError:
-                print("Error reading default python config")
-
-        if data:
-            new_config = json.loads(data)
-            self.update(new_config)
-
-    def set_value(self, key: str, value):
-        if hasattr(self, key):
-            if type(getattr(self, key)) == type(value) or type(value) == type(None):
-                setattr(self, key, value)
-            else:
-                print(f"Config types did not match: {key} ({type(getattr(self, key))}) ({type(value)})")
-        else:
-            print("Attribute does not exist")
-
-    def update(self, new_config: dict) -> None:
-        for (key, value) in new_config.items():
-            self.set_value(key, value)
-
-    def save(self):
-        with open(self.__file, 'w', encoding="utf-8") as file:
-            json.dump(self.get_dict(), file)
