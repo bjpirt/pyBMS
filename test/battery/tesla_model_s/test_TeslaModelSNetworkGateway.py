@@ -19,7 +19,7 @@ class TeslaModelSNetworkGatewayTestCase(unittest.TestCase):
         self.serial = FakeSerial()
         self.serial.write = MagicMock()
         self.gateway = TeslaModelSNetworkGateway(
-            self.serial, Config("config.default.json"))
+            self.serial, Config())
         return super().setUp()
 
     def test_write_register(self):

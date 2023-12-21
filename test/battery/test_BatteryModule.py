@@ -9,7 +9,7 @@ from config import Config
 
 class BatteryModuleTestCase(unittest.TestCase):
     def setUp(self):
-        c = Config("config.default.json")
+        c = Config()
         c.over_voltage_hysteresis_time = 0.01
         self.module = BatteryModule(c)
         for i in range(4):

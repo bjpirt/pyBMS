@@ -8,7 +8,7 @@ from config import Config
 class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.config = Config("config.default.json")
+        self.config = Config()
         self.config.balance_difference = 0.1
         self.config.balancing_enabled = True
         self.config.balance_voltage = 3.6

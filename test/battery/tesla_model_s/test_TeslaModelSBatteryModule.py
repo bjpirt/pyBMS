@@ -32,8 +32,8 @@ mockStatusRead = [0x03, 0x03, 0x07, 0x38]
 class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
 
     def setUp(self):
-        c = Config("config.default.json")
-        self.mockGateway = FakeGateway(None, Config("config.default.json"))
+        c = Config()
+        self.mockGateway = FakeGateway(None, Config())
         self.mockGateway.write_register = MagicMock(return_value=True)
         self.module = TeslaModelSBatteryModule(1, self.mockGateway, c)
         return super().setUp()
@@ -64,5 +64,5 @@ class TeslaModelSBatteryModuleTestCase(unittest.TestCase):
         self.module.balance()
 
         self.mockGateway.write_register.assert_has_calls(
-            [call(self.module.address, REG_CB_TIME, 5), call(self.module.address,
-                                                             REG_CB_CTRL, 0b00001010)])
+            [call(self.module.address, REG_CB_TIME, 10), call(self.module.address,
+                                                              REG_CB_CTRL, 0b00001010)])

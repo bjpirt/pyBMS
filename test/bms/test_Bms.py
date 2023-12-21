@@ -26,7 +26,7 @@ class FakePack(BatteryPack):
 
 class BmsTestCase(unittest.TestCase):
     def setUp(self):
-        self.config = Config("config.default.json")
+        self.config = Config()
         self.pack = FakePack()
         self.current_sensor = FakeCurrentSensor()
         self.bms = Bms(self.pack, self.config, self.current_sensor)

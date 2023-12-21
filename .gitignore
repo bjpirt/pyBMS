@@ -13,7 +13,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -130,6 +129,5 @@ dmypy.json
 .picowgo
 .vscode
 build/out
-config.json
-config_json.py
+initial_config.py
 ui/node_modules

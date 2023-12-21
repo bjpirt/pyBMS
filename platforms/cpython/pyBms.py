@@ -14,7 +14,7 @@ port = sys.argv[1]
 baud = int(sys.argv[2])
 
 serialPort = serial.Serial(port, baud, timeout=0.1)
-config = Config("config.local.json")
+config = Config()
 gateway = TeslaModelSNetworkGateway(serialPort, config)
 pack = TeslaModelSBatteryPack(gateway, config)
 bms = Bms(pack, config)

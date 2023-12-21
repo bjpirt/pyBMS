@@ -29,8 +29,6 @@ jobs:
         run: make mypy
       - name: Test
         run: make test
-      - name: Build conf py
-        run: make build-conf
       - name: Run fake serial ports
         run: make pack-fake-serial
       - name: Run integration tests

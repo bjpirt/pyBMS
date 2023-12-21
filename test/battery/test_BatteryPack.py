@@ -7,7 +7,7 @@ from time import sleep
 
 class BatteryPackTestCase(unittest.TestCase):
     def setUp(self):
-        self.config = Config("config.default.json")
+        self.config = Config()
         self.config.parallel_string_count = 2
         self.config.over_voltage_hysteresis_time = 0.01
         self.pack = BatteryPack(self.config)
